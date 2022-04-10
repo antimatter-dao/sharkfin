@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-// import { useHistory } from 'react-router'
+import { useHistory } from 'react-router'
 // import dayjs from 'dayjs'
 import { Container, Box, Typography } from '@mui/material'
 import Card from 'components/Card/Card'
@@ -77,7 +77,7 @@ export default function Dashboard() {
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
   const [currentCurrency, setCurrentCurrency] = useState<Token | undefined>(undefined)
   const { account, chainId } = useActiveWeb3React()
-  // const history = useHistory()
+  const history = useHistory()
   const isDownMd = useBreakpoint('md')
   const [page] = useState(1)
   // const accountBalances = useAccountBalances()
@@ -176,6 +176,7 @@ export default function Dashboard() {
                 onVisit={() => {
                   // setCurrentCurrency(CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key])
                   // handleDepositOpen()
+                  history.push(`/defi-vault-mgmt/Kovan/ETH/${vault.type}`)
                 }}
               />
             ]
