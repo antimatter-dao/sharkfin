@@ -15,7 +15,7 @@ import Spinner from 'components/Spinner'
 import { fetchLocation } from 'utils/fetch/location'
 import Account from './Account'
 import { BindModalProvider } from 'context/BindContext'
-import Home from './Home'
+// import Home from './Home'
 // import ChainOption from './ChainOption'
 // import ChainOptionMgmt from './ChainOptionMgmt'
 import DefiVault from './DefiVault'
@@ -87,10 +87,10 @@ export default function App() {
                       <Route exact strict path={routes.defiVaultMgmt} component={DefiVaultMgmt} />
                       <Route exact strict path={routes.recurringVault} component={RecurringVault} />
                       <Route exact strict path={routes.recurringVaultMgmt} component={RecurringVaultMgmt} />
-                      <Route exact strict path={routes.home} component={Home} />
-                      <Route exact strict path={routes.referral} component={Home} />
+                      {/*<Route exact strict path={routes.home} component={Home} />*/}
+                      <Route exact strict path={routes.referral} component={DefiVault} />
                       <Route path="/">
-                        <Redirect to={routes.home} />
+                        <Redirect to={routes.defiVault} />
                       </Route>
                     </Switch>
                   </LocatoinVerification>

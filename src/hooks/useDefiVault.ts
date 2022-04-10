@@ -25,7 +25,7 @@ export interface DefiProduct {
   investCurrency: string
   chainId: ChainId | undefined
   balance?: string
-  instantBalance?: string
+   instantBalance?: string
   completeBalance?: string
   initiateBalance?: string
   cap?: number

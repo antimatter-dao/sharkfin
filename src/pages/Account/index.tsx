@@ -7,7 +7,7 @@ import Dashboard from './Dashboard'
 import Position from './Position/index'
 import History from './History/index'
 import Referral from './Referral'
-import dashboardUrl from 'assets/images/dashboard.png'
+// import dashboardUrl from 'assets/images/dashboard.png'
 import positionUrl from 'assets/images/position.png'
 import historyUrl from 'assets/images/history.png'
 import referralUrl from 'assets/images/referral.png'
@@ -60,7 +60,7 @@ export default function Account() {
         customCurrentTab={currentTab}
         customOnChange={handleTabClick}
         titles={[
-          <Tab text="Dashboard" iconUrl={dashboardUrl} key="dashboard" />,
+          <Tab text="Position" iconUrl={positionUrl} key="dashboard" />,
           <Tab text="Position" iconUrl={positionUrl} key="position" />,
           <Tab text="Referral" iconUrl={referralUrl} key="referral" />,
           <Tab text="History" iconUrl={historyUrl} key="history" />
