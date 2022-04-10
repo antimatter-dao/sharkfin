@@ -182,7 +182,7 @@ export default function Dashboard() {
             ]
           })
       : []
-  }, [chainId, vaultList])
+  }, [chainId, history, vaultList])
 
   if (!account)
     return (
