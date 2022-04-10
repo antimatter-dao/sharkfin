@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { Box } from '@mui/material'
 //import Tabs from 'components/Tabs/Tabs'
-import TabButton from 'components/Button/TabButton'
-import useBreakpoint from 'hooks/useBreakpoint'
-import { routes } from 'constants/routes'
+//import TabButton from 'components/Button/TabButton'
+//import useBreakpoint from 'hooks/useBreakpoint'
+//import { routes } from 'constants/routes'
 
 export const PRODUCT_TYPE_ROUTE = {
   dualInvest: 'dual_invest',
@@ -33,22 +33,22 @@ export default function InvestTabs({
   chainTypeContent?: JSX.Element
   recurVaultContent?: JSX.Element
 }) {
-  const history = useHistory()
-  const { tab, type } = useParams<{ type: string; tab: string }>()
+  //const history = useHistory()
+  const { type } = useParams<{ type: string; tab: string }>()
   const typeKey = type ? Keys[type as keyof typeof Keys] ?? undefined : undefined
   const [currentTab, setCurrentTab] = useState(typeKey ? Tabs[typeKey as keyof typeof Tabs] : Tabs.dualInvest)
-  const isDownMd = useBreakpoint('md')
+  // const isDownMd = useBreakpoint('md')
 
-  const handleClick = useCallback(
-    key => () => {
-      history.replace(
-        routes.accountTabType
-          .replace(':tab', tab)
-          .replace(':type', PRODUCT_TYPE_ROUTE[key as keyof typeof PRODUCT_TYPE_ROUTE])
-      )
-    },
-    [history, tab]
-  )
+  // const handleClick = useCallback(
+  //   key => () => {
+  //     history.replace(
+  //       routes.accountTabType
+  //         .replace(':tab', tab)
+  //         .replace(':type', PRODUCT_TYPE_ROUTE[key as keyof typeof PRODUCT_TYPE_ROUTE])
+  //     )
+  //   },
+  //   [history, tab]
+  // )
 
   useEffect(() => {
     if (Keys[type]) {
@@ -65,32 +65,6 @@ export default function InvestTabs({
         padding: { xs: '20px 0', md: 0 }
       }}
     >
-      <TabButton
-        onClick={handleClick(Keys[PRODUCT_TYPE_ROUTE.dualInvest])}
-        active={currentTab === Tabs.dualInvest}
-        sx={{ marginRight: 20, width: isDownMd ? 140 : 180, whiteSpace: 'nowrap', mt: 5 }}
-      >
-        {Tabs.dualInvest}
-      </TabButton>
-      {chainTypeContent && (
-        <TabButton
-          onClick={handleClick(Keys[PRODUCT_TYPE_ROUTE.chainType])}
-          active={currentTab === Tabs.chainType}
-          sx={{ width: isDownMd ? 140 : 180, marginRight: 20, whiteSpace: 'nowrap', mt: 5 }}
-        >
-          {Tabs.chainType}
-        </TabButton>
-      )}
-      {recurVaultContent && (
-        <TabButton
-          onClick={handleClick(Keys[PRODUCT_TYPE_ROUTE.recurVault])}
-          active={currentTab === Tabs.recurVault}
-          sx={{ width: isDownMd ? 140 : 180, whiteSpace: 'nowrap', mt: 5 }}
-        >
-          {Tabs.recurVault}
-        </TabButton>
-      )}
-
       {currentTab === Tabs.dualInvest && dualInvestContent}
       {currentTab === Tabs.chainType && chainTypeContent}
       {currentTab === Tabs.recurVault && recurVaultContent}

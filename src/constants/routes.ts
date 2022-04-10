@@ -1,6 +1,6 @@
 export const routes = {
-  accountTab: '/account/:tab',
-  accountTabType: '/account/:tab/:type',
+  accountTab: '/position/:tab',
+  accountTabType: '/position/:tab/:type',
   chainOption: '/chain-option',
   chainOptionTyped: '/chain-option/:type',
   chainOptionMgmt: '/chain-option-mgmt/:id',

@@ -50,12 +50,20 @@ enum BalanceTableHeaderIndex {
 const BalanceTableHeader = ['', 'Current apy', 'Vault size', 'Your shares']
 // const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
 
-function TokenHeader({ token }: { token: Currency | undefined }) {
+function TokenHeader({
+  token,
+  investToken,
+  type
+}: {
+  token: Currency | undefined
+  investToken: Currency | undefined
+  type: 'CALL' | 'PUT'
+}) {
   return (
     <Box display="flex" alignItems="center" gap={16}>
-      <CurrencyLogo currency={token} size="32px" />
+      <CurrencyLogo currency={investToken} size="32px" />
       <Box>
-        <Typography fontSize={16}>{token?.symbol}</Typography>
+        <Typography fontSize={16}>{`${token?.symbol} Covered ${type === 'CALL' ? 'Call' : 'Put'} Option`}</Typography>
         <Typography fontSize={12} sx={{}}>
           <span style={{ opacity: 0.5, fontSize: '12px' }}>{token?.name}</span>
         </Typography>
@@ -130,9 +138,9 @@ export default function Dashboard() {
   //   })
   // }, [chainId, isDownMd, vaultList])
 
-  const handleDepositOpen = useCallback(() => {
-    setIsDepositOpen(true)
-  }, [])
+  // const handleDepositOpen = useCallback(() => {
+  //   setIsDepositOpen(true)
+  // }, [])
 
   // const handleWithdrawOpen = useCallback(() => {
   //   setIsWithdrawOpen(true)
@@ -153,12 +161,15 @@ export default function Dashboard() {
             return vault.chainId === chainId
           })
           .map((vault, index) => {
-            const token = chainId ? SUPPORTED_CURRENCIES[vault.investCurrency] : undefined
+            const token = chainId ? SUPPORTED_CURRENCIES[vault.currency] : undefined
+            const investCurrency = chainId ? SUPPORTED_CURRENCIES[vault.investCurrency] : undefined
             return [
-              <TokenHeader key={index} token={token} />,
+              <TokenHeader key={index} token={token} type={vault.type} investToken={investCurrency} />,
               '20%',
               vault?.totalBalance ?? '-',
-              vault?.balance ?? '-',
+              vault?.totalBalance && vault?.balance
+                ? `${Number((Number(vault.balance) / vault.totalBalance).toFixed(2)) * 100}%`
+                : '-',
               // balances?.recurTotal ?? '-',
               <VaultActions
                 key={index}
@@ -170,7 +181,7 @@ export default function Dashboard() {
             ]
           })
       : []
-  }, [chainId, handleDepositOpen, vaultList])
+  }, [chainId, vaultList])
 
   if (!account)
     return (
@@ -191,7 +202,7 @@ export default function Dashboard() {
         <Card>
           <Box width="100%" padding="38px 24px" display="flex" flexDirection="column" gap={36}>
             <Typography fontSize={{ xs: 20, sm: 24 }} fontWeight={700}>
-              My Account Balance
+              Vault Detail
             </Typography>
             {/*<Typography sx={{ color: theme => theme.palette.text.secondary, mt: 8 }}>*/}
             {/*  Deposit funds to your Dual Investment account, you can withdraw available amount at any time*/}

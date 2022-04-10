@@ -36,7 +36,7 @@ export const Tabs: Tab[] = [
     ]
   },
   // { title: 'Dual Investment', route: routes.dualInvest },
-  { title: 'Account', route: routes.accountTab.replace(':tab', 'dashboard') },
+  { title: 'Position', route: routes.accountTab.replace(':tab', 'dashboard') },
   { title: 'DAO', link: 'https://dao.antimatter.finance/#/' },
   { title: 'Docs', link: 'https://docs.antimatter.finance/' },
   {
