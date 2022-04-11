@@ -5,13 +5,8 @@ import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.sv
 import theme from 'theme'
 import Card, { OutlinedCard } from 'components/Card/Card'
 import Divider from 'components/Divider'
-// import Spinner from 'components/Spinner'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { RiskStatement, FAQ, Subject } from './stableContent'
-import { LogoTitle } from './LogoTitle'
-import { DefiTemplateImage } from './DefiTemplateImage'
-import { NETWORK_CHAIN_ID } from 'constants/chain'
-// import { useSuccessImage } from 'hooks/useSuccessImage'
 
 const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -31,7 +26,6 @@ const StyledUnorderList = styled('ul')(({ theme }) => ({
 interface Props {
   showFaq?: boolean
   backLink: string
-  product: any
   pageTitle?: string
   chart: React.ReactNode
   chart2?: React.ReactNode
@@ -42,13 +36,11 @@ interface Props {
   vaultForm?: React.ReactNode
   children?: React.ReactNode
   graphTitle: string
-  isDefiVault?: boolean
 }
 
 export default function MgmtPage(props: Props) {
   const {
     backLink,
-    product,
     pageTitle,
     chart,
     subject,
@@ -58,8 +50,7 @@ export default function MgmtPage(props: Props) {
     returnOnInvestmentListItems,
     vaultForm,
     children,
-    graphTitle,
-    isDefiVault
+    graphTitle
   } = props
 
   const isDownMd = useBreakpoint('md')
@@ -112,23 +103,6 @@ export default function MgmtPage(props: Props) {
                 Go Back
               </Typography>
             </Box>
-
-            {isDefiVault && !isDownMd && (
-              <Box padding="0 24px">
-                <div style={{ height: '43px' }}></div>
-                <LogoTitle
-                  title={pageTitle ?? ''}
-                  description={`Generates yield by running an automated ${
-                    product?.type === 'CALL'
-                      ? `${product?.currency ?? ''} covered call strategy`
-                      : `put selling strategy`
-                  }`}
-                  logoCurSymbol={product?.investCurrency ?? ''}
-                />
-                <DefiTemplateImage chainId={product?.chainId ?? NETWORK_CHAIN_ID} />
-                <div style={{ height: '78px' }}></div>
-              </Box>
-            )}
           </Box>
         </Box>
 

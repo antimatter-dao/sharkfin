@@ -24,7 +24,8 @@ export const SYMBOL_MAP = {
   LUNA: 'LUNA',
   MATIC: 'MATIC',
   WMATIC: 'MATIC',
-  CAKE: 'CAKE'
+  CAKE: 'CAKE',
+  USDC: 'USDC'
 }
 
 export const SUPPORTED_CURRENCY_SYMBOL = {

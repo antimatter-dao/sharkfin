@@ -1,33 +1,15 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useHistory } from 'react-router'
-// import dayjs from 'dayjs'
 import { Container, Box, Typography } from '@mui/material'
 import Card from 'components/Card/Card'
 import Table from 'components/Table'
 import NoDataCard from 'components/Card/NoDataCard'
 import Button from 'components/Button/Button'
-//import OutlineButton from 'components/Button/OutlineButton'
-// import NumericalCard from 'components/Card/NumericalCard'
-//import Pagination from 'components/Pagination'
 import { useActiveWeb3React } from 'hooks'
-import ActionModal, { ActionType } from './modals/ActionModal'
-// import StatusTag from 'components/Status/StatusTag'
-// import TransactionTypeIcon from 'components/Icon/TransactionTypeIcon'
-import { Token, Currency } from 'constants/token'
-// import { routes } from 'constants/routes'
+import { Currency } from 'constants/token'
 import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
-// import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
-import { useAccountRecord } from 'hooks/useAccountData'
-import Spinner from 'components/Spinner'
-// import { ExternalLink } from 'theme/components'
-// import { getEtherscanLink } from 'utils/index'
-// import { usePriceForAll } from 'hooks/usePriceSet'
-//import { useAccountBalances } from 'hooks/useAccountBalance'
-// import { toChecksumAddress } from 'web3-utils'
 import { SUPPORTED_CURRENCIES } from 'constants/currencies'
-// import { toLocaleNumberString } from 'utils/toLocaleNumberString'
-//import { NETWORK_CHAIN_ID } from 'constants/chain'
 import { useDefiVaultList } from '../../hooks/useDefiVault'
 
 enum BalanceTableHeaderIndex {
@@ -73,16 +55,15 @@ function TokenHeader({
 }
 
 export default function Dashboard() {
-  const [isDepositOpen, setIsDepositOpen] = useState(false)
-  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
-  const [currentCurrency, setCurrentCurrency] = useState<Token | undefined>(undefined)
+  // const [isDepositOpen, setIsDepositOpen] = useState(false)
+  // const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
+  // const [currentCurrency, setCurrentCurrency] = useState<Token | undefined>(undefined)
   const { account, chainId } = useActiveWeb3React()
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
-  const [page] = useState(1)
+  // const [page] = useState(1)
   // const accountBalances = useAccountBalances()
   // const indexPrices = usePriceForAll()
-  const { accountRecord } = useAccountRecord(page)
   const vaultList = useDefiVaultList()
 
   // const totalInvest = useMemo(() => {
@@ -146,12 +127,6 @@ export default function Dashboard() {
   //   setIsWithdrawOpen(true)
   // }, [])
 
-  const handleDismiss = useCallback(() => {
-    setIsDepositOpen(false)
-    setIsWithdrawOpen(false)
-    setCurrentCurrency(undefined)
-  }, [])
-
   // const handlePage = useCallback((event, value) => setPage(value), [])
 
   const balanceData = useMemo(() => {
@@ -170,7 +145,6 @@ export default function Dashboard() {
               vault?.totalBalance && vault?.balance
                 ? `${Number((Number(vault.balance) / vault.totalBalance).toFixed(2)) * 100}%`
                 : '-',
-              // balances?.recurTotal ?? '-',
               <VaultActions
                 key={index}
                 onVisit={() => {
@@ -184,21 +158,16 @@ export default function Dashboard() {
       : []
   }, [chainId, history, vaultList])
 
-  if (!account)
+  if (!balanceData || balanceData.length === 0) {
     return (
       <Container disableGutters sx={{ mt: 48 }}>
-        <NoDataCard />
+        <NoDataCard height={account ? '40vh' : undefined} />
       </Container>
     )
+  }
+
   return (
     <>
-      <ActionModal isOpen={isDepositOpen} onDismiss={handleDismiss} token={currentCurrency} type={ActionType.DEPOSIT} />
-      <ActionModal
-        isOpen={isWithdrawOpen}
-        onDismiss={handleDismiss}
-        type={ActionType.WITHDRAW}
-        token={currentCurrency}
-      />
       <Box width="100%" mt={48} display="flex" flexDirection="column" gap={19}>
         <Card>
           <Box width="100%" padding="38px 24px" display="flex" flexDirection="column" gap={36}>
@@ -209,24 +178,6 @@ export default function Dashboard() {
             {/*  Deposit funds to your Dual Investment account, you can withdraw available amount at any time*/}
             {/*</Typography>*/}
             <Box position="relative">
-              {!accountRecord && (
-                <Box
-                  position="absolute"
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  sx={{
-                    width: '100%',
-                    height: '100%',
-                    background: '#ffffff',
-                    zIndex: 3,
-                    borderRadius: 2
-                  }}
-                >
-                  <Spinner size={60} />
-                </Box>
-              )}
-
               {/*{isDownMd ? (*/}
               {/*  <InvestmentValueCard*/}
               {/*    value={toLocaleNumberString(totalInvest, 6)}*/}
@@ -269,65 +220,14 @@ export default function Dashboard() {
               {/*    </OutlineButton>*/}
               {/*  </NumericalCard>*/}
               {/*)}*/}
-
-              {balanceData && isDownMd ? (
+              {isDownMd ? (
                 <AccountBalanceCards data={balanceData} />
-              ) : balanceData ? (
-                <Table header={BalanceTableHeader} rows={balanceData} />
               ) : (
-                <NoDataCard height="20vh" />
+                <Table header={BalanceTableHeader} rows={balanceData} />
               )}
             </Box>
           </Box>
         </Card>
-
-        {/*<Card>*/}
-        {/*  <Box padding="38px 24px" display="flex" flexDirection="column" gap={36}>*/}
-        {/*    <Typography fontSize={24} fontWeight={700}>*/}
-        {/*      Account Details*/}
-        {/*    </Typography>*/}
-        {/*    <Box position="relative">*/}
-        {/*      {!accountRecord && (*/}
-        {/*        <Box*/}
-        {/*          position="absolute"*/}
-        {/*          display="flex"*/}
-        {/*          justifyContent="center"*/}
-        {/*          alignItems="center"*/}
-        {/*          sx={{*/}
-        {/*            width: '100%',*/}
-        {/*            height: '100%',*/}
-        {/*            background: '#ffffff',*/}
-        {/*            zIndex: 3,*/}
-        {/*            borderRadius: 2*/}
-        {/*          }}*/}
-        {/*        >*/}
-        {/*          <Spinner size={60} />*/}
-        {/*        </Box>*/}
-        {/*      )}*/}
-
-        {/*      /!*{accountDetailsData.length > 0 ? (*!/*/}
-        {/*      /!*  <>*!/*/}
-        {/*      /!*    {isDownMd ? (*!/*/}
-        {/*      /!*      <AccountDetailCards data={accountDetailsData} />*!/*/}
-        {/*      /!*    ) : (*!/*/}
-        {/*      /!*      <Table header={DetailTableHeader} rows={accountDetailsData} />*!/*/}
-        {/*      /!*    )}*!/*/}
-
-        {/*      /!*    <Pagination*!/*/}
-        {/*      /!*      count={pageParams?.count}*!/*/}
-        {/*      /!*      page={page}*!/*/}
-        {/*      /!*      perPage={pageParams?.perPage}*!/*/}
-        {/*      /!*      boundaryCount={0}*!/*/}
-        {/*      /!*      total={pageParams.total}*!/*/}
-        {/*      /!*      onChange={handlePage}*!/*/}
-        {/*      /!*    />*!/*/}
-        {/*      /!*  </>*!/*/}
-        {/*      /!*) : (*!/*/}
-        {/*      /!*  <NoDataCard height="20vh" />*!/*/}
-        {/*      /!*)}*!/*/}
-        {/*    </Box>*/}
-        {/*  </Box>*/}
-        {/*</Card>*/}
       </Box>
     </>
   )
@@ -364,76 +264,6 @@ function AccountBalanceCards({ data }: { data: any[][] }) {
     </Box>
   )
 }
-
-// function AccountDetailCards({ data }: { data: any[][] }) {
-//   return (
-//     <Box display="flex" flexDirection="column" gap={8} mb={24}>
-//       {data.map((dataRow, idx) => (
-//         <Card color="#F2F5FA" padding="17px 16px" key={`detail-row-${idx}`}>
-//           <Box display="flex" flexDirection="column" gap={16}>
-//             {dataRow.map((datum, idx2) => {
-//               return (
-//                 <Box key={`detail-row-${idx}-datum-${idx2}`} display="flex" justifyContent="space-between">
-//                   <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }} component="div">
-//                     {DetailTableHeader[idx2]}
-//                   </Typography>
-//                   <Typography fontSize={12} fontWeight={600} component="div">
-//                     {datum}
-//                   </Typography>
-//                 </Box>
-//               )
-//             })}
-//           </Box>
-//           <Box
-//             borderRadius={22}
-//             bgcolor="rgba(17, 191, 45, 0.16)"
-//             width="100%"
-//             height={36}
-//             display="flex"
-//             alignItems="center"
-//             justifyContent="center"
-//             mt={20}
-//           >
-//             <Typography fontSize={14} color="#11BF2D" textAlign="center" component="div">
-//               Completed
-//             </Typography>
-//           </Box>
-//         </Card>
-//       ))}
-//     </Box>
-//   )
-// }
-
-// function BalanceActions({
-//   onDeposit,
-//   onWithdraw,
-//   buyHref
-// }: {
-//   onDeposit: () => void
-//   onWithdraw: () => void
-//   buyHref: string
-// }) {
-//   const isDownMd = useBreakpoint('md')
-//
-//   return (
-//     <Box display="flex" key="action" gap={10} pl={isDownMd ? 0 : 20} component="div">
-//       <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onDeposit}>
-//         Deposit
-//       </Button>
-//       <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onWithdraw}>
-//         Withdraw
-//       </Button>
-//       <OutlineButton
-//         href={buyHref}
-//         fontSize={14}
-//         style={{ width: 72, borderRadius: 4, height: 36, backgroundColor: '#ffffff' }}
-//         primary
-//       >
-//         Swap
-//       </OutlineButton>
-//     </Box>
-//   )
-// }
 
 function VaultActions({ onVisit }: { onVisit: () => void }) {
   const isDownMd = useBreakpoint('md')

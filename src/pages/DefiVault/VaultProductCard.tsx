@@ -41,7 +41,7 @@ export default function VaultProductCard({
         width: '100%'
       }}
     >
-      <ChainTag chainId={onChain} />
+      <ChainTag chainId={onChain} isCall={product?.type === 'CALL'} />
 
       <CurrencyLogo
         currency={SUPPORTED_CURRENCIES[product?.investCurrency ?? '']}
@@ -132,10 +132,10 @@ function TextCard({
   )
 }
 
-function ChainTag({ chainId }: { chainId: ChainId }) {
+function ChainTag({ chainId, isCall }: { chainId: ChainId; isCall: boolean }) {
   return (
     <Box
-      bgcolor="rgba(49, 176, 71, 0.2)"
+      bgcolor={isCall ? 'rgba(49, 176, 71, 0.2)' : 'rgba(214, 80, 73, 0.2)'}
       borderRadius="10px"
       padding="7px 14px"
       width="fit-content"
@@ -148,8 +148,13 @@ function ChainTag({ chainId }: { chainId: ChainId }) {
         alt={`${ChainListMap[chainId]?.name} logo`}
         style={{ width: 14, height: 14 }}
       />
-      <Typography color="#31B047" sx={{ letterSpacing: 2.4 }}>
-        {ChainListMap[chainId]?.name}
+      <Typography
+        color={isCall ? '#31B047' : '#D65049'}
+        sx={{ letterSpacing: 2, transformOrigin: '50% 50%', transform: 'scale(1, 0.9) translateY(1px)' }}
+        fontSize={11}
+        fontWeight={500}
+      >
+        {ChainListMap[chainId]?.name?.toUpperCase()}
       </Typography>
     </Box>
   )

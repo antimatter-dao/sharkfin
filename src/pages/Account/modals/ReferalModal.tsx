@@ -14,7 +14,7 @@ import { useActiveWeb3React } from 'hooks'
 
 export default function ReferalModal({ showRedirectButton = true }: { showRedirectButton?: boolean }) {
   const { account } = useActiveWeb3React()
-  const [link] = useState(window.location.origin.toString() + '/#/' + account)
+  const [link] = useState('https://invest.antimatter.finance' + '/#/' + account)
   const [, setCopied] = useCopyClipboard()
   const history = useHistory()
   const { hideModal } = useModal()

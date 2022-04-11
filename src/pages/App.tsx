@@ -8,22 +8,14 @@ import Web3ReactManager from '../components/essential/Web3ReactManager'
 import WarningModal from '../components/Modal/WarningModal'
 import { ModalProvider } from 'context/ModalContext'
 import { routes } from 'constants/routes'
-import DualInvest from './DualInvest'
-import DualInvestMgmt from './DualInvestMgmt'
 import NoService from './NoService'
 import Spinner from 'components/Spinner'
 import { fetchLocation } from 'utils/fetch/location'
 import Account from './Account'
 import { BindModalProvider } from 'context/BindContext'
-// import Home from './Home'
-// import ChainOption from './ChainOption'
-// import ChainOptionMgmt from './ChainOptionMgmt'
 import DefiVault from './DefiVault'
 import DefiVaultMgmt from './DefiVaultMgmt'
-import RecurringVault from './RecurringVault'
-import RecurringVaultMgmt from './RecurringVaultMgmt'
 import { IS_TEST_NET } from 'constants/chain'
-// import Footer from 'components/Footer'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -74,20 +66,11 @@ export default function App() {
                 <BindModalProvider>
                   <LocatoinVerification resource={resource}>
                     <Switch>
-                      {/* <Route exact strict path={routes.chainOption} component={ChainOption} />
-                      <Route exact strict path={routes.chainOptionTyped} component={ChainOption} />
-                      <Route exact strict path={routes.chainOptionMgmt} component={ChainOptionMgmt} /> */}
                       <Route exact strict path={routes.noService} component={NoService} />
                       <Route exact strict path={routes.accountTab} component={Account} />
-                      <Route exact strict path={routes.accountTabType} component={Account} />
 
-                      <Route exact strict path={routes.dualInvest} component={DualInvest} />
-                      <Route exact strict path={routes.dualInvestMgmt} component={DualInvestMgmt} />
                       <Route exact strict path={routes.defiVault} component={DefiVault} />
                       <Route exact strict path={routes.defiVaultMgmt} component={DefiVaultMgmt} />
-                      <Route exact strict path={routes.recurringVault} component={RecurringVault} />
-                      <Route exact strict path={routes.recurringVaultMgmt} component={RecurringVaultMgmt} />
-                      {/*<Route exact strict path={routes.home} component={Home} />*/}
                       <Route exact strict path={routes.referral} component={DefiVault} />
                       <Route path="/">
                         <Redirect to={routes.defiVault} />

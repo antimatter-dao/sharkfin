@@ -7,12 +7,6 @@ import { ReactComponent as AVAX } from 'assets/svg/avax.svg'
 import AVAXUrl from 'assets/svg/avax.svg'
 import { ReactComponent as MATIC } from 'assets/svg/matic.svg'
 import MATICUrl from 'assets/svg/matic.svg'
-import { ReactComponent as AVAXBg } from 'assets/svg/avax_bg.svg'
-import { ReactComponent as BSCBg } from 'assets/svg/bsc_bg.svg'
-import { ReactComponent as ETHBg } from 'assets/svg/eth_bg.svg'
-import { ReactComponent as AVAXBgFilled } from 'assets/svg/avax_bg_filled.svg'
-import { ReactComponent as ETHBgFilled } from 'assets/svg/eth_bg_filled.svg'
-import { ReactComponent as BSCBgFilled } from 'assets/svg/bsc_bg_filled.svg'
 import { toHex } from 'web3-utils'
 
 export enum ChainId {
@@ -196,22 +190,4 @@ export const SUPPORTED_NETWORKS: {
     rpcUrls: ['https://kovan.infura.io/v3/'],
     blockExplorerUrls: ['https://kovan.etherscan.io/']
   }
-}
-
-export const ChainsBgImgs: { [key in ChainId]?: JSX.Element } = {
-  [ChainId.AVAX]: <AVAXBg />,
-  [ChainId.BSC]: <BSCBg />,
-  [ChainId.MAINNET]: <ETHBg />,
-  [ChainId.RINKEBY]: <AVAXBg />,
-  [ChainId.ROPSTEN]: <BSCBg />,
-  [ChainId.KOVAN]: <ETHBg />
-}
-
-export const ChainsBgImgsFilled: { [key in ChainId]?: JSX.Element } = {
-  [ChainId.AVAX]: <AVAXBgFilled />,
-  [ChainId.MAINNET]: <ETHBgFilled />,
-  [ChainId.RINKEBY]: <AVAXBgFilled />,
-  [ChainId.ROPSTEN]: <BSCBgFilled />,
-  [ChainId.BSC]: <BSCBgFilled />,
-  [ChainId.KOVAN]: <ETHBgFilled />
 }

@@ -5,7 +5,7 @@ import Tabs from 'components/Tabs/Tabs'
 import Image from 'components/Image'
 import Dashboard from './Dashboard'
 //import Position from './Position/index'
-import History from './History/index'
+import History from './History'
 //import Referral from './Referral'
 // import dashboardUrl from 'assets/images/dashboard.png'
 import positionUrl from 'assets/images/position.png'
@@ -15,23 +15,19 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import { routes } from 'constants/routes'
 
 export enum AccountTabs {
-  dashboard = 0,
-  position = 1,
-  referral = 2,
-  history = 3
+  position = 0,
+  history = 1
 }
 
 export const AccountTabsRoute = {
-  [AccountTabs.dashboard]: 'dashboard',
   [AccountTabs.position]: 'position',
-  [AccountTabs.referral]: 'referral',
   [AccountTabs.history]: 'history'
 }
 
 export default function Account() {
   const history = useHistory()
   const { tab } = useParams<{ tab: string }>()
-  const [currentTab, setCurrentTab] = useState(AccountTabs.dashboard)
+  const [currentTab, setCurrentTab] = useState(AccountTabs.position)
 
   const handleTabClick = useCallback(
     tabNum => {
@@ -63,7 +59,7 @@ export default function Account() {
           <Tab text="Position" iconUrl={positionUrl} key="dashboard" />,
           <Tab text="History" iconUrl={historyUrl} key="history" />
         ]}
-        contents={[<Dashboard key="dashboard" />, <History key="history" />]}
+        contents={[<Dashboard key="position" />, <History key="history" />]}
         tabPadding="18px 0"
       />
     </Box>

@@ -30,13 +30,11 @@ export const Tabs: Tab[] = [
     title: 'Invest',
     subTab: [
       { title: 'Defi Option Vault', route: routes.defiVault },
-      { title: 'Dual Investment', route: routes.dualInvest },
-      // { title: 'Chain-type Option', route: routes.chainOption },
-      { title: 'Recurring Strategy', route: routes.recurringVault }
+      { title: 'Dual Investment', link: 'https://invest.antimatter.finance/#/dual-invest' },
+      { title: 'Recurring Strategy', link: 'https://invest.antimatter.finance/#/recurring-vault' }
     ]
   },
-  // { title: 'Dual Investment', route: routes.dualInvest },
-  { title: 'Position', route: routes.accountTab.replace(':tab', 'dashboard') },
+  { title: 'Position', route: routes.accountTab.replace(':tab', 'position') },
   { title: 'DAO', link: 'https://dao.antimatter.finance/#/' },
   { title: 'Docs', link: 'https://docs.antimatter.finance/' },
   {
@@ -130,7 +128,7 @@ const Filler = styled('div')(({ theme }) => ({
   }
 }))
 
-const MainLogo = styled(NavLink)(({ theme }) => ({
+const MainLogo = styled(ExternalLink)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   '& img': {
@@ -174,9 +172,10 @@ export default function Header() {
       <Filler />
       <StyledAppBar>
         <Box display="flex" alignItems="center">
-          <MainLogo id={'antimatter'} to={'/'}>
+          <MainLogo id={'antimatter'} href={'https://invest.antimatter.finance/'} target="">
             <Image src={antimatter} alt={'antimatter'} />
           </MainLogo>
+
           <HideOnMobile breakpoint="md">
             <LinksWrapper>
               {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
