@@ -23,11 +23,9 @@ export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
   ? parseInt(process.env.REACT_APP_CHAIN_ID)
   : ChainId.BSC
 
-export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.ROPSTEN)
+export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.KOVAN)
 
-export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET
-  ? [ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.KOVAN, ChainId.AVAX, ChainId.MAINNET, ChainId.MATIC]
-  : [ChainId.BSC, ChainId.AVAX, ChainId.MAINNET, ChainId.MATIC, ChainId.KOVAN]
+export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET ? [ChainId.KOVAN, ChainId.MAINNET] : [ChainId.MAINNET]
 
 export const ChainList: Chain[] = [
   ...(IS_TEST_NET
@@ -121,7 +119,7 @@ export const SUPPORTED_NETWORKS: {
       symbol: 'ETH',
       decimals: 18
     },
-    rpcUrls: ['https://mainnet.infura.io/v3'],
+    rpcUrls: ['https://mainnet.infura.io/v3/d49aedc5c8d04128ab366779756cfacd'],
     blockExplorerUrls: ['https://etherscan.io']
   },
   [ChainId.ROPSTEN]: {
@@ -132,7 +130,7 @@ export const SUPPORTED_NETWORKS: {
       symbol: 'ETH',
       decimals: 18
     },
-    rpcUrls: ['https://ropsten.infura.io/v3/'],
+    rpcUrls: ['https://ropsten.infura.io/v3/ab440a3a67f74b6b8a0a8e8e13a76a52'],
     blockExplorerUrls: ['https://ropsten.etherscan.io']
   },
   [ChainId.BSC]: {
@@ -165,7 +163,7 @@ export const SUPPORTED_NETWORKS: {
       symbol: 'ETH',
       decimals: 18
     },
-    rpcUrls: ['https://rinkeby.infura.io/v3/'],
+    rpcUrls: ['https://rinkeby.infura.io/v3/ab440a3a67f74b6b8a0a8e8e13a76a52'],
     blockExplorerUrls: ['https://rinkeby.etherscan.io']
   },
   [ChainId.MATIC]: {
@@ -187,7 +185,7 @@ export const SUPPORTED_NETWORKS: {
       symbol: 'ETH',
       decimals: 18
     },
-    rpcUrls: ['https://kovan.infura.io/v3/'],
+    rpcUrls: ['https://kovan.infura.io/v3/ab440a3a67f74b6b8a0a8e8e13a76a52'],
     blockExplorerUrls: ['https://kovan.etherscan.io/']
   }
 }
