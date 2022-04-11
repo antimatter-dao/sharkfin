@@ -1,6 +1,15 @@
 import React, { useState, useCallback } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
-import { AppBar, Box, IconButton, MenuItem, styled as muiStyled, styled, Button as MuiButton } from '@mui/material'
+import {
+  AppBar,
+  Box,
+  IconButton,
+  MenuItem,
+  styled as muiStyled,
+  styled,
+  Button as MuiButton,
+  Typography
+} from '@mui/material'
 import { ExternalLink } from 'theme/components'
 import Web3Status from './Web3Status'
 import { HideOnMobile, ShowOnMobile } from 'theme/index'
@@ -59,10 +68,10 @@ export const Tabs: Tab[] = [
 const navLinkSX = ({ theme }: any) => ({
   textDecoration: 'none',
   fontSize: 14,
-  color: theme.palette.text.primary,
-  opacity: 0.5,
+  color: theme.palette.text.primary + '!important',
+  opacity: 0.5 + '!important',
   '&:hover': {
-    opacity: 1
+    opacity: 1 + '!important'
   }
 })
 
@@ -219,14 +228,16 @@ export default function Header() {
                             <ExternalLink
                               href={sub.link}
                               className={'link'}
-                              color="#00000050"
+                              color={'#25252570'}
                               sx={{
                                 '&:hover': {
-                                  color: '#232323!important'
-                                }
+                                  color: '#252525!important'
+                                },
+                                ...navLinkSX,
+                                fontSize: 14
                               }}
                             >
-                              {sub.titleContent ?? sub.title}
+                              <Typography> {sub.titleContent ?? sub.title}</Typography>
                             </ExternalLink>
                           </MenuItem>
                         ) : (

@@ -27,7 +27,7 @@ export function ExternalLink({
   target = '_blank',
   href,
   rel = 'noopener noreferrer',
-  style,
+  // style,
   sx,
   children,
   underline,
@@ -35,7 +35,6 @@ export function ExternalLink({
   color
 }: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & {
   href: string
-  style?: React.CSSProperties
   sx?: SxProps<Theme>
   underline?: 'always' | 'hover' | 'none'
   color?: string
@@ -56,10 +55,8 @@ export function ExternalLink({
       rel={rel}
       href={href}
       onClick={handleClick}
-      style={style}
       sx={{
         color: color ? color + '!important' : undefined,
-
         ...sx
       }}
       underline={underline ?? 'none'}
