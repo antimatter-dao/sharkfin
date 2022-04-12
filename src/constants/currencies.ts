@@ -8,7 +8,7 @@ import LUNALogo from 'assets/svg/luna.svg'
 import MATICLogo from 'assets/svg/matic.svg'
 import CAKELogo from 'assets/svg/cake.svg'
 import USDCLogo from 'assets/svg/usdc.svg'
-import { ChainId, ChainList } from './chain'
+import { ChainId, ChainList, IS_TEST_NET } from './chain'
 
 export const SYMBOL_MAP = {
   BTC: 'BTC',
@@ -240,11 +240,12 @@ export const CURRENCY_ADDRESS_MAP = Object.keys(SUPPORTED_CURRENCIES).reduce((ac
   return acc
 }, {} as { [key: string]: Token })
 
-export const SUPPORTED_DEFI_VAULT: { [chainId in ChainId]?: string[] } = {
-  [ChainId.AVAX]: ['AVAX'],
-  // [ChainId.MAINNET]: ['ETH', 'BTC'],
-  [ChainId.KOVAN]: ['ETH']
-}
+export const SUPPORTED_DEFI_VAULT: { [chainId in ChainId]?: string[] } = IS_TEST_NET
+  ? { [ChainId.KOVAN]: ['ETH'], [ChainId.AVAX]: ['AVAX'] }
+  : {
+      [ChainId.MAINNET]: ['ETH'],
+      [ChainId.AVAX]: ['AVAX']
+    }
 
 export const DEFAULT_COIN_SYMBOL: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: 'ETH',

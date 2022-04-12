@@ -150,9 +150,9 @@ function ChainTag({ chainId, isCall }: { chainId: ChainId; isCall: boolean }) {
       />
       <Typography
         color={isCall ? '#31B047' : '#D65049'}
-        sx={{ letterSpacing: 2, transformOrigin: '50% 50%', transform: 'scale(1, 0.9) translateY(1px)' }}
+        sx={{ letterSpacing: 2, transformOrigin: '50% 50%', transform: 'scale(1, 0.92)' }}
         fontSize={11}
-        fontWeight={500}
+        fontWeight={700}
       >
         {ChainListMap[chainId]?.name?.toUpperCase()}
       </Typography>
