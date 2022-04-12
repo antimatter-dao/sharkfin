@@ -137,7 +137,7 @@ const Filler = styled('div')(({ theme }) => ({
   }
 }))
 
-const MainLogo = styled(ExternalLink)(({ theme }) => ({
+const MainLogo = styled(NavLink)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   '& img': {
@@ -181,7 +181,12 @@ export default function Header() {
       <Filler />
       <StyledAppBar>
         <Box display="flex" alignItems="center">
-          <MainLogo id={'antimatter'} href={'https://invest.antimatter.finance/'} target="">
+          <MainLogo
+            id={'antimatter'}
+            // href={'https://invest.antimatter.finance/'}
+            // target=""
+            to="/"
+          >
             <Image src={antimatter} alt={'antimatter'} />
           </MainLogo>
 
