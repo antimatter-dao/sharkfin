@@ -46,7 +46,7 @@ export function useHistoryRecords(pageNum: number) {
         reject(null)
       })
     return Axios.get<{ records: DefiRecord[] }>('getAccountRecord', {
-      account: account ? '0xafefc8f4ee804da7974fcb569d74dbe59e9a7534' : '0xafefc8f4ee804da7974fcb569d74dbe59e9a7534',
+      account: account,
       pageSize: 999999
     })
   }, [account])
