@@ -158,7 +158,7 @@ export default function Dashboard() {
       : []
   }, [chainId, history, vaultList])
 
-  if (!balanceData || balanceData.length === 0) {
+  if (!account) {
     return (
       <Container disableGutters sx={{ mt: 48 }}>
         <NoDataCard height={account ? '40vh' : undefined} />
@@ -172,7 +172,7 @@ export default function Dashboard() {
         <Card>
           <Box width="100%" padding="38px 24px" display="flex" flexDirection="column" gap={36}>
             <Typography fontSize={{ xs: 20, sm: 24 }} fontWeight={700}>
-              Vault Detail
+              Vault Details
             </Typography>
             {/*<Typography sx={{ color: theme => theme.palette.text.secondary, mt: 8 }}>*/}
             {/*  Deposit funds to your Dual Investment account, you can withdraw available amount at any time*/}
@@ -220,7 +220,9 @@ export default function Dashboard() {
               {/*    </OutlineButton>*/}
               {/*  </NumericalCard>*/}
               {/*)}*/}
-              {isDownMd ? (
+              {!balanceData || balanceData.length === 0 ? (
+                <NoDataCard height="20vh" />
+              ) : isDownMd ? (
                 <AccountBalanceCards data={balanceData} />
               ) : (
                 <Table header={BalanceTableHeader} rows={balanceData} />
