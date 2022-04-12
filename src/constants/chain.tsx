@@ -25,7 +25,9 @@ export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
 
 export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.KOVAN)
 
-export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET ? [ChainId.KOVAN, ChainId.MAINNET] : [ChainId.MAINNET]
+export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET
+  ? [ChainId.KOVAN, ChainId.MAINNET, ChainId.AVAX]
+  : [ChainId.MAINNET, ChainId.AVAX]
 
 export const ChainList: Chain[] = [
   ...(IS_TEST_NET
