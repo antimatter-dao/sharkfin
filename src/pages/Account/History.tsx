@@ -19,27 +19,7 @@ import Pagination from 'components/Pagination'
 import { SUPPORTED_CURRENCIES, SYMBOL_MAP } from 'constants/currencies'
 import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
 
-//enum HistoryMoreHeaderIndex {
-//   OrderID,
-//   ProductID,
-//   SettlementPrice,
-//   SettlementTime,
-//   Status,
-//   Share
-// }
-
-const HistoryTableHeader = [
-  'Invest Amount',
-  'APY',
-  'Subscribed Time',
-  'Strike Price',
-  'Exercise',
-  'Holding Days',
-  'Execute Amount',
-  'Delivery Date'
-]
-
-const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
+const DetailTableHeader = ['Type', 'Vault', 'Amount', 'Date']
 
 export default function HistoryDualInvest() {
   const [page, setPage] = useState(1)
@@ -51,7 +31,7 @@ export default function HistoryDualInvest() {
   const handlePage = useCallback((event, value) => setPage(value), [])
 
   const data = useMemo(() => {
-    if (!records) return []
+    if (!records) return undefined
 
     return records.map(record => {
       const scanLink = getEtherscanLink(record.chainId, record.hash, 'transaction')
@@ -123,7 +103,7 @@ export default function HistoryDualInvest() {
               </Box>
             )}
 
-            {data.length > 0 ? (
+            {data && data.length > 0 ? (
               <>
                 {isDownMd ? <AccountDetailCards data={data} /> : <Table header={DetailTableHeader} rows={data} />}
 
@@ -156,7 +136,7 @@ function AccountDetailCards({ data }: { data: any[][] }) {
               return (
                 <Box key={`detail-row-${idx}-datum-${idx2}`} display="flex" justifyContent="space-between">
                   <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }} component="div">
-                    {HistoryTableHeader[idx2]}
+                    {DetailTableHeader[idx2]}
                   </Typography>
                   <Typography fontSize={12} fontWeight={600} component="div">
                     {datum}

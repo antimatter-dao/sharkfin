@@ -140,11 +140,11 @@ export default function Dashboard() {
             const investCurrency = chainId ? SUPPORTED_CURRENCIES[vault.investCurrency] : undefined
             return [
               <TokenHeader key={index} token={token} type={vault.type} investToken={investCurrency} />,
-              '20%',
+              vault.apy,
               vault?.totalBalance ?? '-',
               vault?.totalBalance && vault?.balance
                 ? `${Number((Number(vault.balance) / vault.totalBalance).toFixed(2)) * 100}%`
-                : '-',
+                : '0%',
               <VaultActions
                 key={index}
                 onVisit={() => {

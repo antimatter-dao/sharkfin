@@ -39,7 +39,7 @@ enum DefiProductDataOrder {
   totalBalance
 }
 
-const APY = '100%'
+const APY = '20%'
 
 export function useSingleDefiVault(chainName: string, currency: string, type: string): DefiProduct | null {
   const { account } = useActiveWeb3React()
