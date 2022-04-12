@@ -151,12 +151,12 @@ export default function DefiVault() {
                     })
                   }
                   acc.push(
-                    <MenuItem value={formatAssetVal(+chainId, 'USDT')} key={formatAssetVal(+chainId, 'USDT')}>
+                    <MenuItem value={formatAssetVal(+chainId, 'USDC')} key={formatAssetVal(+chainId, ' USDC')}>
                       {' '}
                       <Box display="flex" alignItems={'center'} gap={10}>
-                        <CurrencyLogo currency={SUPPORTED_CURRENCIES['USDT']} size={'22px'} />
+                        <CurrencyLogo currency={SUPPORTED_CURRENCIES['USDC']} size={'22px'} />
                         <Box>
-                          USDT{' '}
+                          USDC{' '}
                           <Typography component="span" fontSize={12}>
                             ({ChainListMap[+chainId as ChainId].name})
                           </Typography>
