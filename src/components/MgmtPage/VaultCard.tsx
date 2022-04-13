@@ -166,7 +166,7 @@ export default function VaultCard(props: Props) {
                 >
                   <Box display="grid" gap={16} width="100%" height="100px" margin="20px 0">
                     {[
-                      { title: 'APY', data: product?.apy ?? '-' },
+                      { title: 'Approximate APY', data: product?.apy ?? '-' },
                       {
                         title: 'Selected Option Strike Price',
                         data: (product?.strikePrice ?? '-') + ' USDT'

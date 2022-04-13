@@ -60,7 +60,7 @@ export default function VaultProductCard({
             justifyContent={'space-between'}
             alignItems="center"
           >
-            <TextCard subTextBold color={color} text={product?.apy ?? '-'} subText="Current APY" />
+            <TextCard subTextBold color={color} text={product?.apy ?? '-'} subText="Approximate APY" />
             <Box display="flex" alignItems={'center'} justifyContent="space-between">
               <TextCard
                 subTextBold

@@ -16,11 +16,10 @@ import { ChainListMap, NETWORK_CHAIN_ID } from 'constants/chain'
 
 enum BalanceTableHeaderIndex {
   token,
-  available,
-  amount,
-  cumulativeInvest,
-  pnl,
-  recurring,
+  apy,
+  size,
+  position,
+  deposit,
   actions
 }
 
@@ -31,7 +30,7 @@ enum BalanceTableHeaderIndex {
 //   4: 'vault withdraw'
 // }
 
-const BalanceTableHeader = ['', 'Current apy', 'Vault size', 'Your Position', 'Your Deposit', '']
+const BalanceTableHeader = ['', 'Approximate apy', 'Vault size', 'Your Position', 'Your Deposit', '']
 // const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
 
 function TokenHeader({
@@ -143,12 +142,17 @@ export default function Position() {
             const token = chainId ? SUPPORTED_CURRENCIES[vault.currency] : undefined
             const investCurrency = chainId ? SUPPORTED_CURRENCIES[vault.investCurrency] : undefined
             return [
-              <TokenHeader key={index} token={token} type={vault.type} investToken={investCurrency} />,
+              <TokenHeader
+                key={vault.chainId + vault.type + vault.currency}
+                token={token}
+                type={vault.type}
+                investToken={investCurrency}
+              />,
               vault.apy,
               vault?.totalBalance ?? '-',
-              vault?.totalBalance && vault?.balance
-                ? `${Number((Number(vault.balance) / vault.totalBalance).toFixed(2)) * 100}%`
-                : '0%',
+              vault?.totalBalance && vault.depositAmount
+                ? `${Number((Number(vault.depositAmount) / vault.totalBalance).toFixed(6)) * 100}%`
+                : '-',
               (vault?.depositAmount ?? '-') + ' ' + (vault?.investCurrency ?? '-'),
               <VaultActions
                 key={index}

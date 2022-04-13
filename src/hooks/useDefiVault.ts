@@ -192,7 +192,7 @@ const callsFactory = (contract: Contract | null, account: string | null | undefi
     contract?.decimals(),
     contract?.cap(),
     contract?.totalBalance(),
-    contract?.depositReceipts(account)
+    account ? contract?.depositReceipts(account) : null
   ])
 }
 
