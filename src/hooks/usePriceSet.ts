@@ -11,6 +11,7 @@ export function usePriceSet(symbol: string | undefined) {
   const price = usePrice(symbol)
 
   useEffect(() => {
+    let mounted = true
     if (!symbol) return
     // const id = setInterval(() => {
     fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}USDT&interval=1d&limit=16`, {
@@ -22,15 +23,18 @@ export function usePriceSet(symbol: string | undefined) {
         return r.clone().json()
       })
       .then(json => {
-        const formatted = priceFormatter(json)
-        setPriceSetList(formatted)
+        if (mounted) {
+          const formatted = priceFormatter(json)
+          setPriceSetList(formatted)
+        }
       })
       .catch(e => console.error(e))
     // }, 3000)
 
-    // return () => {
-    //   clearInterval(id)
-    // }
+    return () => {
+      mounted = false
+      // clearInterval(id)
+    }
   }, [symbol])
 
   useEffect(() => {

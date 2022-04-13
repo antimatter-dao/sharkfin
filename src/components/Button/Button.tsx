@@ -1,5 +1,5 @@
 import React from 'react'
-import { ButtonBase, Theme, useTheme } from '@mui/material'
+import { ButtonBase, Theme, useTheme, darken, lighten } from '@mui/material'
 import { SxProps } from '@mui/system'
 
 interface Props {
@@ -35,10 +35,10 @@ export default function Button(props: Props) {
         backgroundColor: backgroundColor || theme.palette.primary.main,
         color: color || theme.palette.primary.contrastText,
         '&:hover': {
-          backgroundColor: theme.palette.primary.dark
+          backgroundColor: backgroundColor ? darken(backgroundColor, 0.13) : theme.palette.primary.dark
         },
         '&:disabled': {
-          backgroundColor: theme.palette.primary.light
+          backgroundColor: backgroundColor ? lighten(backgroundColor, 0.1) : theme.palette.primary.light
         },
         ...style
       }}

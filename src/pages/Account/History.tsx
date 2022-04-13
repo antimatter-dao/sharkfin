@@ -64,7 +64,7 @@ export default function HistoryDualInvest() {
             </Box>
           </ExternalLink>
         </Box>,
-        dayjs(new Date(+record.timestamp * 1000).toUTCString()).format('MMM DD, YYYY hh:mm:ss A') + ' UTC',
+        dayjs(new Date(+record.timestamp * 1000).toUTCString()).format('MMM DD, YYYY') + ' 08:00:00 AM UTC',
         <>{!isDownMd && <StatusTag key="status" status="completed" />}</>
       ]
     })

@@ -106,13 +106,13 @@ export default function VaultCard(props: Props) {
       str = ErrorType.insufficientBalance
     }
 
-    const now = Date.now()
-    const before = product.expiredAt - 7200000
-    const after = product.expiredAt + 1800000
+    // const now = Date.now()
+    // const before = product.expiredAt - 7200000
+    // const after = product.expiredAt + 1800000
 
-    if (now >= before && now < after) {
-      str = ErrorType.notAvailable
-    }
+    // if (now >= before && now < after) {
+    //   str = ErrorType.notAvailable
+    // }
 
     return str
   }, [product, walletBalance, standardWithdrawlStep, currentTab, amount])
@@ -173,7 +173,9 @@ export default function VaultCard(props: Props) {
                       },
                       {
                         title: 'Expiry Time',
-                        data: dayjs(product?.expiredAt).format('YYYY/MMM/DD HH:MM')
+                        data: product?.expiredAt
+                          ? dayjs(product.expiredAt).format('MMM DD, YYYY') + ' 08:00:00 AM UTC'
+                          : '-'
                       }
                     ].map(({ title, data }) => {
                       return (

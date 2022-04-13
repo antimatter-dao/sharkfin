@@ -1,6 +1,6 @@
 import { useMemo, useState, useCallback, ReactElement } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
-import { Typography, Box, useTheme, styled } from '@mui/material'
+import { Typography, Box, useTheme, styled, Grid } from '@mui/material'
 import MgmtPage from 'components/MgmtPage'
 import { routes } from 'constants/routes'
 import { Subject } from 'components/MgmtPage/stableContent'
@@ -8,9 +8,8 @@ import TextButton from 'components/Button/TextButton'
 import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
 import DualInvestChart /*,{ PastAggrChart }*/ from 'pages/DualInvestMgmt/Chart'
-// import Card from 'components/Card/Card'
-// import dayjs from 'dayjs'
-// import { PrevRecur } from 'utils/fetch/recur'
+import Card from 'components/Card/Card'
+import dayjs from 'dayjs'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { useSingleDefiVault } from 'hooks/useDefiVault'
 
@@ -135,8 +134,8 @@ export default function DefiMgmt() {
           vaultForm={<VaultForm product={product} setAmount={handleInput} amount={investAmount} />}
           chart={chart}
         >
-          {/* <Grid xs={12} md={4} item>
-            <PrevCycleStats prevDetails={prevDetails} />
+          <Grid xs={12} md={4} item>
+            <PrevCycleStats prevDetails={undefined} />
           </Grid>
           {!isDownMd && (
             <Grid xs={12} md={8} item>
@@ -149,7 +148,7 @@ export default function DefiMgmt() {
                 </Box>
               </Card>
             </Grid>
-          )} */}
+          )}
         </MgmtPage>
       )}
     </>
@@ -254,49 +253,49 @@ function RecurringPolicyPage({ img, text }: { img: ReactElement<any, any>; text:
   )
 }
 
-// function PrevCycleStats({ prevDetails }: { prevDetails: PrevRecur | undefined }) {
-//   const theme = useTheme()
-//   const data = useMemo(
-//     () => ({
-//       ['APY']: prevDetails?.apy ?? '-',
-//       ['Strike Price']: `${prevDetails?.strikePrice ?? '-'} USDT`,
-//       ['Executed Price']: `${prevDetails?.deliveryPrice ?? '-'} USDT`,
-//       ['Status']: prevDetails?.status ?? '-',
-//       ['Your P&L']: prevDetails?.pnl ?? '-',
-//       ['Date']: prevDetails
-//         ? `From ${dayjs(prevDetails.ts).format('MMM DD, YYYY')} to ${dayjs(prevDetails.expiredAt).format(
-//             'MMM DD, YYYY'
-//           )}`
-//         : '-'
-//     }),
-//     [prevDetails]
-//   )
-//   return (
-//     <Card width={'100%'}>
-//       <Box display="flex" gap="21px" padding="28px" flexDirection="column" alignItems={'stretch'}>
-//         <Typography fontSize={24} fontWeight={700}>
-//           Previous Cycle Statistics
-//         </Typography>
+function PrevCycleStats({ prevDetails }: { prevDetails: any | undefined }) {
+  const theme = useTheme()
+  const data = useMemo(
+    () => ({
+      ['APY']: prevDetails?.apy ?? '-',
+      ['Strike Price']: `${prevDetails?.strikePrice ?? '-'} USDT`,
+      ['Executed Price']: `${prevDetails?.deliveryPrice ?? '-'} USDT`,
+      ['Status']: prevDetails?.status ?? '-',
+      ['Your P&L']: prevDetails?.pnl ?? '-',
+      ['Date']: prevDetails
+        ? `From ${dayjs(prevDetails.ts).format('MMM DD, YYYY')} to ${dayjs(prevDetails.expiredAt).format(
+            'MMM DD, YYYY'
+          )}`
+        : '-'
+    }),
+    [prevDetails]
+  )
+  return (
+    <Card width={'100%'}>
+      <Box display="flex" gap="21px" padding="28px" flexDirection="column" alignItems={'stretch'}>
+        <Typography fontSize={24} fontWeight={700}>
+          Previous Cycle Statistics
+        </Typography>
 
-//         {Object.keys(data).map((key, idx) => (
-//           <Box key={idx} display="flex" justifyContent={'space-between'}>
-//             <Typography fontSize={16} sx={{ opacity: 0.8 }}>
-//               {key}
-//             </Typography>
+        {Object.keys(data).map((key, idx) => (
+          <Box key={idx} display="flex" justifyContent={'space-between'}>
+            <Typography fontSize={16} sx={{ opacity: 0.8 }}>
+              {key}
+            </Typography>
 
-//             <Typography
-//               fontWeight={key === 'APY' || (key === 'Status' && data.Status === 'Exercised') ? 400 : 500}
-//               color={
-//                 key === 'APY' || (key === 'Status' && data.Status === 'Exercised')
-//                   ? theme.palette.primary.main
-//                   : theme.palette.text.primary
-//               }
-//             >
-//               {data[key as keyof typeof data]}
-//             </Typography>
-//           </Box>
-//         ))}
-//       </Box>
-//     </Card>
-//   )
-// }
+            <Typography
+              fontWeight={key === 'APY' || (key === 'Status' && data.Status === 'Exercised') ? 400 : 500}
+              color={
+                key === 'APY' || (key === 'Status' && data.Status === 'Exercised')
+                  ? theme.palette.primary.main
+                  : theme.palette.text.primary
+              }
+            >
+              {data[key as keyof typeof data]}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+    </Card>
+  )
+}

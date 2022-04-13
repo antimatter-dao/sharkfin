@@ -84,8 +84,6 @@ export default function VaultForm({
       ['Platform service fee']: feeRate,
       ['Spot Price']: (spotPrice ? trimNumberString(spotPrice, 2) : '-') + ' USDT',
       ['APY']: product?.apy ?? '-'
-      // ['Strike Price']: (product?.strikePrice ?? '-') + ' USDC'
-      // ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') + ' 08:30:00 AM UTC' : '-'
     }),
     [product?.apy, spotPrice]
   )

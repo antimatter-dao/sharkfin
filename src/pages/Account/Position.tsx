@@ -11,6 +11,8 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { SUPPORTED_CURRENCIES } from 'constants/currencies'
 import { useDefiVaultList } from '../../hooks/useDefiVault'
+import { routes } from 'constants/routes'
+import { ChainListMap, NETWORK_CHAIN_ID } from 'constants/chain'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -29,7 +31,7 @@ enum BalanceTableHeaderIndex {
 //   4: 'vault withdraw'
 // }
 
-const BalanceTableHeader = ['', 'Current apy', 'Vault size', 'Your shares']
+const BalanceTableHeader = ['', 'Current apy', 'Vault size', 'Your Position', 'Your Deposit', '']
 // const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
 
 function TokenHeader({
@@ -147,12 +149,18 @@ export default function Position() {
               vault?.totalBalance && vault?.balance
                 ? `${Number((Number(vault.balance) / vault.totalBalance).toFixed(2)) * 100}%`
                 : '0%',
+              (vault?.depositAmount ?? '-') + ' ' + (vault?.investCurrency ?? '-'),
               <VaultActions
                 key={index}
                 onVisit={() => {
                   // setCurrentCurrency(CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key])
                   // handleDepositOpen()
-                  history.push(`/defi-vault-mgmt/Kovan/ETH/${vault.type}`)
+                  history.push(
+                    routes.defiVaultMgmt
+                      .replace(':currency', vault.currency ?? '')
+                      .replace(':type', vault.type)
+                      .replace(':chainName', ChainListMap[vault?.chainId ?? NETWORK_CHAIN_ID].symbol)
+                  )
                 }}
               />
             ]

@@ -30,13 +30,15 @@ export interface DefiProduct {
   initiateBalance?: string
   cap?: number
   totalBalance?: number
+  depositAmount?: string
 }
 
 enum DefiProductDataOrder {
   accountVaultBalance,
   decimals,
   cap,
-  totalBalance
+  totalBalance,
+  depositReceipts
 }
 
 const APY = '20%'
@@ -65,11 +67,17 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
   const price = useSingleCallResult(contract, 'roundPricePerShare', argPrice)
 
   useEffect(() => {
+    let mounted = true
     if (!optionAddress.result?.[0]) return
     ;(async () => {
       const price = await getStrikePrice(optionAddress.result?.[0], getOtherNetworkLibrary(+productChainId))
-      setStrikePrice(price)
+      if (mounted) {
+        setStrikePrice(price)
+      }
     })()
+    return () => {
+      mounted = false
+    }
   }, [optionAddress.result, productChainId])
 
   const result = useMemo(() => {
@@ -88,7 +96,6 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
               JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(10))
             )
           : undefined
-
       return {
         chainId: productChainId,
         type: type.toUpperCase() === 'CALL' ? 'CALL' : 'PUT',
@@ -152,17 +159,26 @@ export function useDefiVaultList() {
   }, [account])
 
   useEffect(() => {
+    let mounted = true
     ;(async () => {
       if (!promise) setDefiVaultList(defiVaultListUtil())
       try {
         const res = await promise
         const mappedRes = defiVaultListUtil(res)
-        setDefiVaultList(mappedRes)
+        if (mounted) {
+          setDefiVaultList(mappedRes)
+        }
       } catch (e) {
         console.error(e)
-        setDefiVaultList(null)
+        if (mounted) {
+          setDefiVaultList(null)
+        }
       }
     })()
+
+    return () => {
+      mounted = false
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [promise, blockNumber])
 
@@ -175,7 +191,8 @@ const callsFactory = (contract: Contract | null, account: string | null | undefi
     account ? contract?.accountVaultBalance(account) : null,
     contract?.decimals(),
     contract?.cap(),
-    contract?.totalBalance()
+    contract?.totalBalance(),
+    contract?.depositReceipts(account)
   ])
 }
 
@@ -202,16 +219,29 @@ const defiVaultListUtil = (res?: any[][]) => {
             : 100,
         totalBalance:
           resCall && resCall[DefiProductDataOrder.totalBalance] && resCall[DefiProductDataOrder.decimals]
-            ? +parsePrecision(
-                resCall[DefiProductDataOrder.totalBalance].toString(),
-                resCall[DefiProductDataOrder.decimals]
+            ? +trimNumberString(
+                parsePrecision(
+                  resCall[DefiProductDataOrder.totalBalance].toString(),
+                  resCall[DefiProductDataOrder.decimals]
+                ),
+                4
               )
             : 0,
         type: 'CALL',
         apy: APY,
         expiredAt: getExpireAt(),
         investCurrency: symbol,
-        strikePrice: '-'
+        strikePrice: '-',
+        depositAmount:
+          resCall && resCall[DefiProductDataOrder.depositReceipts] && resCall[DefiProductDataOrder.decimals]
+            ? parsePrecision(
+                JSBI.ADD(
+                  JSBI.BigInt(resCall[DefiProductDataOrder.depositReceipts].amount.toString()),
+                  JSBI.BigInt(resCall[DefiProductDataOrder.depositReceipts].unredeemedShares.toString())
+                ).toString(),
+                resCall[DefiProductDataOrder.decimals]
+              )
+            : '-'
       })
       const resPut = res?.[idx1][idx2 * 2 + 1]
       accMain.push({
@@ -233,16 +263,29 @@ const defiVaultListUtil = (res?: any[][]) => {
             : 100,
         totalBalance:
           resPut && resPut[DefiProductDataOrder.totalBalance] && resPut[DefiProductDataOrder.decimals]
-            ? +parsePrecision(
-                resPut[DefiProductDataOrder.totalBalance].toString(),
-                resPut[DefiProductDataOrder.decimals]
+            ? +trimNumberString(
+                parsePrecision(
+                  resPut[DefiProductDataOrder.totalBalance].toString(),
+                  resPut[DefiProductDataOrder.decimals]
+                ),
+                4
               )
             : 0,
         type: 'PUT',
         apy: APY,
         expiredAt: getExpireAt(),
         investCurrency: 'USDC',
-        strikePrice: '-'
+        strikePrice: '-',
+        depositAmount:
+          resPut && resPut[DefiProductDataOrder.depositReceipts] && resPut[DefiProductDataOrder.decimals]
+            ? parsePrecision(
+                JSBI.ADD(
+                  JSBI.BigInt(resPut[DefiProductDataOrder.depositReceipts].amount.toString()),
+                  JSBI.BigInt(resPut[DefiProductDataOrder.depositReceipts].unredeemedShares.toString())
+                ).toString(),
+                resPut[DefiProductDataOrder.decimals]
+              )
+            : '-'
       })
     })
 

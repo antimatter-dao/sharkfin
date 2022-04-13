@@ -95,7 +95,7 @@ export function LightQuestionHelper({ text }: { text: string }) {
 export function ExpireDateAQuestionHelper({ expireAt, showIcon }: { expireAt: number; showIcon: boolean }) {
   return (
     <QuestionHelper
-      text={dayjs(expireAt).format('MMM-DD-YYYY') + ' 08:30:00 AM UTC'}
+      text={dayjs(expireAt).format('MMM-DD-YYYY') + ' 08:00:00 AM UTC'}
       title={
         showIcon ? (
           undefined
