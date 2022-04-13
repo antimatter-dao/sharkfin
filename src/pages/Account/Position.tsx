@@ -45,7 +45,9 @@ function TokenHeader({
     <Box display="flex" alignItems="center" gap={16}>
       <CurrencyLogo currency={investToken} size="32px" />
       <Box>
-        <Typography fontSize={16}>{`${token?.symbol} Covered ${type === 'CALL' ? 'Call' : 'Put'} Option`}</Typography>
+        <Typography fontSize={16}>{`${token?.symbol} ${
+          type === 'CALL' ? 'Covered  Call' : 'Put Selling'
+        } Recurring Strategy`}</Typography>
         <Typography fontSize={12} sx={{}}>
           <span style={{ opacity: 0.5, fontSize: '12px' }}>{token?.name}</span>
         </Typography>
@@ -54,7 +56,7 @@ function TokenHeader({
   )
 }
 
-export default function Dashboard() {
+export default function Position() {
   // const [isDepositOpen, setIsDepositOpen] = useState(false)
   // const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
   // const [currentCurrency, setCurrentCurrency] = useState<Token | undefined>(undefined)

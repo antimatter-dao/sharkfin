@@ -88,8 +88,7 @@ export default function VaultForm({
       alignItems="flex-start"
     >
       <Box display="grid" gap="30px" width={'100%'}>
-        <Box height="48px" display="flex" alignItems={'flex-end'}>
-          {' '}
+        <Box minHeight="48px" display="flex" alignItems={'flex-end'}>
           {children}
         </Box>
         <InputNumerical

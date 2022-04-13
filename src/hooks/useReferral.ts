@@ -1,24 +1,14 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useActiveWeb3React } from 'hooks'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { calculateGasMargin } from 'utils'
-import { Axios } from 'utils/axios'
 import { useDualInvestContract } from './useContract'
-import usePollingWithMaxRetries from './usePollingWithMaxRetries'
-import { CURRENCIES, SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
-import { NETWORK_CHAIN_ID, ChainId } from 'constants/chain'
-
-type ReferBalanceType = {
-  [key: typeof SUPPORTED_CURRENCY_SYMBOL[ChainId][number]]: string
-}
 
 export function useReferral(): {
   invitation: undefined | string
   inviteCount: string
   bindCallback: (address: string) => Promise<any>
-  balance: ReferBalanceType
 } {
-  const [allRes, setAllRes] = useState<any | undefined>(undefined)
   const { account } = useActiveWeb3React()
   const contract = useDualInvestContract()
 
@@ -41,40 +31,13 @@ export function useReferral(): {
     [contract]
   )
 
-  const allTokenPromiseFn = useCallback(() => {
-    return Promise.all(
-      ['USDT', 'BTC'].map(symbol =>
-        Axios.post('getUserAssets', undefined, {
-          account,
-          chainId: NETWORK_CHAIN_ID,
-          currency: CURRENCIES[NETWORK_CHAIN_ID][symbol]?.address,
-          symbol: CURRENCIES[NETWORK_CHAIN_ID][symbol]?.symbol
-        })
-      )
-    )
-  }, [account])
-
-  const allTokenCallbackFn = useCallback(r => {
-    setAllRes(r)
-  }, [])
-
-  usePollingWithMaxRetries(allTokenPromiseFn, allTokenCallbackFn, 300000, 5, true)
-
-  const result = useMemo(() => {
-    const resultMap = ['USDT', 'BTC'].reduce((acc, symbol, idx) => {
-      acc[symbol] = allRes?.[idx]?.data?.data ? allRes[idx].data.data.balance : '-'
-      return acc
-    }, {} as ReferBalanceType)
-    return resultMap
-  }, [allRes])
-
   return useMemo(
     () => ({
       invitation: invitationRes?.result?.[0],
       inviteCount: inviteCountRes?.result?.[0]?.toString(),
-      balance: result,
+
       bindCallback
     }),
-    [bindCallback, invitationRes?.result, inviteCountRes?.result, result]
+    [bindCallback, invitationRes?.result, inviteCountRes?.result]
   )
 }

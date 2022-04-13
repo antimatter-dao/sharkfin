@@ -34,7 +34,7 @@ export default function RedeemConfirmModal({ isOpen, onDismiss, onConfirm, amoun
       >
         <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 12 }} />
         <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-          The redemption amount will be returned to your account balance
+          The redemption amount will be returned to your wallet
         </Typography>
       </Box>
       <Typography fontSize={18} fontWeight={400} sx={{ opacity: 0.4 }} mt={32}>
@@ -42,12 +42,12 @@ export default function RedeemConfirmModal({ isOpen, onDismiss, onConfirm, amoun
       </Typography>
 
       <Box display="flex" justifyContent="space-between" mt={18} mb={33} alignItems={'center'}>
-        <Typography fontSize={44} fontWeight={400}>
+        <Typography fontSize={44} fontWeight={700}>
           {amount}
         </Typography>
 
         {currency && (
-          <Box display="flex" gap="5px">
+          <Box display="flex" gap="5px" alignItems={'center'}>
             <CurrencyLogo currency={currency} />
             <Typography fontSize={24}>{currency.symbol}</Typography>
           </Box>

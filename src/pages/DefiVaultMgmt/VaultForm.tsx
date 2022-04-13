@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from 'react'
 import { Box, Alert, Typography } from '@mui/material'
-import dayjs from 'dayjs'
+// import dayjs from 'dayjs'
 import VaultCard from 'components/MgmtPage/VaultCard'
 import { useActiveWeb3React } from 'hooks'
 import { tryParseAmount } from 'utils/parseAmount'
@@ -21,6 +21,7 @@ import { Timer } from 'components/Timer'
 import { useApproveCallback, ApprovalState } from 'hooks/useApproveCallback'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { trimNumberString } from 'utils/trimNumberString'
+import { usePrice } from 'hooks/usePriceSet'
 
 export default function VaultForm({
   product,
@@ -37,14 +38,15 @@ export default function VaultForm({
   const currency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.currency ?? '']
   const title =
     product?.type === 'CALL'
-      ? `${product?.currency ?? ''} Covered Call Defi Vault`
-      : `${product?.currency ?? ''} Put Selling Defi Vault`
+      ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
+      : `${product?.currency ?? ''} Put Selling Recurring Strategy`
 
   const ETHBalance = useETHBalances([account ?? undefined])?.[account ?? '']
   const tokenBalance = useTokenBalance(account ?? undefined, investCurrency)
   const [snackbarOpen, setSnackbarOpen] = useState(true)
   const [wdConfirmOpen, setWdConfirmOpen] = useState(false)
   const [investConfirmOpen, setInvestConfirmOpen] = useState(false)
+  const spotPrice = usePrice(currencySymbol, 60000)
 
   const balance =
     product?.investCurrency === SUPPORTED_NETWORKS[chainId ?? NETWORK_CHAIN_ID].nativeCurrency.symbol
@@ -80,12 +82,12 @@ export default function VaultForm({
   const confirmData = useMemo(
     () => ({
       ['Platform service fee']: feeRate,
-      ['Spot Price']: '000' ?? '-' + ' USDT',
-      ['APY']: product?.apy ?? '-',
-      ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
-      ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') + ' 08:30:00 AM UTC' : '-'
+      ['Spot Price']: (spotPrice ? trimNumberString(spotPrice, 2) : '-') + ' USDT',
+      ['APY']: product?.apy ?? '-'
+      // ['Strike Price']: (product?.strikePrice ?? '-') + ' USDC'
+      // ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') + ' 08:30:00 AM UTC' : '-'
     }),
-    [product]
+    [product?.apy, spotPrice]
   )
 
   const handleCloseSnakebar = useCallback(() => {
@@ -142,8 +144,8 @@ export default function VaultForm({
     return callbackFactory(
       `Subscribed ${amount} ${product.investCurrency} to ${
         product.type === 'CALL'
-          ? `${product?.currency ?? ''} Covered Call Defi Vault`
-          : `${product?.currency ?? ''} Put Selling Defi Vault`
+          ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
+          : `${product?.currency ?? ''} Put Selling Recurring Strategy`
       }`,
       depositCallback
     )
@@ -154,8 +156,8 @@ export default function VaultForm({
     return callbackFactory(
       `Instantly withdrawed ${amount} ${product.investCurrency} from ${
         product.type === 'CALL'
-          ? `${product?.currency ?? ''} Covered Call Defi Vault`
-          : `${product?.currency ?? ''} Put Selling Defi Vault`
+          ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
+          : `${product?.currency ?? ''} Put Selling Recurring Strategy`
       }`,
       instantWithdrawCallback
     )
@@ -175,8 +177,8 @@ export default function VaultForm({
             callbackFactory(
               `${initiated ? 'Initiated' : 'Completed'} withdrawal ${amount} ${product.investCurrency} from ${
                 product.type === 'CALL'
-                  ? `${product?.currency ?? ''} Covered Call Defi Vault`
-                  : `${product?.currency ?? ''} Put Selling Defi Vault`
+                  ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
+                  : `${product?.currency ?? ''} Put Selling Recurring Strategy`
               }`,
               initiated ? standardCompleteCallback : standardWithdrawCallback
             )(amount)
@@ -205,7 +207,7 @@ export default function VaultForm({
         approvalState={approvalState}
         currency={investCurrency}
         productTitle={title}
-        amount={(+amount).toFixed(2)}
+        amount={amount}
         confirmData={confirmData}
         isOpen={investConfirmOpen}
         onDismiss={handleInvestConfirmDismiss}

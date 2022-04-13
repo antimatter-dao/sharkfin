@@ -10,6 +10,7 @@ import { DefiProduct } from 'hooks/useDefiVault'
 import { useActiveWeb3React } from 'hooks'
 import { Timer } from 'components/Timer'
 import { trimNumberString } from 'utils/trimNumberString'
+import dayjs from 'dayjs'
 
 const StyledBox = styled(Box)<{ selected?: boolean }>(({ theme, selected }) => ({
   border: `1px solid ${selected ? theme.palette.primary.main : theme.palette.text.secondary}`,
@@ -137,7 +138,7 @@ export default function VaultCard(props: Props) {
               alignItems={'center'}
               variant="inherit"
             >
-              Countdown to the start:
+              Time to Expiry:
               <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
                 <Timer timer={product?.expiredAt ?? 0} />
               </Typography>
@@ -163,12 +164,41 @@ export default function VaultCard(props: Props) {
                   formData={formData}
                   buttonText="Invest"
                 >
-                  <Typography display="flex" alignItems={'center'} variant="inherit">
-                    APY:
-                    <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
-                      {product?.apy ?? '-'}
-                    </Typography>
-                  </Typography>
+                  <Box display="grid" gap={16} width="100%" height="100px" margin="20px 0">
+                    {[
+                      { title: 'APY', data: product?.apy ?? '-' },
+                      {
+                        title: 'Selected Option Strike Price',
+                        data: (product?.strikePrice ?? '-') + ' USDT'
+                      },
+                      {
+                        title: 'Expiry Time',
+                        data: dayjs(product?.expiredAt).format('YYYY/MMM/DD HH:MM')
+                      }
+                    ].map(({ title, data }) => {
+                      return (
+                        <Typography
+                          display="flex"
+                          alignItems={'center'}
+                          variant="inherit"
+                          key={title}
+                          justifyContent="space-between"
+                          color={'rgba(37, 37, 37, 0.8)'}
+                        >
+                          {title}:
+                          <Typography
+                            component={'span'}
+                            fontWeight={500}
+                            variant="inherit"
+                            ml={5}
+                            color="rgba(37, 37, 37, 1)"
+                          >
+                            {data}
+                          </Typography>
+                        </Typography>
+                      )
+                    })}
+                  </Box>
                 </VaultForm>,
                 <VaultForm
                   buttonText={initiated ? 'Complete Withdraw' : 'Initiate Withdraw'}

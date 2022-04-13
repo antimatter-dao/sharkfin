@@ -55,8 +55,8 @@ export default function ConfirmModal({
       <Typography fontSize={18} fontWeight={500} sx={{ opacity: 0.4 }} mt={30} mb={16}>
         Subscription Amount
       </Typography>
-      <Box display="flex" justifyContent="space-between" mb={30} alignItems={'center'}>
-        <Typography fontSize={44} fontWeight={700}>
+      <Box display="flex" justifyContent="space-between" mb={30} alignItems={'center'} flexWrap={'wrap-reverse'}>
+        <Typography fontSize={44} fontWeight={700} maxWidth="100%" sx={{ wordBreak: 'break-all' }}>
           {amount}
         </Typography>
         {investCurrency && (

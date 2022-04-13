@@ -3,14 +3,11 @@ import { Box, Typography } from '@mui/material'
 import { useParams, useHistory } from 'react-router-dom'
 import Tabs from 'components/Tabs/Tabs'
 import Image from 'components/Image'
-import Dashboard from './Dashboard'
+import Position from './Position'
 //import Position from './Position/index'
 import History from './History'
-//import Referral from './Referral'
-// import dashboardUrl from 'assets/images/dashboard.png'
 import positionUrl from 'assets/images/position.png'
 import historyUrl from 'assets/images/history.png'
-//import referralUrl from 'assets/images/referral.png'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { routes } from 'constants/routes'
 
@@ -59,7 +56,7 @@ export default function Account() {
           <Tab text="Position" iconUrl={positionUrl} key="dashboard" />,
           <Tab text="History" iconUrl={historyUrl} key="history" />
         ]}
-        contents={[<Dashboard key="position" />, <History key="history" />]}
+        contents={[<Position key="position" />, <History key="history" />]}
         tabPadding="18px 0"
       />
     </Box>
