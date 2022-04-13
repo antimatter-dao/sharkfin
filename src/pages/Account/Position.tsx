@@ -47,7 +47,7 @@ function TokenHeader({
       <CurrencyLogo currency={investToken} size="32px" />
       <Box>
         <Typography fontSize={16}>{`${token?.symbol} ${
-          type === 'CALL' ? 'Covered  Call' : 'Put Selling'
+          type === 'CALL' ? 'Covered Call' : 'Put Selling'
         } Recurring Strategy`}</Typography>
         <Typography fontSize={12} sx={{}}>
           <span style={{ opacity: 0.5, fontSize: '12px' }}>{token?.name}</span>
