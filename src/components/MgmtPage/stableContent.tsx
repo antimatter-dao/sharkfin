@@ -274,8 +274,7 @@ export const vaultPolicyCall = [
   },
   {
     img: <Call2 />,
-    text:
-      'Out of the price when the call option expires, according to whether the option is exercised, which currency is the settlement fund'
+    text: 'The option sold can expire "in-the-money" and "out-of-the-money" the vault aims for the latter'
   },
   {
     img: <Img3 />,
@@ -289,11 +288,11 @@ export const vaultPolicyPut = [
   },
   {
     img: <Put2 />,
-    text: 'Regardless of the settlement, we will again invest in the vault, no management, automatic compounding'
+    text: 'The option sold can expire "in-the-money" and "out-of-the-money" the vault aims for the latter'
   },
   {
     img: <Img3 />,
-    text: 'The vault algorithmically selects the optimal strike price for the BTC call options.'
+    text: 'Regardless of the settlement, we will again invest in the vault, no management, automatic compounding'
   }
 ]
 

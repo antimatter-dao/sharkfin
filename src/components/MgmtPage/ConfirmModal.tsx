@@ -114,7 +114,7 @@ export default function ConfirmModal({
       )}
       {showCompoundWarning && (
         <Box mt={12} display="grid" gap={4}>
-          <InfoText text="When the final result is exercised, you will get settled in the alternative currency and your funds will be invested in the settlement currency's vault for the next cycle." />
+          <InfoText text="Regardless of the settlement, we will again invest in the vault for the next cycle, no management, automatic compounding" />
           <InfoText
             text="Once recurring interest is confirmed, it cannot be canceled halfway.
             When compound interest is in progress, you can choose to stop the current recurring interest."
