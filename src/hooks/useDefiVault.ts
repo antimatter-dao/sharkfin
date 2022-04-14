@@ -24,13 +24,13 @@ export interface DefiProduct {
   currency: string
   investCurrency: string
   chainId: ChainId | undefined
-  balance?: string
   instantBalance?: string
   completeBalance?: string
-  initiateBalance?: string
+  lockedBalance?: string
   cap?: number
   totalBalance?: number
   depositAmount?: string
+  pricePerShareRaw?: string
 }
 
 enum DefiProductDataOrder {
@@ -57,10 +57,12 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
 
   const contract = useDefiVaultContract(productChainId, cur, type === 'CALL' ? 'CALL' : 'PUT')
   const depositReceipts = useSingleCallResult(contract, 'depositReceipts', args)
-  const initiateBalance = useSingleCallResult(contract, 'accountVaultBalance', args)
+  const lockedBalance = useSingleCallResult(contract, 'accountVaultBalance', args)
   const withdrawals = useSingleCallResult(contract, 'withdrawals', args)
   const optionAddress = useSingleCallResult(contract, 'currentOption')
   const vaultState = useSingleCallResult(contract, 'vaultState')
+  // const vaultParams = useSingleCallResult(contract, 'vaultParams')
+  const pricePerShare = useSingleCallResult(contract, 'pricePerShare')
 
   const argPrice = useMemo(() => {
     return [withdrawals?.result?.round]
@@ -97,6 +99,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
               JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(10))
             )
           : undefined
+
       return {
         chainId: productChainId,
         type: type.toUpperCase() === 'CALL' ? 'CALL' : 'PUT',
@@ -107,8 +110,9 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
             ? parseBalance(instantBalanceDisabled ? '0' : depositReceipts.result.amount, token)
             : '-',
         completeBalance: val ? parseBalance(val.toString(), token) : '-',
-        initiateBalance:
-          initiateBalance?.result && productChainId ? parseBalance(initiateBalance.result?.[0].toString(), token) : '-',
+        pricePerShareRaw: pricePerShare.result?.[0].toString(),
+        lockedBalance:
+          lockedBalance?.result && productChainId ? parseBalance(lockedBalance.result?.[0].toString(), token) : '-',
         strikePrice: strikePrice,
         expiredAt: getExpireAt(),
         apy: APY
@@ -118,8 +122,9 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
     cur,
     depositReceipts.result?.amount,
     depositReceipts.result?.round,
-    initiateBalance.result,
+    lockedBalance.result,
     price.result,
+    pricePerShare.result,
     productChainId,
     strikePrice,
     type,
@@ -202,7 +207,7 @@ const defiVaultListUtil = (res?: any[][]) => {
       accMain.push({
         chainId: +chainId,
         currency: symbol,
-        balance:
+        lockedBalance:
           resCall && resCall[DefiProductDataOrder.accountVaultBalance]
             ? trimNumberString(
                 parseBalance(
@@ -246,7 +251,7 @@ const defiVaultListUtil = (res?: any[][]) => {
       accMain.push({
         chainId: +chainId,
         currency: symbol,
-        balance:
+        lockedBalance:
           resPut && resPut[DefiProductDataOrder.accountVaultBalance]
             ? trimNumberString(
                 parseBalance(
@@ -280,7 +285,7 @@ const defiVaultListUtil = (res?: any[][]) => {
             ? parsePrecision(
                 JSBI.ADD(
                   JSBI.BigInt(resPut[DefiProductDataOrder.depositReceipts].amount.toString()),
-                  JSBI.BigInt(resPut[DefiProductDataOrder.depositReceipts].unredeemedShares.toString())
+                  JSBI.BigInt(resPut[DefiProductDataOrder.accountVaultBalance].toString())
                 ).toString(),
                 resPut[DefiProductDataOrder.decimals]
               )

@@ -64,7 +64,7 @@ export default function VaultProductCard({
             <Box display="flex" alignItems={'center'} justifyContent="space-between">
               <TextCard
                 subTextBold
-                text={`${product?.depositAmount ?? '-'}  ${product?.investCurrency ?? '-'}`}
+                text={`${product?.lockedBalance ?? '-'}  ${product?.investCurrency ?? '-'}`}
                 subText="Your existing position"
               />
             </Box>

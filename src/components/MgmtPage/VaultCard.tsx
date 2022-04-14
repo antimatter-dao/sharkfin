@@ -98,7 +98,7 @@ export default function VaultCard(props: Props) {
     let str = ''
     const balance = [
       walletBalance,
-      [product.initiateBalance, product.completeBalance][standardWithdrawlStep],
+      [product.lockedBalance, product.completeBalance][standardWithdrawlStep],
       product.instantBalance
     ][currentTab]
 
@@ -214,7 +214,7 @@ export default function VaultCard(props: Props) {
                   disabled={disabled}
                   productChainId={productChainId}
                   formData={formData}
-                  available={initiated ? product?.completeBalance : product?.initiateBalance}
+                  available={initiated ? product?.completeBalance : product?.lockedBalance}
                 >
                   <Tabs
                     titles={[' Initiate Withdrawal', 'Complete Withdrawal']}

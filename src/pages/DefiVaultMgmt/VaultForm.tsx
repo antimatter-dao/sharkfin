@@ -22,6 +22,7 @@ import { useApproveCallback, ApprovalState } from 'hooks/useApproveCallback'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { trimNumberString } from 'utils/trimNumberString'
 import { usePrice } from 'hooks/usePriceSet'
+import JSBI from 'jsbi'
 
 export default function VaultForm({
   product,
@@ -73,10 +74,10 @@ export default function VaultForm({
     () => ({
       ['']: '',
       ['Current cycle invested amount:']:
-        (product?.initiateBalance ? trimNumberString(product.initiateBalance, 6) : '-') + ' ' + currencySymbol,
+        (product?.lockedBalance ? trimNumberString(product.lockedBalance, 6) : '-') + ' ' + currencySymbol,
       ['Progress order due time:']: <Timer timer={product?.expiredAt ?? 0} />
     }),
-    [currencySymbol, product?.expiredAt, product?.initiateBalance]
+    [currencySymbol, product?.expiredAt, product?.lockedBalance]
   )
 
   const confirmData = useMemo(
@@ -114,9 +115,9 @@ export default function VaultForm({
 
   const callbackFactory = useCallback(
     (summary: string, callback: (...args: any[]) => Promise<any>) => {
-      return async (amount: string) => {
+      return async (amount: string, parsedAmount?: string) => {
         showModal(<TransactionPendingModal />)
-        const val = tryParseAmount(amount, investCurrency)?.raw?.toString()
+        const val = parsedAmount ?? tryParseAmount(amount, investCurrency)?.raw?.toString()
         if (!val) return
         try {
           const r = await callback(val)
@@ -163,6 +164,11 @@ export default function VaultForm({
 
   const handleStandardWd = useCallback(
     (amount: string, initiated: boolean) => {
+      const amountRaw = tryParseAmount(amount, investCurrency)?.raw?.toString()
+      const parsedAmount =
+        amountRaw && product?.pricePerShareRaw
+          ? JSBI.divide(JSBI.BigInt(amountRaw), JSBI.BigInt(product.pricePerShareRaw)).toString()
+          : '0'
       showModal(
         <RedeemConfirmModal
           isOpen={true}
@@ -179,7 +185,7 @@ export default function VaultForm({
                   : `${product?.currency ?? ''} Put Selling Recurring Strategy`
               }`,
               initiated ? standardCompleteCallback : standardWithdrawCallback
-            )(amount)
+            )(amount, parsedAmount)
           }}
           amount={amount}
           currency={investCurrency}
