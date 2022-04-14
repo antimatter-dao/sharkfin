@@ -91,7 +91,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
       const token = CURRENCIES[productChainId as ChainId][investCurrency]
       const shares = withdrawals.result?.shares?.toString()
       const priceResult = price.result?.[0]?.toString()
-      const instantBalanceDisabled = vaultState.result?.round === depositReceipts.result?.round
+      const instantBalanceDisabled = vaultState.result?.round !== depositReceipts.result?.round
       const val =
         shares && priceResult
           ? JSBI.divide(
