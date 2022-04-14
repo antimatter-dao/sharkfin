@@ -30,7 +30,7 @@ enum BalanceTableHeaderIndex {
 //   4: 'vault withdraw'
 // }
 
-const BalanceTableHeader = ['', 'Approximate apy', 'Vault size', 'Your Position', 'Your Deposit', '']
+const BalanceTableHeader = ['', 'Approximate APY', 'Vault Size', 'Your Position', 'Your Deposit', '']
 // const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
 
 function TokenHeader({

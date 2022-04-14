@@ -57,7 +57,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
 
   const contract = useDefiVaultContract(productChainId, cur, type === 'CALL' ? 'CALL' : 'PUT')
   const depositReceipts = useSingleCallResult(contract, 'depositReceipts', args)
-  // const initiateBalance = useSingleCallResult(contract, 'accountVaultBalance', args)
+  const initiateBalance = useSingleCallResult(contract, 'accountVaultBalance', args)
   const withdrawals = useSingleCallResult(contract, 'withdrawals', args)
   const optionAddress = useSingleCallResult(contract, 'currentOption')
   const vaultState = useSingleCallResult(contract, 'vaultState')
@@ -108,9 +108,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
             : '-',
         completeBalance: val ? parseBalance(val.toString(), token) : '-',
         initiateBalance:
-          depositReceipts?.result?.unredeemedShares && productChainId
-            ? parseBalance(depositReceipts.result.unredeemedShares, token)
-            : '-',
+          initiateBalance?.result && productChainId ? parseBalance(initiateBalance.result?.[0].toString(), token) : '-',
         strikePrice: strikePrice,
         expiredAt: getExpireAt(),
         apy: APY
@@ -120,7 +118,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
     cur,
     depositReceipts.result?.amount,
     depositReceipts.result?.round,
-    depositReceipts.result?.unredeemedShares,
+    initiateBalance.result,
     price.result,
     productChainId,
     strikePrice,
