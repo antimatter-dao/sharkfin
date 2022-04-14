@@ -59,7 +59,7 @@ export default function MgmtPage(props: Props) {
     return (
       <div>
         <Typography fontSize={16} color={theme.palette.text.primary}>
-          Return on investment:
+          Strike Price &amp; APY
         </Typography>
         <StyledUnorderList>
           {returnOnInvestmentListItems.map((item, idx) => (

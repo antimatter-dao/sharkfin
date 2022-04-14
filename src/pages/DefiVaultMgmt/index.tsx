@@ -48,22 +48,16 @@ export default function DefiMgmt() {
   const returnOnInvestmentListItems = useMemo(() => {
     return [
       <>
-        When the final settlement price {isCall ? '≥' : '≤'} {product?.strikePrice ?? '-'} USDT, you will receive{' '}
-        <span style={{ color: theme.palette.text.primary }}>
-          (Subscription Amount {isCall ? '*' : '/'} Strike Price) * [1 + (APY% / 365)]
-        </span>
-        .
+        The Strike Price is calculated through an approximate APY. At the start of the cycle a Strike Price is selected
+        that provides investors with that APY.
       </>,
       <>
-        When the settlement price {isCall ? '<' : '>'} {product?.strikePrice ?? '-'} USDT, you will receive{' '}
-        <span style={{ color: theme.palette.text.primary }}>Subscription Amount * [1 + (APY% / 365)]</span>.
+        The further away the Strike Price is from the Spot Price at the start of a cycle, the less likely it is that an
+        option is exercised.
       </>,
-      <>
-        APY will be refreshed instantly, and Antimatter will use and lock in the latest APY when you successfully
-        complete the subscription.
-      </>
+      <>APY will be adjusted accordingly week for week, and remain approximately the same during a cycle.</>
     ]
-  }, [isCall, product?.strikePrice, theme.palette.text.primary])
+  }, [])
 
   const chart = useMemo(() => {
     return (
