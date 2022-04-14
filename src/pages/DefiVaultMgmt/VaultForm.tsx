@@ -167,7 +167,13 @@ export default function VaultForm({
       const amountRaw = tryParseAmount(amount, investCurrency)?.raw?.toString()
       const parsedAmount =
         amountRaw && product?.pricePerShareRaw
-          ? JSBI.divide(JSBI.BigInt(amountRaw), JSBI.BigInt(product.pricePerShareRaw)).toString()
+          ? JSBI.divide(
+              JSBI.multiply(
+                JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(product?.contractDecimals ?? '18')),
+                JSBI.BigInt(amountRaw)
+              ),
+              JSBI.BigInt(product.pricePerShareRaw)
+            ).toString()
           : '0'
       showModal(
         <RedeemConfirmModal

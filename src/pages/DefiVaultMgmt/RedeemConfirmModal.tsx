@@ -4,6 +4,7 @@ import Button from 'components/Button/Button'
 import { Token } from 'constants/token'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import { trimNumberString } from 'utils/trimNumberString'
 
 interface Props {
   isOpen: boolean
@@ -42,8 +43,8 @@ export default function RedeemConfirmModal({ isOpen, onDismiss, onConfirm, amoun
       </Typography>
 
       <Box display="flex" justifyContent="space-between" mt={18} mb={33} alignItems={'center'}>
-        <Typography fontSize={44} fontWeight={700}>
-          {amount}
+        <Typography fontSize={44} fontWeight={700} maxWidth="100%" sx={{ wordBreak: 'break-all' }}>
+          {trimNumberString(amount, 9)}
         </Typography>
 
         {currency && (

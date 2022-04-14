@@ -31,6 +31,7 @@ export interface DefiProduct {
   totalBalance?: number
   depositAmount?: string
   pricePerShareRaw?: string
+  contractDecimals?: string
 }
 
 enum DefiProductDataOrder {
@@ -61,7 +62,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
   const withdrawals = useSingleCallResult(contract, 'withdrawals', args)
   const optionAddress = useSingleCallResult(contract, 'currentOption')
   const vaultState = useSingleCallResult(contract, 'vaultState')
-  // const vaultParams = useSingleCallResult(contract, 'vaultParams')
+  const vaultParams = useSingleCallResult(contract, 'vaultParams')
   const pricePerShare = useSingleCallResult(contract, 'pricePerShare')
 
   const argPrice = useMemo(() => {
@@ -111,6 +112,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
             : '-',
         completeBalance: val ? parseBalance(val.toString(), token) : '-',
         pricePerShareRaw: pricePerShare.result?.[0].toString(),
+        contractDecimals: vaultParams.result?.decimals.toString(),
         lockedBalance:
           lockedBalance?.result && productChainId ? parseBalance(lockedBalance.result?.[0].toString(), token) : '-',
         strikePrice: strikePrice,
@@ -128,6 +130,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
     productChainId,
     strikePrice,
     type,
+    vaultParams.result?.decimals,
     vaultState.result?.round,
     withdrawals.result?.shares
   ])

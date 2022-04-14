@@ -160,6 +160,8 @@ function RecurringPolicy({ type, currencySymbol }: { type: 'call' | 'put'; curre
   const policy = type === 'call' ? vaultPolicyCall : vaultPolicyPut
   const Text = vaultPolicyText[type]
 
+  const theme = useTheme()
+
   const handlePrev = useCallback(() => {
     setCurIdx(preIdx => {
       return preIdx === 0 ? 0 : preIdx - 1
@@ -185,10 +187,10 @@ function RecurringPolicy({ type, currencySymbol }: { type: 'call' | 'put'; curre
           <TextButton onClick={handlePrev} disabled={curIdx === 0} style={{ '&:disabled': { opacity: 0 } }}>
             <svg width="12" height="19" viewBox="0 0 12 19" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
-                opacity="0.4"
                 d="M10.4844 17.9707L1.99909 9.48542L10.4844 1.00014"
-                stroke="black"
-                strokeWidth="1.6"
+                stroke={theme.palette.primary.main}
+                strokeWidth="2"
+                strokeLinecap="round"
               />
             </svg>
           </TextButton>
@@ -198,7 +200,12 @@ function RecurringPolicy({ type, currencySymbol }: { type: 'call' | 'put'; curre
             style={{ '&:disabled': { opacity: 0 } }}
           >
             <svg width="11" height="19" viewBox="0 0 11 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path opacity="0.4" d="M0.828125 1L9.31341 9.48528L0.828125 17.9706" stroke="black" strokeWidth="1.6" />
+              <path
+                d="M0.828125 1L9.31341 9.48528L0.828125 17.9706"
+                stroke={theme.palette.primary.main}
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
             </svg>
           </TextButton>
         </Box>
