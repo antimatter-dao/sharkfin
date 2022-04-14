@@ -97,7 +97,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
         shares && priceResult
           ? JSBI.divide(
               JSBI.multiply(JSBI.BigInt(shares), JSBI.BigInt(priceResult)),
-              JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(10))
+              JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(vaultParams.result?.decimals.toString() ?? 18))
             )
           : undefined
 
