@@ -20,7 +20,7 @@ enum TYPE {
 }
 
 const Instructions: { [type in TYPE]: JSX.Element | string } = {
-  [TYPE.invest]: 'Your deposit will be deployed in the vault’s weekly strategy on Friday at 08:00am UTC',
+  [TYPE.invest]: 'Your deposit will be deployed in the vault’s weekly strategy on Friday at 08:00 AM UTC',
   [TYPE.standard]: (
     <>
       Standard withdrawals are for funds that have been deployed in the vault&apos;s weekly strategy and involve a
