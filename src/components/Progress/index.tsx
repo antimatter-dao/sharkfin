@@ -1,4 +1,4 @@
-import { Box, Typography, LinearProgress, linearProgressClasses, styled, lighten } from '@mui/material'
+import { Box, Typography, LinearProgress, linearProgressClasses, styled } from '@mui/material'
 
 const StyledLinearProgress = styled(LinearProgress, {
   shouldForwardProp: props => (props === 'customColor' ? false : true)
@@ -9,7 +9,7 @@ const StyledLinearProgress = styled(LinearProgress, {
   height: height ?? 10,
   borderRadius: 5,
   [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: customColor ? lighten(customColor, 0.9) : 'rgba(37, 37, 37, 0.1)'
+    backgroundColor: '#F2F5FA'
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,

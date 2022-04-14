@@ -60,6 +60,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
   // const initiateBalance = useSingleCallResult(contract, 'accountVaultBalance', args)
   const withdrawals = useSingleCallResult(contract, 'withdrawals', args)
   const optionAddress = useSingleCallResult(contract, 'currentOption')
+  const vaultState = useSingleCallResult(contract, 'vaultState')
 
   const argPrice = useMemo(() => {
     return [withdrawals?.result?.round]
@@ -88,7 +89,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
       const token = CURRENCIES[productChainId as ChainId][investCurrency]
       const shares = withdrawals.result?.shares?.toString()
       const priceResult = price.result?.[0]?.toString()
-      const instantBalanceDisabled = withdrawals.result?.round === depositReceipts.result?.round
+      const instantBalanceDisabled = vaultState.result?.round === depositReceipts.result?.round
       const val =
         shares && priceResult
           ? JSBI.divide(
@@ -117,14 +118,14 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
     }
   }, [
     cur,
-    depositReceipts?.result?.amount,
-    depositReceipts?.result?.round,
-    depositReceipts?.result?.unredeemedShares,
+    depositReceipts.result?.amount,
+    depositReceipts.result?.round,
+    depositReceipts.result?.unredeemedShares,
     price.result,
     productChainId,
     strikePrice,
     type,
-    withdrawals.result?.round,
+    vaultState.result?.round,
     withdrawals.result?.shares
   ])
   return result

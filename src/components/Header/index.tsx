@@ -39,8 +39,8 @@ export const Tabs: Tab[] = [
     title: 'Invest',
     subTab: [
       { title: 'Defi Option Vault', route: routes.defiVault },
-      { title: 'Dual Investment', link: 'https://invest.antimatter.finance/#/dual-invest' }
-      // { title: 'Recurring Strategy', link: 'https://invest.antimatter.finance/#/recurring-vault' }
+      { title: 'Dual Investment', link: 'https://invest.antimatter.finance/#/dual-invest' },
+      { title: 'Recurring Strategy', link: 'https://invest.antimatter.finance/#/recurring-vault' }
     ]
   },
   { title: 'Position', route: routes.accountTab.replace(':tab', 'position') },
