@@ -279,8 +279,7 @@ export const vaultPolicyCall = [
   },
   {
     img: <Img3 />,
-    text:
-      'Regardless of the settlement currency, we will again invest in the treasury of the settlement currency, no management, automatic compounding'
+    text: 'Regardless of the settlement, we will again invest in the vault, no management, automatic compounding'
   }
 ]
 export const vaultPolicyPut = [
@@ -290,8 +289,7 @@ export const vaultPolicyPut = [
   },
   {
     img: <Put2 />,
-    text:
-      'Regardless of the settlement currency, we will again invest in the treasury of the settlement currency, no management, automatic compounding'
+    text: 'Regardless of the settlement, we will again invest in the vault, no management, automatic compounding'
   },
   {
     img: <Img3 />,
@@ -314,8 +312,8 @@ export const vaultPolicyText: {
           effectively increasing the saver&apos;s returns over time.
         </li>
         <li>
-          It is important to note that when the final result is exercised, we will settle in another currency and invest
-          again in the settlement currency&apos;s strategy.
+          It is important to note that regardless of type of expiry, your funds will be reinvested into the vault in
+          weekly cycles. You can withdraw, once a cycle is over.
         </li>
       </>
     )
@@ -329,8 +327,8 @@ export const vaultPolicyText: {
           effectively increasing the saver&apos;s returns over time.
         </li>
         <li>
-          It is important to note that when the final result is exercised, we will settle in another currency and invest
-          again in the settlement currency&apos;s strategy.
+          It is important to note that regardless of type of expiry, your funds will be reinvested into the vault in
+          weekly cycles. You can withdraw, once a cycle is over.
         </li>
       </>
     )
