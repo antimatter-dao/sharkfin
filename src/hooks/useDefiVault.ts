@@ -39,7 +39,8 @@ enum DefiProductDataOrder {
   decimals,
   cap,
   totalBalance,
-  depositReceipts
+  depositReceipts,
+  vaultState
 }
 
 const APY = '20%'
@@ -199,7 +200,8 @@ const callsFactory = (contract: Contract | null, account: string | null | undefi
     contract?.decimals(),
     contract?.cap(),
     contract?.totalBalance(),
-    account ? contract?.depositReceipts(account) : null
+    account ? contract?.depositReceipts(account) : null,
+    contract?.vaultState()
   ])
 }
 
@@ -207,6 +209,9 @@ const defiVaultListUtil = (res?: any[][]) => {
   return Object.keys(SUPPORTED_DEFI_VAULT).reduce((accMain, chainId: string, idx1: number) => {
     SUPPORTED_DEFI_VAULT[+chainId as keyof typeof SUPPORTED_DEFI_VAULT]?.map((symbol: string, idx2: number) => {
       const resCall = res?.[idx1][idx2 * 2]
+      const resCallIsRound = resCall
+        ? resCall?.[DefiProductDataOrder.vaultState]?.round === resCall[DefiProductDataOrder.depositReceipts]?.round
+        : false
       accMain.push({
         chainId: +chainId,
         currency: symbol,
@@ -244,8 +249,8 @@ const defiVaultListUtil = (res?: any[][]) => {
             ? trimNumberString(
                 parsePrecision(
                   JSBI.ADD(
-                    JSBI.BigInt(resCall[DefiProductDataOrder.depositReceipts].amount.toString()),
-                    JSBI.BigInt(resCall[DefiProductDataOrder.depositReceipts].unredeemedShares.toString())
+                    JSBI.BigInt(resCallIsRound ? resCall[DefiProductDataOrder.depositReceipts].amount.toString() : '0'),
+                    JSBI.BigInt(resCall[DefiProductDataOrder.accountVaultBalance].toString())
                   ).toString(),
                   resCall[DefiProductDataOrder.decimals]
                 ),
@@ -253,7 +258,12 @@ const defiVaultListUtil = (res?: any[][]) => {
               )
             : '-'
       })
+
       const resPut = res?.[idx1][idx2 * 2 + 1]
+      const resPutIsRound = resPut
+        ? resPut?.[DefiProductDataOrder.vaultState]?.round === resPut[DefiProductDataOrder.depositReceipts]?.round
+        : false
+
       accMain.push({
         chainId: +chainId,
         currency: symbol,
@@ -291,7 +301,7 @@ const defiVaultListUtil = (res?: any[][]) => {
             ? trimNumberString(
                 parsePrecision(
                   JSBI.ADD(
-                    JSBI.BigInt(resPut[DefiProductDataOrder.depositReceipts].amount.toString()),
+                    JSBI.BigInt(resPutIsRound ? resPut[DefiProductDataOrder.depositReceipts].amount.toString() : '0'),
                     JSBI.BigInt(resPut[DefiProductDataOrder.accountVaultBalance].toString())
                   ).toString(),
                   resPut[DefiProductDataOrder.decimals]

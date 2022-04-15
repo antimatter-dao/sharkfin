@@ -151,7 +151,7 @@ export default function Position() {
               vault.apy,
               vault?.totalBalance ?? '-',
               vault?.totalBalance && vault.depositAmount
-                ? `${Number((Number(vault.depositAmount) / vault.totalBalance).toFixed(6)) * 100}%`
+                ? `${(Number((Number(vault.depositAmount) / vault.totalBalance).toFixed(6)) * 100).toFixed(4)}%`
                 : '-',
               (vault?.depositAmount ?? '-') + ' ' + (vault?.investCurrency ?? '-'),
               <VaultActions
