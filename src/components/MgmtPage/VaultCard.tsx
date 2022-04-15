@@ -166,13 +166,13 @@ export default function VaultCard(props: Props) {
                 >
                   <Box display="grid" gap={16} width="100%" height="100px" margin="20px 0">
                     {[
-                      { title: 'Approximate APY', data: product?.apy ?? '-' },
+                      { title: 'Current Vault Approximate APY', data: product?.apy ?? '-' },
                       {
-                        title: 'Selected Option Strike Price',
+                        title: 'Current Vault Strike Price',
                         data: (product?.strikePrice ?? '-') + ' USDT'
                       },
                       {
-                        title: 'Expiry Time',
+                        title: 'Current Vault Expiry Time',
                         data: product?.expiredAt
                           ? dayjs(product.expiredAt).format('MMM DD, YYYY') + ' 08:00:00 AM UTC'
                           : '-'

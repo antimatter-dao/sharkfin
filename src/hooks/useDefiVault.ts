@@ -241,12 +241,15 @@ const defiVaultListUtil = (res?: any[][]) => {
         strikePrice: '-',
         depositAmount:
           resCall && resCall[DefiProductDataOrder.depositReceipts] && resCall[DefiProductDataOrder.decimals]
-            ? parsePrecision(
-                JSBI.ADD(
-                  JSBI.BigInt(resCall[DefiProductDataOrder.depositReceipts].amount.toString()),
-                  JSBI.BigInt(resCall[DefiProductDataOrder.depositReceipts].unredeemedShares.toString())
-                ).toString(),
-                resCall[DefiProductDataOrder.decimals]
+            ? trimNumberString(
+                parsePrecision(
+                  JSBI.ADD(
+                    JSBI.BigInt(resCall[DefiProductDataOrder.depositReceipts].amount.toString()),
+                    JSBI.BigInt(resCall[DefiProductDataOrder.depositReceipts].unredeemedShares.toString())
+                  ).toString(),
+                  resCall[DefiProductDataOrder.decimals]
+                ),
+                4
               )
             : '-'
       })
@@ -285,12 +288,15 @@ const defiVaultListUtil = (res?: any[][]) => {
         strikePrice: '-',
         depositAmount:
           resPut && resPut[DefiProductDataOrder.depositReceipts] && resPut[DefiProductDataOrder.decimals]
-            ? parsePrecision(
-                JSBI.ADD(
-                  JSBI.BigInt(resPut[DefiProductDataOrder.depositReceipts].amount.toString()),
-                  JSBI.BigInt(resPut[DefiProductDataOrder.accountVaultBalance].toString())
-                ).toString(),
-                resPut[DefiProductDataOrder.decimals]
+            ? trimNumberString(
+                parsePrecision(
+                  JSBI.ADD(
+                    JSBI.BigInt(resPut[DefiProductDataOrder.depositReceipts].amount.toString()),
+                    JSBI.BigInt(resPut[DefiProductDataOrder.accountVaultBalance].toString())
+                  ).toString(),
+                  resPut[DefiProductDataOrder.decimals]
+                ),
+                4
               )
             : '-'
       })
