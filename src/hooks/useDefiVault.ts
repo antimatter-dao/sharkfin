@@ -54,7 +54,11 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
 
   const cur = currency.toUpperCase()
   const productChainId: number = useMemo(() => {
-    return ChainList.find(chain => chain.symbol.toUpperCase() === chainName.toUpperCase())?.id ?? NETWORK_CHAIN_ID
+    return (
+      ChainList.find(chain => {
+        chain.symbol.toUpperCase() === chainName.toUpperCase() || chain.id === +chain
+      })?.id ?? NETWORK_CHAIN_ID
+    )
   }, [chainName])
 
   const contract = useDefiVaultContract(productChainId, cur, type === 'CALL' ? 'CALL' : 'PUT')
