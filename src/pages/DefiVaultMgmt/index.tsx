@@ -39,7 +39,6 @@ export default function DefiMgmt() {
   const { currency, type, chainName } = useParams<{ currency: string; type: string; chainName: string }>()
 
   const product = useSingleDefiVault(chainName ?? '', currency ?? '', type ?? '')
-
   // const prevDetails = undefined
   const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'

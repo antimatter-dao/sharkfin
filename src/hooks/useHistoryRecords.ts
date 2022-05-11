@@ -6,12 +6,20 @@ import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { DEFAULT_COIN_SYMBOL, SUPPORTED_CURRENCIES } from 'constants/currencies'
 import { parsePrecision } from 'utils/parseAmount'
 import { trimNumberString } from 'utils/trimNumberString'
+import qs from 'qs'
 
 const PageSize = 8
 
+const types = [5, 6, 7, 8].join('&types=')
+
 export function useHistoryRecords(pageNum: number) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const [orderList, setOrderList] = useState<DefiRecord[] | undefined>(undefined)
+  const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
+    count: 0,
+    perPage: 0,
+    total: 0
+  })
 
   const filteredOrderList = useMemo(() => {
     if (!orderList) return undefined
@@ -34,25 +42,27 @@ export function useHistoryRecords(pageNum: number) {
     }, [] as DefiRecord[])
   }, [orderList])
 
-  const pageCount = useMemo(() => {
-    if (!filteredOrderList) return 0
-
-    return Math.ceil(filteredOrderList.length / PageSize)
-  }, [filteredOrderList])
-
   const promiseFn = useCallback(() => {
     if (!account)
       return new Promise((resolve, reject) => {
         reject(null)
       })
-    return Axios.get<{ records: DefiRecord[] }>('getAccountRecord', {
+    const params = {
       account: account,
-      pageSize: 999999
-    })
-  }, [account])
+      pageSize: PageSize,
+      pageNum,
+      chainId
+    }
+    return Axios.get<{ records: DefiRecord[] }>('getAccountRecord?' + qs.stringify(params) + '&types=' + types)
+  }, [account, chainId, pageNum])
 
   const callbackFn = useCallback(r => {
-    setOrderList(r.data.data.records)
+    setOrderList(r.data.data.list)
+    setPageParams({
+      count: parseInt(r.data.data.pages, 10),
+      perPage: parseInt(r.data.data.size, 10),
+      total: parseInt(r.data.data.total, 10)
+    })
   }, [])
 
   usePollingWithMaxRetries(promiseFn, callbackFn, 50000)
@@ -63,7 +73,7 @@ export function useHistoryRecords(pageNum: number) {
         pageNum && filteredOrderList
           ? filteredOrderList.slice((pageNum - 1) * PageSize, pageNum * PageSize)
           : undefined,
-      pageParams: { count: pageCount, perPage: PageSize, total: filteredOrderList?.length ?? 0 }
+      pageParams
     }
-  }, [filteredOrderList, pageCount, pageNum])
+  }, [filteredOrderList, pageNum, pageParams])
 }

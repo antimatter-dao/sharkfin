@@ -22,9 +22,7 @@ export default function DualInvestChart({
   const isDownMd = useBreakpoint('md')
 
   const strikeLineData = useMemo(() => {
-    return product?.expiredAt && product?.strikePrice
-      ? { time: product.expiredAt as Time, value: +product.strikePrice }
-      : undefined
+    return product?.expiredAt ? { time: product.expiredAt as Time, value: +product.strikePrice ?? 0 } : undefined
   }, [product?.expiredAt, product?.strikePrice])
 
   return (

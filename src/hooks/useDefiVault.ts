@@ -56,7 +56,12 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
   const productChainId: number = useMemo(() => {
     return (
       ChainList.find(chain => {
-        chain.symbol.toUpperCase() === chainName.toUpperCase() || chain.id === +chain
+        if (chain.symbol.toUpperCase() === chainName.toUpperCase()) {
+          return true
+        } else if (chain.id === +chain) {
+          return true
+        }
+        return false
       })?.id ?? NETWORK_CHAIN_ID
     )
   }, [chainName])
