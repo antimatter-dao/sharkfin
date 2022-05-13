@@ -45,3 +45,24 @@ export interface OrderRecord {
   type: string
   investType: INVEST_TYPE
 }
+
+export interface PrevOrder {
+  orderId: number
+  productId: number
+  vaultAddress: string
+  swapAddress: string
+  otokenAddress: string
+  indexPrice: string
+  price: string
+  amount: string
+  createdAt: string
+  investStatus: number
+  chainId: number
+  type: string
+  annualRor: string
+  strikePrice: string
+  expiredAt: number
+  multiplier: string
+  investCurrency: string
+  investType: number
+}

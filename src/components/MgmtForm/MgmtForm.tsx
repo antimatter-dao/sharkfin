@@ -5,9 +5,7 @@ import InputNumerical from 'components/Input/InputNumerical'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import ActionButton from 'components/Button/ActionButton'
 import { BlackButton } from 'components/Button/Button'
-import ActionModal, { ActionType } from 'pages/Account/modals/ActionModal'
 import { useWalletModalToggle } from 'state/application/hooks'
-import { Token } from 'constants/token'
 import { Product } from 'utils/fetch/product'
 import ConfirmModal from 'components/MgmtPage/ConfirmModal'
 import { CURRENCIES } from 'constants/currencies'
@@ -32,7 +30,6 @@ export function MgmtForm({
   account,
   pending,
   onSubscribe,
-  currentCurrency,
   product,
   confirmData,
   balance,
@@ -51,14 +48,12 @@ export function MgmtForm({
   account: string | undefined | null
   pending: boolean
   onSubscribe: (setIsConfirmed: (isConfirmed: boolean) => void) => void
-  currentCurrency: Token
   product: Product | undefined
   balance?: string
   subStr?: string
   unit?: string
   infoText: string
 }) {
-  const [isDepositOpen, setIsDepositOpen] = useState(false)
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const theme = useTheme()
@@ -72,14 +67,6 @@ export function MgmtForm({
   }, [])
   const hideConfirm = useCallback(() => {
     setIsConfirmOpen(false)
-  }, [])
-
-  const showDeposit = useCallback(() => {
-    setIsDepositOpen(true)
-  }, [])
-
-  const hideDeposit = useCallback(() => {
-    setIsDepositOpen(false)
   }, [])
 
   const handleSubscribe = useCallback(() => {
@@ -113,7 +100,6 @@ export function MgmtForm({
         subTitle={`  [${product?.type === 'CALL' ? 'upward' : 'down'} exercise]`}
         showCancelWarning={false}
       />
-      <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
       <Box
         display="grid"
         flexDirection="column"
@@ -160,7 +146,6 @@ export function MgmtForm({
 
         <InputNumerical
           smallPlaceholder
-          onDeposit={children ? undefined : showDeposit}
           placeholder={inputPlaceholder}
           disabled={!product || !account || isConfirmed || !isCorrectChain || !product?.isActive}
           value={amount}

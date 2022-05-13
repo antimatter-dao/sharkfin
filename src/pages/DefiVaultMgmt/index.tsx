@@ -7,13 +7,15 @@ import { Subject } from 'components/MgmtPage/stableContent'
 import TextButton from 'components/Button/TextButton'
 import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
-import DualInvestChart /*,{ PastAggrChart }*/ from 'pages/DualInvestMgmt/Chart'
+import DualInvestChart /*,{ PastAggrChart }*/ from 'pages/DefiVaultMgmt/Chart'
 import Card from 'components/Card/Card'
 import dayjs from 'dayjs'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { useSingleDefiVault } from 'hooks/useDefiVault'
 
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
+import { usePrevDetails } from 'hooks/usePrevDetails'
+import { PrevOrder } from 'utils/fetch/record'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -39,7 +41,7 @@ export default function DefiMgmt() {
   const { currency, type, chainName } = useParams<{ currency: string; type: string; chainName: string }>()
 
   const product = useSingleDefiVault(chainName ?? '', currency ?? '', type ?? '')
-  // const prevDetails = undefined
+  const prevDetails = usePrevDetails(chainName ?? '', currency ?? '', type ?? '')
   const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'
   const isCall = type.toUpperCase() === 'CALL'
@@ -128,7 +130,7 @@ export default function DefiMgmt() {
           chart={chart}
         >
           <Grid xs={12} md={4} item>
-            <PrevCycleStats prevDetails={undefined} />
+            <PrevCycleStats prevDetails={prevDetails} />
           </Grid>
           {!isDownMd && (
             <Grid xs={12} md={8} item>
@@ -253,17 +255,17 @@ function RecurringPolicyPage({ img, text }: { img: ReactElement<any, any>; text:
   )
 }
 
-function PrevCycleStats({ prevDetails }: { prevDetails: any | undefined }) {
+function PrevCycleStats({ prevDetails }: { prevDetails: PrevOrder | undefined }) {
   const theme = useTheme()
   const data = useMemo(
     () => ({
-      ['APY']: prevDetails?.apy ?? '-',
-      ['Strike Price']: `${prevDetails?.strikePrice ?? '-'} USDT`,
-      ['Executed Price']: `${prevDetails?.deliveryPrice ?? '-'} USDT`,
-      ['Status']: prevDetails?.status ?? '-',
-      ['Your P&L']: prevDetails?.pnl ?? '-',
+      ['APY']: prevDetails?.annualRor ? (+prevDetails.annualRor * 100).toFixed(2) + '%' : '-',
+      ['Strike Price']: `${prevDetails?.strikePrice ?? '-'} USDC`,
+      // ['Executed Price']: `${prevDetails?.deliveryPrice ?? '-'} USDT`,
+      // ['Status']: prevDetails?.status ?? '-',
+      // ['Your P&L']: prevDetails?.pnl ?? '-',
       ['Date']: prevDetails
-        ? `From ${dayjs(prevDetails.ts).format('MMM DD, YYYY')} to ${dayjs(prevDetails.expiredAt).format(
+        ? `From ${dayjs(+prevDetails.createdAt).format('MMM DD, YYYY')} to ${dayjs(prevDetails.expiredAt * 1000).format(
             'MMM DD, YYYY'
           )}`
         : '-'
@@ -284,12 +286,8 @@ function PrevCycleStats({ prevDetails }: { prevDetails: any | undefined }) {
             </Typography>
 
             <Typography
-              fontWeight={key === 'APY' || (key === 'Status' && data.Status === 'Exercised') ? 400 : 500}
-              color={
-                key === 'APY' || (key === 'Status' && data.Status === 'Exercised')
-                  ? theme.palette.primary.main
-                  : theme.palette.text.primary
-              }
+              fontWeight={key === 'APY' ? 400 : 500}
+              color={key === 'APY' ? theme.palette.primary.main : theme.palette.text.primary}
             >
               {data[key as keyof typeof data]}
             </Typography>

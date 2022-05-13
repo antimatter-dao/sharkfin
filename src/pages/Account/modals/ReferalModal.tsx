@@ -1,28 +1,25 @@
 import React, { useCallback, useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import { Box, Typography } from '@mui/material'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import Input from 'components/Input'
 import Modal from 'components/Modal'
 import Button from 'components/Button/Button'
-import { routes } from 'constants/routes'
 import useModal from 'hooks/useModal'
 import SecondaryButton from 'components/Button/SecondaryButton'
 import Divider from 'components/Divider'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useActiveWeb3React } from 'hooks'
+import { ExternalLink } from 'theme/components'
 
 export default function ReferalModal({ showRedirectButton = true }: { showRedirectButton?: boolean }) {
   const { account } = useActiveWeb3React()
   const [link] = useState('https://invest.antimatter.finance' + '/#/' + account)
   const [, setCopied] = useCopyClipboard()
-  const history = useHistory()
   const { hideModal } = useModal()
 
   const handleRedirect = useCallback(() => {
-    history.push(routes.accountTab.replace(':tab', 'referral'))
     hideModal()
-  }, [hideModal, history])
+  }, [hideModal])
 
   const handleCopy = useCallback(
     (e: React.MouseEvent) => {
@@ -69,11 +66,19 @@ export default function ReferalModal({ showRedirectButton = true }: { showRedire
         </Box>
         {showRedirectButton && (
           <Box ml="auto">
-            <Button onClick={handleRedirect} width="172px" height="36px" fontSize={'14px'} style={{ borderRadius: 5 }}>
-              <Box display="flex" alignItems="center">
-                My Referral reward &nbsp;➡️
-              </Box>
-            </Button>
+            <ExternalLink href="https://invest.antimatter.finance/#/account/referral">
+              <Button
+                onClick={handleRedirect}
+                width="172px"
+                height="36px"
+                fontSize={'14px'}
+                style={{ borderRadius: 5 }}
+              >
+                <Box display="flex" alignItems="center">
+                  My Referral reward &nbsp;➡️
+                </Box>
+              </Button>
+            </ExternalLink>
           </Box>
         )}
         <Divider color="rgba(0, 0, 0, 0.1)" />

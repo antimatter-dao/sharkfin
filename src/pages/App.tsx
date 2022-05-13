@@ -12,7 +12,6 @@ import NoService from './NoService'
 import Spinner from 'components/Spinner'
 import { fetchLocation } from 'utils/fetch/location'
 import Account from './Account'
-import { BindModalProvider } from 'context/BindContext'
 import DefiVault from './DefiVault'
 import DefiVaultMgmt from './DefiVaultMgmt'
 import { IS_TEST_NET } from 'constants/chain'
@@ -63,21 +62,19 @@ export default function App() {
               <WarningModal />
               <ScrollToTop />
               <Web3ReactManager>
-                <BindModalProvider>
-                  <LocatoinVerification resource={resource}>
-                    <Switch>
-                      <Route exact strict path={routes.noService} component={NoService} />
-                      <Route exact strict path={routes.accountTab} component={Account} />
+                <LocatoinVerification resource={resource}>
+                  <Switch>
+                    <Route exact strict path={routes.noService} component={NoService} />
+                    <Route exact strict path={routes.accountTab} component={Account} />
 
-                      <Route exact strict path={routes.defiVault} component={DefiVault} />
-                      <Route exact strict path={routes.defiVaultMgmt} component={DefiVaultMgmt} />
-                      <Route exact strict path={routes.referral} component={DefiVault} />
-                      <Route path="/">
-                        <Redirect to={routes.defiVault} />
-                      </Route>
-                    </Switch>
-                  </LocatoinVerification>
-                </BindModalProvider>
+                    <Route exact strict path={routes.defiVault} component={DefiVault} />
+                    <Route exact strict path={routes.defiVaultMgmt} component={DefiVaultMgmt} />
+                    <Route exact strict path={routes.referral} component={DefiVault} />
+                    <Route path="/">
+                      <Redirect to={routes.defiVault} />
+                    </Route>
+                  </Switch>
+                </LocatoinVerification>
               </Web3ReactManager>
             </BodyWrapper>
             {/* <Footer /> */}
