@@ -12,8 +12,8 @@ import NoService from './NoService'
 import Spinner from 'components/Spinner'
 import { fetchLocation } from 'utils/fetch/location'
 import Account from './Account'
-import DefiVault from './DefiVault'
-import DefiVaultMgmt from './DefiVaultMgmt'
+import Sharkfin from './Sharkfin'
+import SharkfinMgmt from './SharkfinMgmt'
 import { IS_TEST_NET } from 'constants/chain'
 
 const AppWrapper = styled('div')(({ theme }) => ({
@@ -67,11 +67,10 @@ export default function App() {
                     <Route exact strict path={routes.noService} component={NoService} />
                     <Route exact strict path={routes.accountTab} component={Account} />
 
-                    <Route exact strict path={routes.defiVault} component={DefiVault} />
-                    <Route exact strict path={routes.defiVaultMgmt} component={DefiVaultMgmt} />
-                    <Route exact strict path={routes.referral} component={DefiVault} />
+                    <Route exact strict path={routes.sharkfin} component={Sharkfin} />
+                    <Route exact strict path={routes.sharkfinMgmt} component={SharkfinMgmt} />
                     <Route path="/">
-                      <Redirect to={routes.defiVault} />
+                      <Redirect to={routes.sharkfin} />
                     </Route>
                   </Switch>
                 </LocatoinVerification>
