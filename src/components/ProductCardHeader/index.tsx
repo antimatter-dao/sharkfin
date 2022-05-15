@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material'
-import Card from 'components/Card/Card'
 import BlueRing from 'components/Icon/BlueRing'
 import { LogoTitle } from 'components/MgmtPage/LogoTitle'
 import useBreakpoint from 'hooks/useBreakpoint'
@@ -12,22 +11,31 @@ interface Props {
   priceCurSymbol: string
   description?: string
   color?: string
+  titleSize?: string
 }
 
-export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol, description, color }: Props) {
+export default function ProductCardHeader({
+  logoCurSymbol,
+  title,
+  priceCurSymbol,
+  description,
+  color,
+  titleSize
+}: Props) {
   const curPrice = usePrice(priceCurSymbol)
 
-  const isDownSm = useBreakpoint('sm')
+  // const isDownSm = useBreakpoint('sm')
   const isDownMd = useBreakpoint('md')
 
   return (
     <Box
+      width="100%"
       display={{ xs: 'grid', sm: 'flex' }}
-      alignContent="center"
+      alignItems="center"
       justifyContent={{ xs: 'stretch', sm: 'space-between' }}
       gap={{ xs: '0', sm: '40px' }}
     >
-      {logoCurSymbol && <LogoTitle description={description ?? ''} logoCurSymbol={logoCurSymbol} title={title} />}
+      <LogoTitle description={description ?? ''} logoCurSymbol={logoCurSymbol} title={title} titleSize={titleSize} />
       {/* <Box display="grid" columnGap={20} mb={{ xs: 10, md: 0 }}>
         {logoCurSymbol && (
           <CurrencyLogo
@@ -61,7 +69,7 @@ export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol
           </Typography>
         )}
       </Box> */}
-      <Card gray={isDownSm} style={{ borderRadius: '16px', margin: isDownMd ? '16px 0' : 0 }}>
+      {priceCurSymbol && (
         <Box
           display="flex"
           flexDirection="column"
@@ -87,7 +95,7 @@ export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol
             {priceCurSymbol} latest spot price
           </Typography>
         </Box>
-      </Card>
+      )}
     </Box>
   )
 }

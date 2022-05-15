@@ -6,11 +6,13 @@ import useBreakpoint from 'hooks/useBreakpoint'
 export function LogoTitle({
   logoCurSymbol,
   title,
-  description
+  description,
+  titleSize
 }: {
-  logoCurSymbol: string
+  logoCurSymbol?: string
   title: string | JSX.Element
   description: string
+  titleSize?: string
 }) {
   const isDownMd = useBreakpoint('md')
   const isDownSm = useBreakpoint('sm')
@@ -35,10 +37,12 @@ export function LogoTitle({
         sx={{
           gridColumnStart: isDownSm ? 1 : 2,
           gridColumnEnd: 'span 1',
-          fontSize: {
-            xs: 20,
-            md: 24
-          }
+          fontSize: titleSize
+            ? titleSize
+            : {
+                xs: 20,
+                md: 24
+              }
         }}
       >
         {title}

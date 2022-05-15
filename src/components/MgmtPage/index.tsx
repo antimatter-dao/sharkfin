@@ -7,6 +7,7 @@ import Card, { OutlinedCard } from 'components/Card/Card'
 import Divider from 'components/Divider'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { RiskStatement, FAQ, Subject } from './stableContent'
+import ProductCardHeader from 'components/ProductCardHeader'
 
 const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -115,9 +116,16 @@ export default function MgmtPage(props: Props) {
             flexDirection={isDownMd ? 'column' : 'row'}
           >
             {pageTitle && (
-              <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
-                {pageTitle}
-              </Typography>
+              // <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
+              //   {pageTitle}
+              // </Typography>
+              <ProductCardHeader
+                // logoCurSymbol={product?.investCurrency}
+                title={pageTitle}
+                priceCurSymbol={'BTC'}
+                description=""
+                titleSize={'44px'}
+              />
             )}
             {/* {subject === Subject.DualInvest && (
                 <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={400} component="span">
