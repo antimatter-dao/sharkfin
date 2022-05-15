@@ -10,8 +10,8 @@ import { ChainId, SUPPORTED_NETWORKS } from 'constants/chain'
 import { useSwitchChainModal } from 'hooks/useSwitchChainModal'
 import useBreakpoint from 'hooks/useBreakpoint'
 // import { OutlinedCard } from 'components/Card/Card'
-// import Card from 'components/Card/Card'
-// import Divider from 'components/Divider'
+import Card from 'components/Card/Card'
+import Divider from 'components/Divider'
 
 enum TYPE {
   invest = 'Invest',
@@ -19,19 +19,19 @@ enum TYPE {
   instant = 'Instant'
 }
 
-// const Instructions: { [type in TYPE]: JSX.Element | string } = {
-//   [TYPE.invest]: 'Your deposit will be deployed in the vault’s weekly strategy on Friday at 08:00 AM UTC',
-//   [TYPE.standard]: (
-//     <>
-//       Standard withdrawals are for funds that have been deployed in the vault&apos;s weekly strategy and involve a
-//       2-step withdrawal process:
-//       <br /> Step 1: User submits the amount to be withdrawn <br />
-//       Step 2: After the investment expires, the actual withdrawal will be completed, and the withdrawal amount includes
-//       part of the income.
-//     </>
-//   ),
-//   [TYPE.instant]: `Instant withdrawals are for funds that have been deposited but not yet deployed in the Defi Option Vault. Because these funds haven't been deployed they can be withdrawn immediately.`
-// }
+const Instructions: { [type in TYPE]: JSX.Element | string } = {
+  [TYPE.invest]: 'Your deposit will be deployed in the vault’s weekly strategy on Friday at 08:00 AM UTC',
+  [TYPE.standard]: (
+    <>
+      Standard withdrawals are for funds that have been deployed in the vault&apos;s weekly strategy and involve a
+      2-step withdrawal process:
+      <br /> Step 1: User submits the amount to be withdrawn <br />
+      Step 2: After the investment expires, the actual withdrawal will be completed, and the withdrawal amount includes
+      part of the income.
+    </>
+  ),
+  [TYPE.instant]: `Instant withdrawals are for funds that have been deposited but not yet deployed in the Defi Option Vault. Because these funds haven't been deployed they can be withdrawn immediately.`
+}
 
 export default function VaultForm({
   type,
@@ -63,7 +63,7 @@ export default function VaultForm({
   const { account, chainId } = useActiveWeb3React()
   const toggleWallet = useWalletModalToggle()
   const { switchChainCallback } = useSwitchChainModal()
-  const isDownMd = useBreakpoint('md')
+  // const isDownMd = useBreakpoint('md')
 
   const handleChange = useCallback(
     e => {
@@ -79,13 +79,7 @@ export default function VaultForm({
   }, [available, onChange])
 
   return (
-    <Box
-      pt="20px"
-      display={isDownMd ? 'grid' : 'flex'}
-      width="100%"
-      gap={isDownMd ? '40px' : '60px'}
-      alignItems="flex-start"
-    >
+    <Box pt="20px" display="flex" flexDirection="column" width="100%">
       <Box display="grid" gap="30px" width={'100%'}>
         <Box minHeight="48px" display="flex" alignItems={'flex-end'}>
           {children}
@@ -144,43 +138,48 @@ export default function VaultForm({
           )}
         </Box>
       </Box>
-      {/* <OutlinedCard width={'100%'} style={{ margin: '12px 0' }}>
-        <Box width={'100%'} padding="24px 22px 27px" display="flex" flexDirection={'column'} gap={24}>
-          <Card gray>
-            <Box padding="20px 22px" display="grid" gap={30} minHeight={141}>
-              <Box display={'flex'} alignItems="center">
-                <Divider
-                  orientation="vertical"
-                  sx={{
-                    marginRight: 12,
-                    width: 2,
-                    backgroundColor: theme => theme.palette.primary.main,
-                    borderColor: 'transparent'
-                  }}
-                />
-                <Typography fontSize={14} sx={{ color: theme => theme.palette.text.secondary }}>
-                  {Instructions[type as TYPE]}
-                </Typography>
-              </Box>
+      <Divider
+        sx={{
+          mt: 16,
+          backgroundColor: 'rgba(204, 204, 204, 0.61)',
+          borderColor: 'transparent'
+        }}
+      />
+      <Box width={'100%'} padding="24px 22px 27px" display="flex" flexDirection={'column'} gap={24}>
+        <Card gray>
+          <Box padding="20px 22px" display="grid" gap={30} minHeight={141}>
+            <Box display={'flex'} alignItems="center">
+              <Divider
+                orientation="vertical"
+                sx={{
+                  marginRight: 12,
+                  width: 2,
+                  backgroundColor: theme => theme.palette.primary.main,
+                  borderColor: 'transparent'
+                }}
+              />
+              <Typography fontSize={14} sx={{ color: theme => theme.palette.text.secondary }}>
+                {Instructions[type as TYPE]}
+              </Typography>
             </Box>
-          </Card>
-          <Box display="flex" flexDirection="column" gap={16}>
-            {Object.keys(formData).map(key => (
-              <Box key={key} display={{ xs: 'grid', md: 'flex' }} justifyContent="space-between" gap={5}>
-                <Typography fontSize={16}>{key}</Typography>
-                <Typography
-                  fontSize={16}
-                  component="div"
-                  fontWeight={700}
-                  sx={{ color: theme => theme.palette.text.secondary }}
-                >
-                  {formData[key as keyof typeof formData]}
-                </Typography>
-              </Box>
-            ))}
           </Box>
+        </Card>
+        <Box display="flex" flexDirection="column" gap={16}>
+          {Object.keys(formData).map(key => (
+            <Box key={key} display={{ xs: 'grid', md: 'flex' }} justifyContent="space-between" gap={5}>
+              <Typography fontSize={16}>{key}</Typography>
+              <Typography
+                fontSize={16}
+                component="div"
+                fontWeight={700}
+                sx={{ color: theme => theme.palette.text.secondary }}
+              >
+                {formData[key as keyof typeof formData]}
+              </Typography>
+            </Box>
+          ))}
         </Box>
-      </OutlinedCard> */}
+      </Box>
     </Box>
   )
 }
