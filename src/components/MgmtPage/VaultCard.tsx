@@ -9,7 +9,7 @@ import VaultForm from './VaultForm'
 import { DefiProduct } from 'hooks/useDefiVault'
 import { useActiveWeb3React } from 'hooks'
 // import { Timer } from 'components/Timer'
-import { trimNumberString } from 'utils/trimNumberString'
+// import { trimNumberString } from 'utils/trimNumberString'
 import dayjs from 'dayjs'
 
 const StyledBox = styled(Box)<{ selected?: boolean }>(({ theme, selected }) => ({
@@ -58,7 +58,7 @@ export default function VaultCard(props: Props) {
     available,
     onInvestChange,
     amount,
-    onInstantWd,
+    // onInstantWd,
     onInvest,
     walletBalance,
     product,
@@ -123,8 +123,8 @@ export default function VaultCard(props: Props) {
         <ProductCardHeader
           logoCurSymbol={product?.investCurrency}
           title={title}
-          priceCurSymbol={product?.currency ?? ''}
-          description=""
+          // priceCurSymbol={product?.currency ?? ''}
+          // description=""
         />
 
         <Box width={'100%'} mt={{ xs: 0, md: 30 }}>
@@ -145,7 +145,7 @@ export default function VaultCard(props: Props) {
             <Tabs
               customCurrentTab={currentTab}
               customOnChange={handleTabClick}
-              titles={['Invest', 'Standard Withdrawal', 'Instant Withdrawal']}
+              titles={['Invest', 'Redeem']}
               tabPadding="12px 0px 12px 0px"
               contents={[
                 <VaultForm
@@ -220,28 +220,6 @@ export default function VaultCard(props: Props) {
                     CustomTab={CustomTab}
                     customCurrentTab={standardWithdrawlStep}
                   />
-                </VaultForm>,
-                <VaultForm
-                  buttonText="Instant Withdraw"
-                  error={error}
-                  key={TYPE.instant}
-                  type={'Instant'}
-                  val={amount}
-                  onChange={onInvestChange}
-                  currencySymbol={currencySymbol}
-                  onClick={onInstantWd}
-                  disabled={disabled}
-                  productChainId={productChainId}
-                  formData={formData}
-                  available={product?.instantBalance}
-                >
-                  <Typography display="flex" alignItems={'center'} variant="inherit">
-                    Redeemable:
-                    <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
-                      {product?.instantBalance ? trimNumberString(product?.instantBalance, 6) : '-'}{' '}
-                      {product?.investCurrency}
-                    </Typography>
-                  </Typography>
                 </VaultForm>
               ]}
             />

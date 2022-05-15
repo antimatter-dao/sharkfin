@@ -8,7 +8,7 @@ import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 interface Props {
   logoCurSymbol?: string
   title: string | JSX.Element
-  priceCurSymbol: string
+  priceCurSymbol?: string
   description?: string
   color?: string
   titleSize?: string
