@@ -223,7 +223,7 @@ export default function Sharkfin() {
                   } strategy`}
                   onClick={() => {
                     history.push(
-                      routes.defiVaultMgmt
+                      routes.sharkfinMgmt
                         .replace(':currency', currency ?? '')
                         .replace(':type', type)
                         .replace(':chainName', ChainListMap[+chainId].symbol)
