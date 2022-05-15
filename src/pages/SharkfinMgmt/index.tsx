@@ -126,10 +126,10 @@ export default function DefiMgmt() {
             vaultForm={<VaultForm product={product} setAmount={handleInput} amount={investAmount} />}
             chart={chart}
           >
-            <Grid xs={12} md={4} item>
+            <Grid xs={12} md={8} item>
               <PrevCycleStats prevDetails={prevDetails} />
             </Grid>
-            {!isDownMd && (
+            {/* {!isDownMd && (
               <Grid xs={12} md={8} item>
                 <Card style={{ height: '100%' }}>
                   <Box height="100%" width="100%" display="flex" alignItems={'center'} padding="24px">
@@ -140,7 +140,7 @@ export default function DefiMgmt() {
                   </Box>
                 </Card>
               </Grid>
-            )}
+            )} */}
           </MgmtPage>
         </>
       )}
