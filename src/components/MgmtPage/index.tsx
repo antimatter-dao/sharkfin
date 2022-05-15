@@ -44,7 +44,7 @@ export default function MgmtPage(props: Props) {
     pageTitle,
     chart,
     subject,
-    type,
+    // type,
     subscribeForm,
     showFaq = true,
     returnOnInvestmentListItems,
@@ -106,87 +106,91 @@ export default function MgmtPage(props: Props) {
           </Box>
         </Box>
 
-        <Box padding={isDownMd || vaultForm ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
-          {!vaultForm && (
-            <Box
-              mb={isDownMd ? 24 : 60}
-              display="flex"
-              gap={{ xs: 0, md: 8 }}
-              flexDirection={isDownMd ? 'column' : 'row'}
-            >
-              {pageTitle && (
-                <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
-                  {pageTitle}
-                </Typography>
-              )}
-              {subject === Subject.DualInvest && (
+        <Box padding={isDownMd ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
+          {/* {!vaultForm && ( */}
+          <Box
+            mb={isDownMd ? 24 : 60}
+            display="flex"
+            gap={{ xs: 0, md: 8 }}
+            flexDirection={isDownMd ? 'column' : 'row'}
+          >
+            {pageTitle && (
+              <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
+                {pageTitle}
+              </Typography>
+            )}
+            {/* {subject === Subject.DualInvest && (
                 <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={400} component="span">
                   [{type === 'CALL' ? 'upward' : 'down'} exercise]
                 </Typography>
-              )}
-            </Box>
-          )}
+              )} */}
+          </Box>
+          {/* )} */}
 
           <Grid container spacing={20}>
             {vaultForm && (
               <Grid xs={12} item>
-                {vaultForm}
+                <Card>
+                  <Grid container spacing={20}>
+                    <Grid item xs={12} md={5}>
+                      {vaultForm}
+                    </Grid>
+                    <Grid item xs={12} md={7}>
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        gap="20px"
+                        maxWidth="100%"
+                        height="100%"
+                        width="100%"
+                        padding="32px 24px"
+                      >
+                        <Box
+                          display="flex"
+                          justifyContent={isDownMd ? 'flex-start' : 'space-between'}
+                          flexDirection={isDownMd ? 'column' : 'row'}
+                          gap={18}
+                        >
+                          <Typography fontSize={{ xs: 20, md: 24 }} fontWeight={700}>
+                            {graphTitle}
+                          </Typography>
+                          <Box display="flex" gap={24}>
+                            <Box display="flex" alignItems="center" gap={8}>
+                              <Box height={10} width={10} borderRadius="50%" bgcolor="#18A0FB" />
+                              <Typography fontSize={12} color="#18A0FB">
+                                Spot Price
+                              </Typography>
+                            </Box>
+                            <Box display="flex" alignItems="center" gap={8}>
+                              <Box height={10} width={10} borderRadius="50%" bgcolor="#F0B90B" />
+                              <Typography fontSize={12} color="#F0B90B">
+                                Strike Price
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </Box>
+                        <Box sx={{ maxWidth: '100%', height: '100%', flexGrow: 1 }} mt={20}>
+                          <Box maxHeight="100%" height="100%" gap={0} display={{ xs: 'grid', md: 'flex' }}>
+                            {chart}
+                          </Box>
+                        </Box>
+                        {isDownMd ? (
+                          <Box>
+                            <Divider extension={24} sx={{ opacity: 0.1, marginBottom: 20 }} />
+                            {returnOnInvestment}
+                          </Box>
+                        ) : (
+                          <OutlinedCard padding="16px 20px">{returnOnInvestment}</OutlinedCard>
+                        )}
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Card>
               </Grid>
             )}
+
             <Grid xs={12} md={4} item position="relative">
               <Card style={{ height: '100%' }}>{subscribeForm}</Card>
-            </Grid>
-
-            <Grid xs={12} md={8} item>
-              <Card style={{ height: '100%' }}>
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  gap="20px"
-                  maxWidth="100%"
-                  height="100%"
-                  width="100%"
-                  padding="32px 24px"
-                >
-                  <Box
-                    display="flex"
-                    justifyContent={isDownMd ? 'flex-start' : 'space-between'}
-                    flexDirection={isDownMd ? 'column' : 'row'}
-                    gap={18}
-                  >
-                    <Typography fontSize={{ xs: 20, md: 24 }} fontWeight={700}>
-                      {graphTitle}
-                    </Typography>
-                    <Box display="flex" gap={24}>
-                      <Box display="flex" alignItems="center" gap={8}>
-                        <Box height={10} width={10} borderRadius="50%" bgcolor="#18A0FB" />
-                        <Typography fontSize={12} color="#18A0FB">
-                          Spot Price
-                        </Typography>
-                      </Box>
-                      <Box display="flex" alignItems="center" gap={8}>
-                        <Box height={10} width={10} borderRadius="50%" bgcolor="#F0B90B" />
-                        <Typography fontSize={12} color="#F0B90B">
-                          Strike Price
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Box>
-                  <Box sx={{ maxWidth: '100%', height: '100%', flexGrow: 1 }} mt={20}>
-                    <Box maxHeight="100%" height="100%" gap={0} display={{ xs: 'grid', md: 'flex' }}>
-                      {chart}
-                    </Box>
-                  </Box>
-                  {isDownMd ? (
-                    <Box>
-                      <Divider extension={24} sx={{ opacity: 0.1, marginBottom: 20 }} />
-                      {returnOnInvestment}
-                    </Box>
-                  ) : (
-                    <OutlinedCard padding="16px 20px">{returnOnInvestment}</OutlinedCard>
-                  )}
-                </Box>
-              </Card>
             </Grid>
 
             {children && <>{children}</>}

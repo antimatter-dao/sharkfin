@@ -9,9 +9,9 @@ import { ErrorType } from './VaultCard'
 import { ChainId, SUPPORTED_NETWORKS } from 'constants/chain'
 import { useSwitchChainModal } from 'hooks/useSwitchChainModal'
 import useBreakpoint from 'hooks/useBreakpoint'
-import { OutlinedCard } from 'components/Card/Card'
-import Card from 'components/Card/Card'
-import Divider from 'components/Divider'
+// import { OutlinedCard } from 'components/Card/Card'
+// import Card from 'components/Card/Card'
+// import Divider from 'components/Divider'
 
 enum TYPE {
   invest = 'Invest',
@@ -19,19 +19,19 @@ enum TYPE {
   instant = 'Instant'
 }
 
-const Instructions: { [type in TYPE]: JSX.Element | string } = {
-  [TYPE.invest]: 'Your deposit will be deployed in the vault’s weekly strategy on Friday at 08:00 AM UTC',
-  [TYPE.standard]: (
-    <>
-      Standard withdrawals are for funds that have been deployed in the vault&apos;s weekly strategy and involve a
-      2-step withdrawal process:
-      <br /> Step 1: User submits the amount to be withdrawn <br />
-      Step 2: After the investment expires, the actual withdrawal will be completed, and the withdrawal amount includes
-      part of the income.
-    </>
-  ),
-  [TYPE.instant]: `Instant withdrawals are for funds that have been deposited but not yet deployed in the Defi Option Vault. Because these funds haven't been deployed they can be withdrawn immediately.`
-}
+// const Instructions: { [type in TYPE]: JSX.Element | string } = {
+//   [TYPE.invest]: 'Your deposit will be deployed in the vault’s weekly strategy on Friday at 08:00 AM UTC',
+//   [TYPE.standard]: (
+//     <>
+//       Standard withdrawals are for funds that have been deployed in the vault&apos;s weekly strategy and involve a
+//       2-step withdrawal process:
+//       <br /> Step 1: User submits the amount to be withdrawn <br />
+//       Step 2: After the investment expires, the actual withdrawal will be completed, and the withdrawal amount includes
+//       part of the income.
+//     </>
+//   ),
+//   [TYPE.instant]: `Instant withdrawals are for funds that have been deposited but not yet deployed in the Defi Option Vault. Because these funds haven't been deployed they can be withdrawn immediately.`
+// }
 
 export default function VaultForm({
   type,
@@ -144,7 +144,7 @@ export default function VaultForm({
           )}
         </Box>
       </Box>
-      <OutlinedCard width={'100%'} style={{ margin: '12px 0' }}>
+      {/* <OutlinedCard width={'100%'} style={{ margin: '12px 0' }}>
         <Box width={'100%'} padding="24px 22px 27px" display="flex" flexDirection={'column'} gap={24}>
           <Card gray>
             <Box padding="20px 22px" display="grid" gap={30} minHeight={141}>
@@ -180,7 +180,7 @@ export default function VaultForm({
             ))}
           </Box>
         </Box>
-      </OutlinedCard>
+      </OutlinedCard> */}
     </Box>
   )
 }

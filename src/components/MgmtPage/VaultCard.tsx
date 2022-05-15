@@ -8,7 +8,7 @@ import Tabs from 'components/Tabs/Tabs'
 import VaultForm from './VaultForm'
 import { DefiProduct } from 'hooks/useDefiVault'
 import { useActiveWeb3React } from 'hooks'
-import { Timer } from 'components/Timer'
+// import { Timer } from 'components/Timer'
 import { trimNumberString } from 'utils/trimNumberString'
 import dayjs from 'dayjs'
 
@@ -124,14 +124,12 @@ export default function VaultCard(props: Props) {
           logoCurSymbol={product?.investCurrency}
           title={title}
           priceCurSymbol={product?.currency ?? ''}
-          description={`Generates yield by running an automated ${
-            product?.type === 'CALL' ? `${product?.currency ?? ''} covered call strategy` : `put selling strategy`
-          }`}
+          description=""
         />
 
         <Box width={'100%'} mt={{ xs: 0, md: 30 }}>
           <Box mt={12} position="relative">
-            <Typography
+            {/* <Typography
               position={{ xs: 'static', md: 'absolute' }}
               sx={{ top: 0, right: 0, height: 48 }}
               display="flex"
@@ -142,7 +140,7 @@ export default function VaultCard(props: Props) {
               <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
                 <Timer timer={product?.expiredAt ?? 0} />
               </Typography>
-            </Typography>
+            </Typography> */}
             {isDownSm && <Divider sx={{ opacity: 0.1 }} />}
             <Tabs
               customCurrentTab={currentTab}

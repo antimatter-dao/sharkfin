@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react'
-import { Box, Alert, Typography } from '@mui/material'
+// import { Box, Alert, Typography } from '@mui/material'
 // import dayjs from 'dayjs'
 import VaultCard from 'components/MgmtPage/VaultCard'
 import { useActiveWeb3React } from 'hooks'
@@ -37,14 +37,11 @@ export default function VaultForm({
   const currencySymbol = product?.investCurrency ?? ''
   const investCurrency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.investCurrency ?? '']
   const currency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.currency ?? '']
-  const title =
-    product?.type === 'CALL'
-      ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-      : `${product?.currency ?? ''} Put Selling Recurring Strategy`
+  const title = 'BTC weekly sharkfin(Principle protected)'
 
   const ETHBalance = useETHBalances([account ?? undefined])?.[account ?? '']
   const tokenBalance = useTokenBalance(account ?? undefined, investCurrency)
-  const [snackbarOpen, setSnackbarOpen] = useState(true)
+  // const [snackbarOpen, setSnackbarOpen] = useState(true)
   const [wdConfirmOpen, setWdConfirmOpen] = useState(false)
   const [investConfirmOpen, setInvestConfirmOpen] = useState(false)
   const spotPrice = usePrice(currencySymbol, 60000)
@@ -89,9 +86,9 @@ export default function VaultForm({
     [product?.apy, spotPrice]
   )
 
-  const handleCloseSnakebar = useCallback(() => {
-    setSnackbarOpen(false)
-  }, [])
+  // const handleCloseSnakebar = useCallback(() => {
+  //   setSnackbarOpen(false)
+  // }, [])
 
   const handleInvestChange = useCallback(
     val => {
@@ -242,8 +239,8 @@ export default function VaultForm({
         currency={investCurrency}
       />
 
-      <Box display="grid" position="relative" gap="35px" mt={32}>
-        {snackbarOpen && (
+      {/* <Box display="grid" position="relative" gap="35px" mt={32}> */}
+      {/* {snackbarOpen && (
           <Alert
             onClose={handleCloseSnakebar}
             severity="error"
@@ -266,21 +263,21 @@ export default function VaultForm({
               </Typography>
             </div>
           </Alert>
-        )}
+        )} */}
 
-        <VaultCard
-          walletBalance={balance}
-          title={title}
-          formData={formData}
-          product={product}
-          onStandardWd={handleStandardWd}
-          onInstantWd={handleWdConfirmOpen}
-          onInvest={handleInvestConfirmOpen}
-          available={balance}
-          onInvestChange={handleInvestChange}
-          amount={amount}
-        />
-      </Box>
+      <VaultCard
+        walletBalance={balance}
+        title={title}
+        formData={formData}
+        product={product}
+        onStandardWd={handleStandardWd}
+        onInstantWd={handleWdConfirmOpen}
+        onInvest={handleInvestConfirmOpen}
+        available={balance}
+        onInvestChange={handleInvestChange}
+        amount={amount}
+      />
+      {/* </Box> */}
     </>
   )
 }

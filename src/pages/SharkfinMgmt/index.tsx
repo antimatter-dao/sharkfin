@@ -109,42 +109,40 @@ export default function DefiMgmt() {
           </Box>
         </Box>
       ) : (
-        <MgmtPage
-          graphTitle="Current Subscription Status"
-          showFaq={false}
-          backLink={routes.defiVault}
-          pageTitle={
-            product?.type === 'CALL'
-              ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-              : `${product?.currency ?? ''} Put Selling Recurring Strategy`
-          }
-          subject={Subject.RecurringVault}
-          subscribeForm={
-            <RecurringPolicy
-              type={product?.type.toLocaleLowerCase() === 'call' ? 'call' : 'put'}
-              currencySymbol={product?.currency ?? '-'}
-            />
-          }
-          returnOnInvestmentListItems={returnOnInvestmentListItems}
-          vaultForm={<VaultForm product={product} setAmount={handleInput} amount={investAmount} />}
-          chart={chart}
-        >
-          <Grid xs={12} md={4} item>
-            <PrevCycleStats prevDetails={prevDetails} />
-          </Grid>
-          {!isDownMd && (
-            <Grid xs={12} md={8} item>
-              <Card style={{ height: '100%' }}>
-                <Box height="100%" width="100%" display="flex" alignItems={'center'} padding="24px">
-                  <Typography sx={{ margin: 'auto auto' }} align="center">
-                    Past aggregate earnings graph <br />
-                    Coming soon...
-                  </Typography>
-                </Box>
-              </Card>
+        <>
+          <MgmtPage
+            graphTitle="Current Subscription Status"
+            showFaq={false}
+            backLink={routes.defiVault}
+            pageTitle={'BTC weekly sharkfin'}
+            subject={Subject.RecurringVault}
+            subscribeForm={
+              <RecurringPolicy
+                type={product?.type.toLocaleLowerCase() === 'call' ? 'call' : 'put'}
+                currencySymbol={product?.currency ?? '-'}
+              />
+            }
+            returnOnInvestmentListItems={returnOnInvestmentListItems}
+            vaultForm={<VaultForm product={product} setAmount={handleInput} amount={investAmount} />}
+            chart={chart}
+          >
+            <Grid xs={12} md={4} item>
+              <PrevCycleStats prevDetails={prevDetails} />
             </Grid>
-          )}
-        </MgmtPage>
+            {!isDownMd && (
+              <Grid xs={12} md={8} item>
+                <Card style={{ height: '100%' }}>
+                  <Box height="100%" width="100%" display="flex" alignItems={'center'} padding="24px">
+                    <Typography sx={{ margin: 'auto auto' }} align="center">
+                      Past aggregate earnings graph <br />
+                      Coming soon...
+                    </Typography>
+                  </Box>
+                </Card>
+              </Grid>
+            )}
+          </MgmtPage>
+        </>
       )}
     </>
   )
