@@ -15,13 +15,12 @@ import Divider from 'components/Divider'
 
 enum TYPE {
   invest = 'Invest',
-  standard = 'Standard',
-  instant = 'Instant'
+  redeem = 'Redeem'
 }
 
-const Instructions: { [type in TYPE]: JSX.Element | string } = {
-  [TYPE.invest]: 'Your deposit will be deployed in the vault’s weekly strategy on Friday at 08:00 AM UTC',
-  [TYPE.standard]: (
+const Instructions: { [type in TYPE]: JSX.Element | string | undefined } = {
+  [TYPE.invest]: undefined,
+  [TYPE.redeem]: (
     <>
       Standard withdrawals are for funds that have been deployed in the vault&apos;s weekly strategy and involve a
       2-step withdrawal process:
@@ -29,8 +28,7 @@ const Instructions: { [type in TYPE]: JSX.Element | string } = {
       Step 2: After the investment expires, the actual withdrawal will be completed, and the withdrawal amount includes
       part of the income.
     </>
-  ),
-  [TYPE.instant]: `Instant withdrawals are for funds that have been deposited but not yet deployed in the Defi Option Vault. Because these funds haven't been deployed they can be withdrawn immediately.`
+  )
 }
 
 export default function VaultForm({
@@ -138,47 +136,52 @@ export default function VaultForm({
           )}
         </Box>
       </Box>
-      <Divider
-        sx={{
-          mt: 16,
-          backgroundColor: 'rgba(204, 204, 204, 0.61)',
-          borderColor: 'transparent'
-        }}
-      />
+
       <Box width={'100%'} padding="24px 22px 27px" display="flex" flexDirection={'column'} gap={24}>
-        <Card gray>
-          <Box padding="20px 22px" display="grid" gap={30} minHeight={141}>
-            <Box display={'flex'} alignItems="center">
-              <Divider
-                orientation="vertical"
-                sx={{
-                  marginRight: 12,
-                  width: 2,
-                  backgroundColor: theme => theme.palette.primary.main,
-                  borderColor: 'transparent'
-                }}
-              />
-              <Typography fontSize={14} sx={{ color: theme => theme.palette.text.secondary }}>
-                {Instructions[type as TYPE]}
-              </Typography>
+        {type === TYPE.redeem && (
+          <>
+            <Divider
+              sx={{
+                mt: 16,
+                backgroundColor: 'rgba(204, 204, 204, 0.61)',
+                borderColor: 'transparent'
+              }}
+            />
+            <Card gray>
+              <Box padding="20px 22px" display="grid" gap={30} minHeight={141}>
+                <Box display={'flex'} alignItems="center">
+                  <Divider
+                    orientation="vertical"
+                    sx={{
+                      marginRight: 12,
+                      width: 2,
+                      backgroundColor: theme => theme.palette.primary.main,
+                      borderColor: 'transparent'
+                    }}
+                  />
+                  <Typography fontSize={14} sx={{ color: theme => theme.palette.text.secondary }}>
+                    {Instructions[type as TYPE]}
+                  </Typography>
+                </Box>
+              </Box>
+            </Card>
+            <Box display="flex" flexDirection="column" gap={16}>
+              {Object.keys(formData).map(key => (
+                <Box key={key} display={{ xs: 'grid', md: 'flex' }} justifyContent="space-between" gap={5}>
+                  <Typography fontSize={16}>{key}</Typography>
+                  <Typography
+                    fontSize={16}
+                    component="div"
+                    fontWeight={700}
+                    sx={{ color: theme => theme.palette.text.secondary }}
+                  >
+                    {formData[key as keyof typeof formData]}
+                  </Typography>
+                </Box>
+              ))}
             </Box>
-          </Box>
-        </Card>
-        <Box display="flex" flexDirection="column" gap={16}>
-          {Object.keys(formData).map(key => (
-            <Box key={key} display={{ xs: 'grid', md: 'flex' }} justifyContent="space-between" gap={5}>
-              <Typography fontSize={16}>{key}</Typography>
-              <Typography
-                fontSize={16}
-                component="div"
-                fontWeight={700}
-                sx={{ color: theme => theme.palette.text.secondary }}
-              >
-                {formData[key as keyof typeof formData]}
-              </Typography>
-            </Box>
-          ))}
-        </Box>
+          </>
+        )}
       </Box>
     </Box>
   )

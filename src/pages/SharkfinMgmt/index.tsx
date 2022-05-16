@@ -111,8 +111,8 @@ export default function DefiMgmt() {
       ) : (
         <>
           <MgmtPage
-            graphTitle="Current Subscription Status"
-            showFaq={false}
+            graphTitle="Purchase expected income graph"
+            showFaq={true}
             backLink={routes.defiVault}
             pageTitle={'BTC weekly sharkfin'}
             subject={Subject.RecurringVault}

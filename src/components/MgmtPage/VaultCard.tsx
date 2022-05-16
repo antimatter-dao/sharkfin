@@ -10,7 +10,7 @@ import { DefiProduct } from 'hooks/useDefiVault'
 import { useActiveWeb3React } from 'hooks'
 // import { Timer } from 'components/Timer'
 // import { trimNumberString } from 'utils/trimNumberString'
-import dayjs from 'dayjs'
+// import dayjs from 'dayjs'
 
 const StyledBox = styled(Box)<{ selected?: boolean }>(({ theme, selected }) => ({
   border: `1px solid ${selected ? theme.palette.primary.main : theme.palette.text.secondary}`,
@@ -163,18 +163,27 @@ export default function VaultCard(props: Props) {
                   formData={formData}
                   buttonText="Invest"
                 >
-                  <Box display="grid" gap={16} width="100%" height="100px" margin="20px 0">
+                  <Box display="grid" gap={16} width="100%" margin="20px 0">
                     {[
-                      { title: 'Current Vault Approximate APY', data: product?.apy ?? '-' },
                       {
-                        title: 'Current Vault Strike Price',
-                        data: (product?.strikePrice ?? '-') + ' USDT'
+                        title: 'Price Range(USDT)',
+                        data: '59,000~62,000'
                       },
                       {
-                        title: 'Current Vault Expiry Time',
-                        data: product?.expiredAt
-                          ? dayjs(product.expiredAt).format('MMM DD, YYYY') + ' 08:00:00 AM UTC'
-                          : '-'
+                        title: 'APR',
+                        data: '12%'
+                      },
+                      {
+                        title: 'Term',
+                        data: '7 Days'
+                      },
+                      {
+                        title: 'Duration',
+                        data: '21 Oct 2022 ~ 27 Oct 2022'
+                      },
+                      {
+                        title: 'Your Position',
+                        data: '123BTC'
                       }
                     ].map(({ title, data }) => {
                       return (
@@ -205,7 +214,7 @@ export default function VaultCard(props: Props) {
                   buttonText={initiated ? 'Complete Withdraw' : 'Initiate Withdraw'}
                   error={error}
                   key={TYPE.standard}
-                  type={'Standard'}
+                  type={'Redeem'}
                   val={amount}
                   onChange={onInvestChange}
                   currencySymbol={currencySymbol}
