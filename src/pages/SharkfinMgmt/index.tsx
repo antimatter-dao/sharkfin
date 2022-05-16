@@ -1,21 +1,25 @@
-import { useMemo, useState, useCallback, ReactElement } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 import { Typography, Box, useTheme, styled, Grid } from '@mui/material'
 import MgmtPage from 'components/MgmtPage'
 import { routes } from 'constants/routes'
 import { Subject } from 'components/MgmtPage/stableContent'
-import TextButton from 'components/Button/TextButton'
-import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
+// import TextButton from 'components/Button/TextButton'
+// import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
-import DualInvestChart /*,{ PastAggrChart }*/ from 'pages/SharkfinMgmt/Chart'
+import DualInvestChart, { PastAggrChart } from 'pages/SharkfinMgmt/Chart'
 import Card from 'components/Card/Card'
-import dayjs from 'dayjs'
+// import dayjs from 'dayjs'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { useSingleDefiVault } from 'hooks/useDefiVault'
 
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
-import { usePrevDetails } from 'hooks/usePrevDetails'
-import { PrevOrder } from 'utils/fetch/record'
+// import { usePrevDetails } from 'hooks/usePrevDetails'
+// import { PrevOrder } from 'utils/fetch/record'
+import Divider from 'components/Divider'
+import { Timer } from 'components/Timer'
+import { ExternalLink } from 'theme/components'
+import SwitchToggle from 'components/SwitchToggle'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -41,7 +45,7 @@ export default function DefiMgmt() {
   const { currency, type, chainName } = useParams<{ currency: string; type: string; chainName: string }>()
 
   const product = useSingleDefiVault(chainName ?? '', currency ?? '', type ?? '')
-  const prevDetails = usePrevDetails(chainName ?? '', currency ?? '', type ?? '')
+  // const prevDetails = usePrevDetails(chainName ?? '', currency ?? '', type ?? '')
   const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'
   const isCall = type.toUpperCase() === 'CALL'
@@ -49,14 +53,18 @@ export default function DefiMgmt() {
   const returnOnInvestmentListItems = useMemo(() => {
     return [
       <>
-        The Strike Price is calculated through an approximate APY. At the start of the cycle a Strike Price is selected
-        that provides investors with that APY.
+        Settlement at maturity:at annualised rate of return 3.00~25.00% Conditions must meet:BTC price was always within
+        the price range Annualised Product Return =3.00%+(settlement price at
+        maturity-38500)/(42500-38500)*(25.00%-3.00%) Return=Principal* Annualised Product Return/365*Investment term
       </>,
       <>
-        The further away the Strike Price is from the Spot Price at the start of a cycle, the less likely it is that an
-        option is exercised.
+        Settlement at maturity:APR of 3.00% Conditions must meet:Would BTC price was atleast once below $38500 or above
+        $42500 Return=Principal * 3.00/365 * 7 (investment term)
       </>,
-      <>APY will be adjusted accordingly week for week, and remain approximately the same during a cycle.</>
+      <>
+        *Observed btc/usd option’s underlying price at Deribit at 12:00 every day is the observed price of the day. The
+        settlement price is the BTC price at 8:00 UTC on expiry date. Price data is sourced from an on-chain oracle.
+      </>
     ]
   }, [])
 
@@ -116,18 +124,22 @@ export default function DefiMgmt() {
             backLink={routes.defiVault}
             pageTitle={'BTC weekly sharkfin'}
             subject={Subject.RecurringVault}
-            subscribeForm={
-              <RecurringPolicy
-                type={product?.type.toLocaleLowerCase() === 'call' ? 'call' : 'put'}
-                currencySymbol={product?.currency ?? '-'}
-              />
-            }
+            // subscribeForm={
+            //   <RecurringPolicy
+            //     type={product?.type.toLocaleLowerCase() === 'call' ? 'call' : 'put'}
+            //     currencySymbol={product?.currency ?? '-'}
+            //   />
+            // }
             returnOnInvestmentListItems={returnOnInvestmentListItems}
             vaultForm={<VaultForm product={product} setAmount={handleInput} amount={investAmount} />}
             chart={chart}
           >
+            <Grid xs={12} md={4} item>
+              <RecurringSwitch />
+            </Grid>
             <Grid xs={12} md={8} item>
-              <PrevCycleStats prevDetails={prevDetails} />
+              <PastAggregate />
+              {/* <PrevCycleStats prevDetails={prevDetails} /> */}
             </Grid>
             {/* {!isDownMd && (
               <Grid xs={12} md={8} item>
@@ -148,135 +160,191 @@ export default function DefiMgmt() {
   )
 }
 
-function RecurringPolicy({ type, currencySymbol }: { type: 'call' | 'put'; currencySymbol: string }) {
-  const [curIdx, setCurIdx] = useState(0)
-  const policy = type === 'call' ? vaultPolicyCall : vaultPolicyPut
-  const Text = vaultPolicyText[type]
+// function RecurringPolicy({ type, currencySymbol }: { type: 'call' | 'put'; currencySymbol: string }) {
+//   const [curIdx, setCurIdx] = useState(0)
+//   const policy = type === 'call' ? vaultPolicyCall : vaultPolicyPut
+//   const Text = vaultPolicyText[type]
 
-  const theme = useTheme()
+//   const theme = useTheme()
 
-  const handlePrev = useCallback(() => {
-    setCurIdx(preIdx => {
-      return preIdx === 0 ? 0 : preIdx - 1
-    })
-  }, [])
+//   const handlePrev = useCallback(() => {
+//     setCurIdx(preIdx => {
+//       return preIdx === 0 ? 0 : preIdx - 1
+//     })
+//   }, [])
 
-  const handleNext = useCallback(() => {
-    setCurIdx(preIdx => {
-      return preIdx === policy.length - 1 ? policy.length - 1 : preIdx + 1
-    })
-  }, [policy.length])
+//   const handleNext = useCallback(() => {
+//     setCurIdx(preIdx => {
+//       return preIdx === policy.length - 1 ? policy.length - 1 : preIdx + 1
+//     })
+//   }, [policy.length])
 
-  return (
-    <Box display="grid" gap="19px" padding="33px 24px">
-      <Typography fontSize={24} fontWeight={700}>
-        Recurring Policy
-      </Typography>
-      <StyledUnorderList>
-        <Text currencySymbol={currencySymbol} />
-      </StyledUnorderList>
-      <Box position="relative">
-        <Box width="100%" display="flex" justifyContent="space-between" position="absolute" top="50%">
-          <TextButton onClick={handlePrev} disabled={curIdx === 0} style={{ '&:disabled': { opacity: 0 } }}>
-            <svg width="12" height="19" viewBox="0 0 12 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M10.4844 17.9707L1.99909 9.48542L10.4844 1.00014"
-                stroke={theme.palette.primary.main}
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-          </TextButton>
-          <TextButton
-            onClick={handleNext}
-            disabled={curIdx === policy.length - 1}
-            style={{ '&:disabled': { opacity: 0 } }}
-          >
-            <svg width="11" height="19" viewBox="0 0 11 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M0.828125 1L9.31341 9.48528L0.828125 17.9706"
-                stroke={theme.palette.primary.main}
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-          </TextButton>
-        </Box>
-        <Typography fontWeight={700} fontSize={14} color="primary">
-          {valutPolicyTitle[curIdx]}
-        </Typography>
-        {<RecurringPolicyPage img={policy[curIdx].img} text={policy[curIdx].text} />}
-      </Box>
-      <Box display="flex" gap="5px" margin="10px auto 0">
-        {policy.map((item, idx) => {
-          const active = curIdx === idx
-          return (
-            <div
-              key={idx}
-              style={{
-                height: 3,
-                width: active ? 24 : 6,
-                backgroundColor: active ? '#31B047' : '#C4C4C4',
-                transition: '.5s',
-                borderRadius: 3
-              }}
-            />
-          )
-        })}
-      </Box>
-    </Box>
-  )
-}
+//   return (
+//     <Box display="grid" gap="19px" padding="33px 24px">
+//       <Typography fontSize={24} fontWeight={700}>
+//         Recurring Policy
+//       </Typography>
+//       <StyledUnorderList>
+//         <Text currencySymbol={currencySymbol} />
+//       </StyledUnorderList>
+//       <Box position="relative">
+//         <Box width="100%" display="flex" justifyContent="space-between" position="absolute" top="50%">
+//           <TextButton onClick={handlePrev} disabled={curIdx === 0} style={{ '&:disabled': { opacity: 0 } }}>
+//             <svg width="12" height="19" viewBox="0 0 12 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+//               <path
+//                 d="M10.4844 17.9707L1.99909 9.48542L10.4844 1.00014"
+//                 stroke={theme.palette.primary.main}
+//                 strokeWidth="2"
+//                 strokeLinecap="round"
+//               />
+//             </svg>
+//           </TextButton>
+//           <TextButton
+//             onClick={handleNext}
+//             disabled={curIdx === policy.length - 1}
+//             style={{ '&:disabled': { opacity: 0 } }}
+//           >
+//             <svg width="11" height="19" viewBox="0 0 11 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+//               <path
+//                 d="M0.828125 1L9.31341 9.48528L0.828125 17.9706"
+//                 stroke={theme.palette.primary.main}
+//                 strokeWidth="2"
+//                 strokeLinecap="round"
+//               />
+//             </svg>
+//           </TextButton>
+//         </Box>
+//         <Typography fontWeight={700} fontSize={14} color="primary">
+//           {valutPolicyTitle[curIdx]}
+//         </Typography>
+//         {<RecurringPolicyPage img={policy[curIdx].img} text={policy[curIdx].text} />}
+//       </Box>
+//       <Box display="flex" gap="5px" margin="10px auto 0">
+//         {policy.map((item, idx) => {
+//           const active = curIdx === idx
+//           return (
+//             <div
+//               key={idx}
+//               style={{
+//                 height: 3,
+//                 width: active ? 24 : 6,
+//                 backgroundColor: active ? '#31B047' : '#C4C4C4',
+//                 transition: '.5s',
+//                 borderRadius: 3
+//               }}
+//             />
+//           )
+//         })}
+//       </Box>
+//     </Box>
+//   )
+// }
 
-function RecurringPolicyPage({ img, text }: { img: ReactElement<any, any>; text: string }) {
-  return (
-    <Box display="flex" gap="12px" flexDirection="column" justifyContent={'space-between'} alignItems="center">
-      <div />
-      <Box
-        sx={{ border: '1px solid #25252510', borderRadius: 1 }}
-        padding="15px"
-        width="calc(100% - 34px)"
-        display="grid"
-        justifyItems={'center'}
-        height={210}
-        gap={8}
-      >
-        <Box alignItems="center" display="flex">
-          {img}
-        </Box>
+// function RecurringPolicyPage({ img, text }: { img: ReactElement<any, any>; text: string }) {
+//   return (
+//     <Box display="flex" gap="12px" flexDirection="column" justifyContent={'space-between'} alignItems="center">
+//       <div />
+//       <Box
+//         sx={{ border: '1px solid #25252510', borderRadius: 1 }}
+//         padding="15px"
+//         width="calc(100% - 34px)"
+//         display="grid"
+//         justifyItems={'center'}
+//         height={210}
+//         gap={8}
+//       >
+//         <Box alignItems="center" display="flex">
+//           {img}
+//         </Box>
 
-        <Typography sx={{ color: '#00000060' }} fontWeight={400} fontSize={12}>
-          {text}
-        </Typography>
-      </Box>
-    </Box>
-  )
-}
+//         <Typography sx={{ color: '#00000060' }} fontWeight={400} fontSize={12}>
+//           {text}
+//         </Typography>
+//       </Box>
+//     </Box>
+//   )
+// }
 
-function PrevCycleStats({ prevDetails }: { prevDetails: PrevOrder | undefined }) {
+// function PrevCycleStats({ prevDetails }: { prevDetails: PrevOrder | undefined }) {
+//   const theme = useTheme()
+//   const data = useMemo(
+//     () => ({
+//       ['APY']: prevDetails?.annualRor ? (+prevDetails.annualRor * 100).toFixed(2) + '%' : '-',
+//       ['Strike Price']: `${prevDetails?.strikePrice ?? '-'} USDC`,
+//       // ['Executed Price']: `${prevDetails?.deliveryPrice ?? '-'} USDT`,
+//       // ['Status']: prevDetails?.status ?? '-',
+//       // ['Your P&L']: prevDetails?.pnl ?? '-',
+//       ['Date']: prevDetails
+//         ? `From ${dayjs(+prevDetails.createdAt).format('MMM DD, YYYY')} to ${dayjs(prevDetails.expiredAt * 1000).format(
+//             'MMM DD, YYYY'
+//           )}`
+//         : '-'
+//     }),
+//     [prevDetails]
+//   )
+//   return (
+//     <Card width={'100%'}>
+//       <Box display="flex" gap="21px" padding="28px" flexDirection="column" alignItems={'stretch'}>
+//         <Typography fontSize={24} fontWeight={700}>
+//           Previous Cycle Statistics
+//         </Typography>
+
+//         {Object.keys(data).map((key, idx) => (
+//           <Box key={idx} display="flex" justifyContent={'space-between'}>
+//             <Typography fontSize={16} sx={{ opacity: 0.8 }}>
+//               {key}
+//             </Typography>
+
+//             <Typography
+//               fontWeight={key === 'APY' ? 400 : 500}
+//               color={key === 'APY' ? theme.palette.primary.main : theme.palette.text.primary}
+//             >
+//               {data[key as keyof typeof data]}
+//             </Typography>
+//           </Box>
+//         ))}
+//       </Box>
+//     </Card>
+//   )
+// }
+
+function RecurringSwitch() {
   const theme = useTheme()
   const data = useMemo(
     () => ({
-      ['APY']: prevDetails?.annualRor ? (+prevDetails.annualRor * 100).toFixed(2) + '%' : '-',
-      ['Strike Price']: `${prevDetails?.strikePrice ?? '-'} USDC`,
-      // ['Executed Price']: `${prevDetails?.deliveryPrice ?? '-'} USDT`,
-      // ['Status']: prevDetails?.status ?? '-',
-      // ['Your P&L']: prevDetails?.pnl ?? '-',
-      ['Date']: prevDetails
-        ? `From ${dayjs(+prevDetails.createdAt).format('MMM DD, YYYY')} to ${dayjs(prevDetails.expiredAt * 1000).format(
-            'MMM DD, YYYY'
-          )}`
-        : '-'
+      ['Subscribed orders in progress']: <ExternalLink href="">Details</ExternalLink>,
+      ['Progress order due time']: <Timer timer={0} />
     }),
-    [prevDetails]
+    []
   )
   return (
-    <Card width={'100%'}>
-      <Box display="flex" gap="21px" padding="28px" flexDirection="column" alignItems={'stretch'}>
-        <Typography fontSize={24} fontWeight={700}>
-          Previous Cycle Statistics
-        </Typography>
-
+    <Card width="100%" padding="43px 22px" height={400}>
+      <Card gray>
+        <Box padding="20px 22px" display="grid" gap={30} minHeight={141}>
+          <Box display={'flex'} alignItems="center">
+            <Divider
+              orientation="vertical"
+              sx={{
+                marginRight: 12,
+                width: 2,
+                backgroundColor: theme => theme.palette.primary.main,
+                borderColor: 'transparent'
+              }}
+            />
+            <Typography fontSize={14} sx={{ color: theme => theme.palette.text.secondary }}>
+              When you stop recurring, all your existing orders will not be taken into next cycle and you can redeem
+              your tokens once your existing orders expire.
+            </Typography>
+          </Box>
+          <Box display="flex" gap="13px" alignItems="center">
+            <SwitchToggle checked={true} onChange={() => {}} />
+            <Typography fontWeight={600} fontSize={16}>
+              Recurring
+            </Typography>
+          </Box>
+        </Box>
+      </Card>
+      <Box display="flex" gap="17px" flexDirection="column" mt={28}>
         {Object.keys(data).map((key, idx) => (
           <Box key={idx} display="flex" justifyContent={'space-between'}>
             <Typography fontSize={16} sx={{ opacity: 0.8 }}>
@@ -292,6 +360,24 @@ function PrevCycleStats({ prevDetails }: { prevDetails: PrevOrder | undefined })
           </Box>
         ))}
       </Box>
+    </Card>
+  )
+}
+
+function PastAggregate() {
+  return (
+    <Card width="100%" padding="34px 24px" height={400}>
+      <Typography fontSize={16} sx={{ opacity: 0.5 }} mb={8}>
+        Past Aggregate Earnings (Platform)
+      </Typography>
+      <Box display="flex" alignItems="flex-end">
+        <Typography fontSize={44} fontWeight={700}>
+          82,890
+        </Typography>
+        <Typography fontWeight={700}>$</Typography>
+      </Box>
+      <Typography sx={{ opacity: 0.8, mt: 8 }}>Aug 26, 2021</Typography>
+      <PastAggrChart />
     </Card>
   )
 }

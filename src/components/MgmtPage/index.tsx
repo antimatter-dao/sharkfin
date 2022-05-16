@@ -32,7 +32,7 @@ interface Props {
   chart2?: React.ReactNode
   subject: Subject
   type?: string
-  subscribeForm: React.ReactNode
+  // subscribeForm: React.ReactNode
   returnOnInvestmentListItems: React.ReactNode[]
   vaultForm?: React.ReactNode
   children?: React.ReactNode
@@ -46,7 +46,7 @@ export default function MgmtPage(props: Props) {
     chart,
     subject,
     // type,
-    subscribeForm,
+    // subscribeForm,
     showFaq = true,
     returnOnInvestmentListItems,
     vaultForm,
@@ -60,7 +60,7 @@ export default function MgmtPage(props: Props) {
     return (
       <div>
         <Typography fontSize={16} color={theme.palette.text.primary}>
-          Strike Price &amp; APY
+          Rules of Return:
         </Typography>
         <StyledUnorderList>
           {returnOnInvestmentListItems.map((item, idx) => (
@@ -169,12 +169,12 @@ export default function MgmtPage(props: Props) {
                                 Spot Price
                               </Typography>
                             </Box>
-                            <Box display="flex" alignItems="center" gap={8}>
+                            {/* <Box display="flex" alignItems="center" gap={8}>
                               <Box height={10} width={10} borderRadius="50%" bgcolor="#F0B90B" />
                               <Typography fontSize={12} color="#F0B90B">
                                 Strike Price
                               </Typography>
-                            </Box>
+                            </Box> */}
                           </Box>
                         </Box>
                         <Box sx={{ maxWidth: '100%', height: '100%', flexGrow: 1 }} mt={20}>
@@ -197,9 +197,9 @@ export default function MgmtPage(props: Props) {
               </Grid>
             )}
 
-            <Grid xs={12} md={4} item position="relative">
+            {/* <Grid xs={12} md={4} item position="relative">
               <Card style={{ height: '100%' }}>{subscribeForm}</Card>
-            </Grid>
+            </Grid> */}
 
             {children && <>{children}</>}
 
