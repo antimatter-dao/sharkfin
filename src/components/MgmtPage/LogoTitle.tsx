@@ -7,12 +7,14 @@ export function LogoTitle({
   logoCurSymbol,
   title,
   description,
-  titleSize
+  titleSize,
+  logoSize
 }: {
   logoCurSymbol?: string
   title: string | JSX.Element
   description: string
-  titleSize?: string
+  titleSize?: string | number
+  logoSize?: string | number
 }) {
   const isDownMd = useBreakpoint('md')
   const isDownSm = useBreakpoint('sm')
@@ -22,7 +24,7 @@ export function LogoTitle({
       {logoCurSymbol && (
         <CurrencyLogo
           currency={SUPPORTED_CURRENCIES[logoCurSymbol]}
-          size={isDownMd ? '32px' : '64px'}
+          size={logoSize ? logoSize : isDownMd ? '32px' : '64px'}
           style={{
             gridRowStart: 1,
             gridRowEnd: isDownSm ? 'span 1' : 'span 2',

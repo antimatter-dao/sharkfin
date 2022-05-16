@@ -123,6 +123,7 @@ export default function VaultCard(props: Props) {
         <ProductCardHeader
           logoCurSymbol={product?.investCurrency}
           title={title}
+          logoSize={46}
           // priceCurSymbol={product?.currency ?? ''}
           // description=""
         />

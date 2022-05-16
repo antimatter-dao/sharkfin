@@ -13,7 +13,7 @@ export default function CurrencyLogo({
   style
 }: {
   currency?: Currency
-  size?: string
+  size?: string | number
   style?: React.CSSProperties
 }) {
   const srcs: string[] = useMemo(() => {

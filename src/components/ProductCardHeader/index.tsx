@@ -11,7 +11,8 @@ interface Props {
   priceCurSymbol?: string
   description?: string
   color?: string
-  titleSize?: string
+  titleSize?: string | number
+  logoSize?: string | number
 }
 
 export default function ProductCardHeader({
@@ -20,7 +21,8 @@ export default function ProductCardHeader({
   priceCurSymbol,
   description,
   color,
-  titleSize
+  titleSize,
+  logoSize
 }: Props) {
   const curPrice = usePrice(priceCurSymbol)
 
@@ -35,7 +37,13 @@ export default function ProductCardHeader({
       justifyContent={{ xs: 'stretch', sm: 'space-between' }}
       gap={{ xs: '0', sm: '40px' }}
     >
-      <LogoTitle description={description ?? ''} logoCurSymbol={logoCurSymbol} title={title} titleSize={titleSize} />
+      <LogoTitle
+        description={description ?? ''}
+        logoCurSymbol={logoCurSymbol}
+        title={title}
+        titleSize={titleSize}
+        logoSize={logoSize}
+      />
       {/* <Box display="grid" columnGap={20} mb={{ xs: 10, md: 0 }}>
         {logoCurSymbol && (
           <CurrencyLogo
