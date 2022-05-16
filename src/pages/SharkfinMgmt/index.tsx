@@ -123,13 +123,7 @@ export default function DefiMgmt() {
             showFaq={true}
             backLink={routes.defiVault}
             pageTitle={'BTC weekly sharkfin'}
-            subject={Subject.RecurringVault}
-            // subscribeForm={
-            //   <RecurringPolicy
-            //     type={product?.type.toLocaleLowerCase() === 'call' ? 'call' : 'put'}
-            //     currencySymbol={product?.currency ?? '-'}
-            //   />
-            // }
+            subject={Subject.Sharkfin}
             returnOnInvestmentListItems={returnOnInvestmentListItems}
             vaultForm={<VaultForm product={product} setAmount={handleInput} amount={investAmount} />}
             chart={chart}
