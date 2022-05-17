@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, TextField } from '@mui/material'
 // import { Timer } from 'components/Timer'
 import Button from 'components/Button/Button'
 import Spinner from 'components/Spinner'
@@ -7,8 +7,8 @@ import { ChainId } from 'constants/chain'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { SimpleProgress } from 'components/Progress'
 import { DefiProduct } from 'hooks/useDefiVault'
-import { ChainListMap } from 'constants/chain'
-import Image from 'components/Image'
+// import { ChainListMap } from 'constants/chain'
+// import Image from 'components/Image'
 
 export default function VaultProductCard({
   title,
@@ -19,7 +19,7 @@ export default function VaultProductCard({
   onChain
 }: {
   title: string
-  description: string
+  description?: string
   onClick: () => void
   color: string
   product: DefiProduct | undefined
@@ -41,8 +41,8 @@ export default function VaultProductCard({
         width: '100%'
       }}
     >
-      <ChainTag chainId={onChain} isCall={product?.type === 'CALL'} />
-
+      {/* <ChainTag chainId={onChain} isCall={product?.type === 'CALL'} /> */}
+      <TermTag days={7} />
       <CurrencyLogo
         currency={SUPPORTED_CURRENCIES[product?.investCurrency ?? '']}
         size={'52px'}
@@ -60,12 +60,12 @@ export default function VaultProductCard({
             justifyContent={'space-between'}
             alignItems="center"
           >
-            <TextCard subTextBold color={color} text={product?.apy ?? '-'} subText="Approximate APY" />
+            <TextCard subTextBold color={color} text={product?.apy ?? '-'} subText="Current APY" />
             <Box display="flex" alignItems={'center'} justifyContent="space-between">
               <TextCard
                 subTextBold
                 text={`${product?.lockedBalance ?? '-'}  ${product?.investCurrency ?? '-'}`}
-                subText="Your existing position"
+                subText="Initial investment"
               />
             </Box>
           </Box>
@@ -80,11 +80,11 @@ export default function VaultProductCard({
             />
             <Box display="flex" alignItems={'center'} justifyContent="space-between">
               <Typography fontSize={12} color="rgba(0,0,0,0.5)" fontWeight={500}>
-                Total Balance: {product?.totalBalance ?? '-'} {product?.investCurrency ?? '-'}
+                Count Down to the start
               </Typography>
               <Typography fontSize={12} fontWeight={700}>
-                Cap: {product?.cap ?? '-'} {product?.investCurrency ?? '-'}
-              </Typography>{' '}
+                11d:10h:05m
+              </Typography>
             </Box>
           </Box>
           {/* <Box display="flex" alignItems={'center'} justifyContent="space-between">
@@ -117,7 +117,7 @@ function TextCard({
 }: {
   color?: string
   text: string
-  subText: string
+  subText?: string
   maxWidth?: number
   subTextBold?: boolean
 }) {
@@ -126,37 +126,66 @@ function TextCard({
       <Typography fontSize={24} fontWeight={700} color={color}>
         {text}
       </Typography>
-      <Typography sx={{ color: 'rgba(0,0,0,0.5)' }} fontSize={12} fontWeight={subTextBold ? 500 : 400}>
-        {subText}
-      </Typography>
+      {subText && (
+        <Typography sx={{ color: 'rgba(0,0,0,0.5)' }} fontSize={12} fontWeight={subTextBold ? 500 : 400}>
+          {subText}
+        </Typography>
+      )}
     </Box>
   )
 }
 
-function ChainTag({ chainId, isCall }: { chainId: ChainId; isCall: boolean }) {
+// function ChainTag({ chainId, isCall }: { chainId: ChainId; isCall: boolean }) {
+//   return (
+//     <Box
+//       bgcolor={isCall ? 'rgba(49, 176, 71, 0.2)' : 'rgba(214, 80, 73, 0.2)'}
+//       borderRadius="10px"
+//       padding="7px 14px"
+//       width="fit-content"
+//       display="flex"
+//       alignItems="center"
+//       gap={4.8}
+//     >
+//       <Image
+//         src={ChainListMap[chainId]?.logo}
+//         alt={`${ChainListMap[chainId]?.name} logo`}
+//         style={{ width: 14, height: 14 }}
+//       />
+//       <Typography
+//         color={isCall ? '#31B047' : '#D65049'}
+//         sx={{ letterSpacing: 2, transformOrigin: '50% 50%', transform: 'scale(1, 0.92)' }}
+//         fontSize={11}
+//         fontWeight={700}
+//       >
+//         {ChainListMap[chainId]?.name?.toUpperCase()}
+//       </Typography>
+//     </Box>
+//   )
+// }
+
+function TermTag({ days }: { days: number }) {
   return (
-    <Box
-      bgcolor={isCall ? 'rgba(49, 176, 71, 0.2)' : 'rgba(214, 80, 73, 0.2)'}
-      borderRadius="10px"
-      padding="7px 14px"
-      width="fit-content"
-      display="flex"
-      alignItems="center"
-      gap={4.8}
-    >
-      <Image
-        src={ChainListMap[chainId]?.logo}
-        alt={`${ChainListMap[chainId]?.name} logo`}
-        style={{ width: 14, height: 14 }}
-      />
-      <Typography
-        color={isCall ? '#31B047' : '#D65049'}
-        sx={{ letterSpacing: 2, transformOrigin: '50% 50%', transform: 'scale(1, 0.92)' }}
-        fontSize={11}
-        fontWeight={700}
-      >
-        {ChainListMap[chainId]?.name?.toUpperCase()}
-      </Typography>
-    </Box>
+    <TextField
+      label="Term"
+      value={`${days} Days`}
+      sx={{
+        width: 80,
+        height: '35px',
+        color: theme => theme.palette.primary.main,
+        pointerEvents: 'none',
+        '& .MuiInputBase-input': {
+          padding: '8px 14px',
+          fontSize: 16,
+          fontWeight: 600,
+          color: theme => theme.palette.primary.main
+        },
+        '& .MuiInputLabel-root': {
+          color: theme => theme.palette.primary.main
+        },
+        '& .MuiOutlinedInput-notchedOutline': {
+          borderColor: theme => theme.palette.primary.main
+        }
+      }}
+    />
   )
 }

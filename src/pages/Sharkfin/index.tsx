@@ -218,9 +218,6 @@ export default function Sharkfin() {
                   onChain={+chainId}
                   product={item}
                   title={`${currency} ${type === 'CALL' ? 'Covered Call' : 'Put Selling'} Recurring Strategy`}
-                  description={`Generates yield by running an automated ${currency} ${
-                    type === 'CALL' ? 'covered call' : 'put selling'
-                  } strategy`}
                   onClick={() => {
                     history.push(
                       routes.sharkfinMgmt
