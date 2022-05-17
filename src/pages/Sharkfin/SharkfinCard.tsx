@@ -46,7 +46,7 @@ export default function VaultProductCard({
       <CurrencyLogo
         currency={SUPPORTED_CURRENCIES[product?.investCurrency ?? '']}
         size={'52px'}
-        style={{ zIndex: 2, position: 'absolute', right: 23, top: 20 }}
+        style={{ zIndex: 2, position: 'absolute', right: 24, top: 36 }}
       />
 
       <TextCard text={title} subText={description} maxWidth={240} />
