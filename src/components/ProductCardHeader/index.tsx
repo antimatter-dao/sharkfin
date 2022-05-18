@@ -82,8 +82,11 @@ export default function ProductCardHeader({
           display="flex"
           flexDirection="column"
           alignItems={isDownMd ? 'flex-start' : 'flex-end'}
-          padding={{ xs: '16px', sm: '0' }}
           gap={isDownMd ? 10 : 0}
+          sx={{
+            mt: { xs: 16, md: 0 },
+            mb: { xs: 28, md: 0 }
+          }}
         >
           <Typography
             fontSize={24}

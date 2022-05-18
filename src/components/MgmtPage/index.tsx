@@ -74,11 +74,11 @@ export default function MgmtPage(props: Props) {
   return (
     <>
       <Box
-        display="grid"
+        display="flex"
+        flexDirection="column"
         width="100%"
-        alignContent="flex-start"
+        alignItems="center"
         marginBottom="auto"
-        justifyItems="center"
         padding={{ xs: '24px 20px', md: 0 }}
       >
         <Box
@@ -87,9 +87,9 @@ export default function MgmtPage(props: Props) {
             alignItems: 'center',
             justifyContent: 'center',
             marginTop: isDownMd ? -24 : 0,
-            width: `calc(100% + ${vaultForm && isDownMd ? 40 : 0}px)`,
-            background: isDownMd && !vaultForm ? theme.palette.background.default : theme.palette.background.paper,
-            padding: isDownMd ? '24px 24px 28px' : '27px 24px'
+            width: '100%',
+            background: isDownMd ? theme.palette.background.default : theme.palette.background.paper,
+            padding: isDownMd ? '24px 0 28px' : '27px 24px'
           }}
         >
           <Box maxWidth={theme.width.maxContent} width="100%" display="grid" position="relative">
@@ -108,32 +108,22 @@ export default function MgmtPage(props: Props) {
         </Box>
 
         <Box padding={isDownMd ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
-          {/* {!vaultForm && ( */}
           <Box
             mb={isDownMd ? 24 : 60}
             display="flex"
             gap={{ xs: 0, md: 8 }}
             flexDirection={isDownMd ? 'column' : 'row'}
+            width="100%"
           >
             {pageTitle && (
-              // <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
-              //   {pageTitle}
-              // </Typography>
               <ProductCardHeader
-                // logoCurSymbol={product?.investCurrency}
                 title={pageTitle}
                 priceCurSymbol={'BTC'}
                 description=""
-                titleSize={'44px'}
+                titleSize={isDownMd ? '32px' : '44px'}
               />
             )}
-            {/* {subject === Subject.DualInvest && (
-                <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={400} component="span">
-                  [{type === 'CALL' ? 'upward' : 'down'} exercise]
-                </Typography>
-              )} */}
           </Box>
-          {/* )} */}
 
           <Grid container spacing={20}>
             {vaultForm && (
@@ -196,10 +186,6 @@ export default function MgmtPage(props: Props) {
                 </Card>
               </Grid>
             )}
-
-            {/* <Grid xs={12} md={4} item position="relative">
-              <Card style={{ height: '100%' }}>{subscribeForm}</Card>
-            </Grid> */}
 
             {children && <>{children}</>}
 

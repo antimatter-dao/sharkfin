@@ -105,7 +105,7 @@ export default function DefiMgmt() {
         >
           <Box
             component={NavLink}
-            to={routes.defiVault}
+            to={routes.sharkfin}
             zIndex={2}
             style={{ textDecoration: 'none', display: 'block', width: 'max-content' }}
           >
@@ -123,7 +123,7 @@ export default function DefiMgmt() {
           <MgmtPage
             graphTitle="Purchase expected income graph"
             showFaq={true}
-            backLink={routes.defiVault}
+            backLink={routes.sharkfin}
             pageTitle={'BTC weekly sharkfin'}
             subject={Subject.Sharkfin}
             returnOnInvestmentListItems={returnOnInvestmentListItems}

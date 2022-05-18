@@ -2,8 +2,6 @@ import { useCallback, useState, useMemo, useEffect } from 'react'
 import { Box, Typography, styled, Tab, TabProps } from '@mui/material'
 import Card from 'components/Card/Card'
 import ProductCardHeader from 'components/ProductCardHeader'
-import useBreakpoint from 'hooks/useBreakpoint'
-import Divider from 'components/Divider'
 import Tabs from 'components/Tabs/Tabs'
 import VaultForm from './VaultForm'
 import { DefiProduct } from 'hooks/useDefiVault'
@@ -68,7 +66,6 @@ export default function VaultCard(props: Props) {
   const [standardWithdrawlStep, setStandardWithdrawlStep] = useState<StandardWithdrawType>(0)
   const { chainId } = useActiveWeb3React()
 
-  const isDownSm = useBreakpoint('md')
   const productChainId = product?.chainId
   const currencySymbol = product?.investCurrency ?? ''
   const disabled = !product || !amount || chainId !== product?.chainId || +amount === 0
@@ -130,19 +127,6 @@ export default function VaultCard(props: Props) {
 
         <Box width={'100%'} mt={{ xs: 0, md: 30 }}>
           <Box mt={12} position="relative">
-            {/* <Typography
-              position={{ xs: 'static', md: 'absolute' }}
-              sx={{ top: 0, right: 0, height: 48 }}
-              display="flex"
-              alignItems={'center'}
-              variant="inherit"
-            >
-              Time to Expiry:
-              <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
-                <Timer timer={product?.expiredAt ?? 0} />
-              </Typography>
-            </Typography> */}
-            {isDownSm && <Divider sx={{ opacity: 0.1 }} />}
             <Tabs
               customCurrentTab={currentTab}
               customOnChange={handleTabClick}
