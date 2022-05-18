@@ -53,13 +53,15 @@ export default function DefiMgmt() {
   const returnOnInvestmentListItems = useMemo(() => {
     return [
       <>
-        Settlement at maturity:at annualised rate of return 3.00~25.00% Conditions must meet:BTC price was always within
-        the price range Annualised Product Return =3.00%+(settlement price at
+        Settlement at maturity:at annualised rate of return{' '}
+        <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>3.00~25.00%</span> Conditions must meet:BTC
+        price was always within the price range Annualised Product Return =3.00%+(settlement price at
         maturity-38500)/(42500-38500)*(25.00%-3.00%) Return=Principal* Annualised Product Return/365*Investment term
       </>,
       <>
-        Settlement at maturity:APR of 3.00% Conditions must meet:Would BTC price was atleast once below $38500 or above
-        $42500 Return=Principal * 3.00/365 * 7 (investment term)
+        Settlement at maturity:APR of <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>3.00%</span>{' '}
+        Conditions must meet:Would BTC price was atleast once below $38500 or above $42500 Return=Principal * 3.00/365 *
+        7 (investment term)
       </>,
       <>
         *Observed btc/usd option’s underlying price at Deribit at 12:00 every day is the observed price of the day. The
