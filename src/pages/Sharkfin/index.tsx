@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Box, MenuItem, Typography, useTheme } from '@mui/material'
+import { Box, MenuItem, Typography } from '@mui/material'
 import ProductBanner from 'components/ProductBanner'
 import VaultProductCard from './SharkfinCard'
 import { routes } from 'constants/routes'
@@ -37,7 +37,7 @@ const filterDepositAsset = (selected: string, item: DefiProduct) => {
 
 export default function Sharkfin() {
   const history = useHistory()
-  const theme = useTheme()
+  // const theme = useTheme()
   const isDownSm = useBreakpoint('sm')
   // const [sortBy, setSortBy] = useState<SortBy>(SortBy.highToLow)
   const [strategy, setStrategy] = useState<Strategy>(Strategy.all)
@@ -218,18 +218,15 @@ export default function Sharkfin() {
                   onChain={+chainId}
                   product={item}
                   title={`${currency} ${type === 'CALL' ? 'Covered Call' : 'Put Selling'} Recurring Strategy`}
-                  description={`Generates yield by running an automated ${currency} ${
-                    type === 'CALL' ? 'covered call' : 'put selling'
-                  } strategy`}
                   onClick={() => {
                     history.push(
-                      routes.defiVaultMgmt
+                      routes.sharkfinMgmt
                         .replace(':currency', currency ?? '')
                         .replace(':type', type)
                         .replace(':chainName', ChainListMap[+chainId].symbol)
                     )
                   }}
-                  color={type === 'CALL' ? theme.palette.primary.main : '#D65049'}
+                  color={'#F99F33'}
                 />
               </React.Fragment>
             )

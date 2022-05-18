@@ -2,15 +2,13 @@ import { useCallback, useState, useMemo, useEffect } from 'react'
 import { Box, Typography, styled, Tab, TabProps } from '@mui/material'
 import Card from 'components/Card/Card'
 import ProductCardHeader from 'components/ProductCardHeader'
-import useBreakpoint from 'hooks/useBreakpoint'
-import Divider from 'components/Divider'
 import Tabs from 'components/Tabs/Tabs'
 import VaultForm from './VaultForm'
 import { DefiProduct } from 'hooks/useDefiVault'
 import { useActiveWeb3React } from 'hooks'
-import { Timer } from 'components/Timer'
-import { trimNumberString } from 'utils/trimNumberString'
-import dayjs from 'dayjs'
+// import { Timer } from 'components/Timer'
+// import { trimNumberString } from 'utils/trimNumberString'
+// import dayjs from 'dayjs'
 
 const StyledBox = styled(Box)<{ selected?: boolean }>(({ theme, selected }) => ({
   border: `1px solid ${selected ? theme.palette.primary.main : theme.palette.text.secondary}`,
@@ -58,7 +56,7 @@ export default function VaultCard(props: Props) {
     available,
     onInvestChange,
     amount,
-    onInstantWd,
+    // onInstantWd,
     onInvest,
     walletBalance,
     product,
@@ -68,7 +66,6 @@ export default function VaultCard(props: Props) {
   const [standardWithdrawlStep, setStandardWithdrawlStep] = useState<StandardWithdrawType>(0)
   const { chainId } = useActiveWeb3React()
 
-  const isDownSm = useBreakpoint('md')
   const productChainId = product?.chainId
   const currencySymbol = product?.investCurrency ?? ''
   const disabled = !product || !amount || chainId !== product?.chainId || +amount === 0
@@ -123,31 +120,17 @@ export default function VaultCard(props: Props) {
         <ProductCardHeader
           logoCurSymbol={product?.investCurrency}
           title={title}
-          priceCurSymbol={product?.currency ?? ''}
-          description={`Generates yield by running an automated ${
-            product?.type === 'CALL' ? `${product?.currency ?? ''} covered call strategy` : `put selling strategy`
-          }`}
+          logoSize={46}
+          // priceCurSymbol={product?.currency ?? ''}
+          // description=""
         />
 
         <Box width={'100%'} mt={{ xs: 0, md: 30 }}>
           <Box mt={12} position="relative">
-            <Typography
-              position={{ xs: 'static', md: 'absolute' }}
-              sx={{ top: 0, right: 0, height: 48 }}
-              display="flex"
-              alignItems={'center'}
-              variant="inherit"
-            >
-              Time to Expiry:
-              <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
-                <Timer timer={product?.expiredAt ?? 0} />
-              </Typography>
-            </Typography>
-            {isDownSm && <Divider sx={{ opacity: 0.1 }} />}
             <Tabs
               customCurrentTab={currentTab}
               customOnChange={handleTabClick}
-              titles={['Invest', 'Standard Withdrawal', 'Instant Withdrawal']}
+              titles={['Invest', 'Redeem']}
               tabPadding="12px 0px 12px 0px"
               contents={[
                 <VaultForm
@@ -164,18 +147,27 @@ export default function VaultCard(props: Props) {
                   formData={formData}
                   buttonText="Invest"
                 >
-                  <Box display="grid" gap={16} width="100%" height="100px" margin="20px 0">
+                  <Box display="grid" gap={16} width="100%" margin="20px 0">
                     {[
-                      { title: 'Current Vault Approximate APY', data: product?.apy ?? '-' },
                       {
-                        title: 'Current Vault Strike Price',
-                        data: (product?.strikePrice ?? '-') + ' USDT'
+                        title: 'Price Range(USDT)',
+                        data: '59,000~62,000'
                       },
                       {
-                        title: 'Current Vault Expiry Time',
-                        data: product?.expiredAt
-                          ? dayjs(product.expiredAt).format('MMM DD, YYYY') + ' 08:00:00 AM UTC'
-                          : '-'
+                        title: 'APR',
+                        data: '12%'
+                      },
+                      {
+                        title: 'Term',
+                        data: '7 Days'
+                      },
+                      {
+                        title: 'Duration',
+                        data: '21 Oct 2022 ~ 27 Oct 2022'
+                      },
+                      {
+                        title: 'Your Position',
+                        data: '123BTC'
                       }
                     ].map(({ title, data }) => {
                       return (
@@ -206,7 +198,7 @@ export default function VaultCard(props: Props) {
                   buttonText={initiated ? 'Complete Withdraw' : 'Initiate Withdraw'}
                   error={error}
                   key={TYPE.standard}
-                  type={'Standard'}
+                  type={'Redeem'}
                   val={amount}
                   onChange={onInvestChange}
                   currencySymbol={currencySymbol}
@@ -222,28 +214,6 @@ export default function VaultCard(props: Props) {
                     CustomTab={CustomTab}
                     customCurrentTab={standardWithdrawlStep}
                   />
-                </VaultForm>,
-                <VaultForm
-                  buttonText="Instant Withdraw"
-                  error={error}
-                  key={TYPE.instant}
-                  type={'Instant'}
-                  val={amount}
-                  onChange={onInvestChange}
-                  currencySymbol={currencySymbol}
-                  onClick={onInstantWd}
-                  disabled={disabled}
-                  productChainId={productChainId}
-                  formData={formData}
-                  available={product?.instantBalance}
-                >
-                  <Typography display="flex" alignItems={'center'} variant="inherit">
-                    Redeemable:
-                    <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
-                      {product?.instantBalance ? trimNumberString(product?.instantBalance, 6) : '-'}{' '}
-                      {product?.investCurrency}
-                    </Typography>
-                  </Typography>
                 </VaultForm>
               ]}
             />
