@@ -42,7 +42,7 @@ export default function VaultProductCard({
       }}
     >
       {/* <ChainTag chainId={onChain} isCall={product?.type === 'CALL'} /> */}
-      <TermTag days={7} />
+      <TermTag days={7} color={color} />
       <CurrencyLogo
         currency={SUPPORTED_CURRENCIES[product?.investCurrency ?? '']}
         size={'52px'}
@@ -163,7 +163,7 @@ function TextCard({
 //   )
 // }
 
-function TermTag({ days }: { days: number }) {
+function TermTag({ days, color }: { days: number; color: string }) {
   return (
     <TextField
       label="Term"
@@ -171,19 +171,19 @@ function TermTag({ days }: { days: number }) {
       sx={{
         width: 80,
         height: '35px',
-        color: theme => theme.palette.primary.main,
+        color,
         pointerEvents: 'none',
         '& .MuiInputBase-input': {
           padding: '8px 14px',
           fontSize: 16,
           fontWeight: 600,
-          color: theme => theme.palette.primary.main
+          color
         },
         '& .MuiInputLabel-root': {
-          color: theme => theme.palette.primary.main
+          color
         },
         '& .MuiOutlinedInput-notchedOutline': {
-          borderColor: theme => theme.palette.primary.main
+          borderColor: color
         }
       }}
     />
