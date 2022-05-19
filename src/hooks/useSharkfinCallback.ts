@@ -1,16 +1,16 @@
 import { useCallback, useMemo } from 'react'
 import { ChainId } from 'constants/chain'
-import { useDefiVaultContract } from './useContract'
+import { useSharkfinContract } from './useContract'
 import { DEFAULT_COIN_SYMBOL } from 'constants/currencies'
 // import { useActiveWeb3React } from 'hooks'
 // import JSBI from 'jsbi'
 
-export function useDefiVaultCallback(
+export function useSharkfinCallback(
   chainId: ChainId | undefined,
   currencySymbol: string | undefined,
   type: 'CALL' | 'PUT' | undefined
 ) {
-  const contract = useDefiVaultContract(chainId, currencySymbol, type)
+  const contract = useSharkfinContract(chainId, currencySymbol, type)
   // const { account } = useActiveWeb3React()
 
   const depositETH = useCallback(

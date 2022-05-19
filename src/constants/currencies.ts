@@ -241,7 +241,7 @@ export const CURRENCY_ADDRESS_MAP = Object.keys(SUPPORTED_CURRENCIES).reduce((ac
 }, {} as { [key: string]: Token })
 
 export const SUPPORTED_DEFI_VAULT: { [chainId in ChainId]?: string[] } = IS_TEST_NET
-  ? { [ChainId.KOVAN]: ['ETH'], [ChainId.AVAX]: ['AVAX'] }
+  ? { [ChainId.RINKEBY]: ['ETH'] }
   : {
       [ChainId.MAINNET]: ['ETH'],
       [ChainId.AVAX]: ['AVAX']

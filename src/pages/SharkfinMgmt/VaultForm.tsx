@@ -11,11 +11,11 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 import RedeemConfirmModal from './RedeemConfirmModal'
 import InvestConfirmModal from './InvestConfirmModal'
-import { feeRate, getDefiVaultAddress } from 'constants/index'
+import { feeRate, getSharkfinAddress } from 'constants/index'
 import { NETWORK_CHAIN_ID, SUPPORTED_NETWORKS } from 'constants/chain'
 import { useETHBalances, useTokenBalance } from 'state/wallet/hooks'
 import { DefiProduct } from 'hooks/useDefiVault'
-import { useDefiVaultCallback } from 'hooks/useDefiVaultCallback'
+import { useSharkfinCallback } from 'hooks/useSharkfinCallback'
 import { CURRENCIES, DEFAULT_COIN_SYMBOL } from 'constants/currencies'
 import { Timer } from 'components/Timer'
 import { useApproveCallback, ApprovalState } from 'hooks/useApproveCallback'
@@ -58,13 +58,13 @@ export default function VaultForm({
     instantWithdrawCallback,
     standardWithdrawCallback,
     standardCompleteCallback
-  } = useDefiVaultCallback(product?.chainId, product?.currency, product?.type)
+  } = useSharkfinCallback(product?.chainId, product?.currency, product?.type)
 
   const { showModal, hideModal } = useModal()
   const addPopup = useTransactionAdder()
   const [approvalState, approveCallback] = useApproveCallback(
     tryParseAmount(amount, investCurrency),
-    getDefiVaultAddress(product?.currency, product?.chainId, product?.type)
+    getSharkfinAddress(product?.currency, product?.chainId, product?.type)
   )
 
   const formData = useMemo(

@@ -6,14 +6,14 @@ import { ChainId, ChainList, NETWORK_CHAIN_ID } from 'constants/chain'
 import { CURRENCIES, SUPPORTED_CURRENCIES, SUPPORTED_DEFI_VAULT } from 'constants/currencies'
 import { getOtherNetworkLibrary } from 'connectors/multiNetworkConnectors'
 import { getContract, isAddress } from 'utils'
-import { DEFI_VAULT_ADDRESS, ZERO_ADDRESS } from 'constants/index'
+import { SHARKFIN_ADDRESS, ZERO_ADDRESS } from 'constants/index'
 import DEFI_VAULT_ABI from '../constants/abis/defi_vault.json'
 import DEFI_VAULT_OPTION_ABI from '../constants/abis/defi_vault_option.json'
 import { useActiveWeb3React } from 'hooks'
 import { useBlockNumber } from 'state/application/hooks'
 import { parseBalance, parsePrecision } from 'utils/parseAmount'
 import { useSingleCallResult } from 'state/multicall/hooks'
-import { useDefiVaultContract } from './useContract'
+import { useSharkfinContract } from './useContract'
 import { trimNumberString } from 'utils/trimNumberString'
 
 export interface DefiProduct {
@@ -66,7 +66,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
     )
   }, [chainName])
 
-  const contract = useDefiVaultContract(productChainId, cur, type === 'CALL' ? 'CALL' : 'PUT')
+  const contract = useSharkfinContract(productChainId, cur, type === 'CALL' ? 'CALL' : 'PUT')
   const depositReceipts = useSingleCallResult(contract, 'depositReceipts', args)
   const lockedBalance = useSingleCallResult(contract, 'accountVaultBalance', args)
   const withdrawals = useSingleCallResult(contract, 'withdrawals', args)
@@ -156,7 +156,7 @@ export function useDefiVaultList() {
   useEffect(() => {
     const list = Object.keys(SUPPORTED_DEFI_VAULT).reduce((acc, chainId: string) => {
       const library = getOtherNetworkLibrary(+chainId)
-      const addresses = DEFI_VAULT_ADDRESS[+chainId as ChainId]
+      const addresses = SHARKFIN_ADDRESS[+chainId as ChainId]
       const list = SUPPORTED_DEFI_VAULT[+chainId as keyof typeof SUPPORTED_DEFI_VAULT]?.reduce(
         (acc, symbol: string) => {
           const addressCall = addresses?.[symbol]?.CALL

@@ -160,7 +160,7 @@ export default function Position() {
                   // setCurrentCurrency(CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key])
                   // handleDepositOpen()
                   history.push(
-                    routes.defiVaultMgmt
+                    routes.sharkfinMgmt
                       .replace(':currency', vault.currency ?? '')
                       .replace(':type', vault.type)
                       .replace(':chainName', ChainListMap[vault?.chainId ?? NETWORK_CHAIN_ID].symbol)

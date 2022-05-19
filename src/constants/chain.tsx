@@ -21,12 +21,12 @@ export enum ChainId {
 
 export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
   ? parseInt(process.env.REACT_APP_CHAIN_ID)
-  : ChainId.BSC
+  : ChainId.MAINNET
 
-export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.KOVAN)
+export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.RINKEBY)
 
 export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET
-  ? [ChainId.KOVAN, ChainId.MAINNET, ChainId.AVAX]
+  ? [ChainId.MAINNET, ChainId.AVAX, ChainId.RINKEBY]
   : [ChainId.MAINNET, ChainId.AVAX]
 
 export const ChainList: Chain[] = [
@@ -82,15 +82,15 @@ export const ChainList: Chain[] = [
     name: 'Avalanche',
     id: ChainId.AVAX,
     hex: '0xA86A'
-  },
-  {
-    icon: <ETH />,
-    logo: EthUrl,
-    symbol: 'Kovan',
-    name: 'Kovan Testnet',
-    id: ChainId.KOVAN,
-    hex: '0x2a'
   }
+  // {
+  //   icon: <ETH />,
+  //   logo: EthUrl,
+  //   symbol: 'Kovan',
+  //   name: 'Kovan Testnet',
+  //   id: ChainId.KOVAN,
+  //   hex: '0x2a'
+  // }
 ]
 
 export const ChainListMap: {

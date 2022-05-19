@@ -110,19 +110,11 @@ export const BLOCKED_ADDRESSES: string[] = [
   '0x8576aCC5C05D6Ce88f4e49bf65BdF0C62F91353C'
 ]
 
-export const DUAL_INVEST_ADDRESS: { [chainId in ChainId]?: string } = {
-  [ChainId.ROPSTEN]: '0xCD8C8C39DcE7E5846a7b1BaBb0621250DB7b7430',
-  [ChainId.BSC]: '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16',
-  [ChainId.RINKEBY]: '0xa5F5954f3f229784BFefE1B4Cc8f3FB5e9CeA13B',
-  [ChainId.AVAX]: '0x626B5c394542960faa9495e64E812d17D5B605F9',
-  [ChainId.MATIC]: '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16'
-}
-
 export const NO_REFERRER = '0x0000000000000000000000000000000000000000'
 
 export const feeRate = '3%'
 
-export const DEFI_VAULT_ADDRESS: {
+export const SHARKFIN_ADDRESS: {
   [chainId in ChainId]?: { [currencySymbol: string]: { CALL: string | undefined; PUT: string | undefined } }
 } = {
   [ChainId.AVAX]: {
@@ -136,12 +128,12 @@ export const DEFI_VAULT_ADDRESS: {
   }
 }
 
-export const getDefiVaultAddress = (
+export const getSharkfinAddress = (
   currencySymbol: string | undefined,
   chainId: ChainId | undefined,
   type: string | undefined
 ) => {
   return currencySymbol && chainId && type
-    ? DEFI_VAULT_ADDRESS[chainId]?.[currencySymbol]?.[type === 'CALL' ? 'CALL' : 'PUT']
+    ? SHARKFIN_ADDRESS[chainId]?.[currencySymbol]?.[type === 'CALL' ? 'CALL' : 'PUT']
     : undefined
 }

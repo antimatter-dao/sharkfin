@@ -148,7 +148,7 @@ export default function Sharkfin() {
                             <Box>
                               {curSymbol}{' '}
                               <Typography component="span" fontSize={12}>
-                                ({ChainListMap[+chainId as ChainId].name})
+                                ({ChainListMap[+chainId as ChainId]?.name})
                               </Typography>
                             </Box>
                           </Box>
