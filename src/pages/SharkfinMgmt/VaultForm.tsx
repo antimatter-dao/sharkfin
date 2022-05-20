@@ -14,7 +14,7 @@ import InvestConfirmModal from './InvestConfirmModal'
 import { feeRate, getSharkfinAddress } from 'constants/index'
 import { NETWORK_CHAIN_ID, SUPPORTED_NETWORKS } from 'constants/chain'
 import { useETHBalances, useTokenBalance } from 'state/wallet/hooks'
-import { DefiProduct } from 'hooks/useDefiVault'
+import { DefiProduct } from 'hooks/useSharkfin'
 import { useSharkfinCallback } from 'hooks/useSharkfinCallback'
 import { CURRENCIES, DEFAULT_COIN_SYMBOL } from 'constants/currencies'
 import { Timer } from 'components/Timer'
@@ -37,7 +37,7 @@ export default function VaultForm({
   const currencySymbol = product?.investCurrency ?? ''
   const investCurrency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.investCurrency ?? '']
   const currency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.currency ?? '']
-  const title = 'BTC weekly sharkfin(Principle protected)'
+  const title = `${currencySymbol} weekly sharkfin\n (Principle protected)`
 
   const ETHBalance = useETHBalances([account ?? undefined])?.[account ?? '']
   const tokenBalance = useTokenBalance(account ?? undefined, investCurrency)

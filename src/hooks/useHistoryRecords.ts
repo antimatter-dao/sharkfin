@@ -26,7 +26,7 @@ export function useHistoryRecords(pageNum: number) {
     return orderList.reduce((acc, order) => {
       const currency = DEFAULT_COIN_SYMBOL[order.chainId as keyof typeof DEFAULT_COIN_SYMBOL]
       const isCall = [5, 6].includes(order.type)
-      const investCurrency = isCall ? currency : 'USDC'
+      const investCurrency = isCall ? currency : 'USDT'
       if ([5, 6, 7, 8].includes(order.type)) {
         acc.push({
           ...order,

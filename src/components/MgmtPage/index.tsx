@@ -37,6 +37,7 @@ interface Props {
   vaultForm?: React.ReactNode
   children?: React.ReactNode
   graphTitle: string
+  priceCurSymbol?: string
 }
 
 export default function MgmtPage(props: Props) {
@@ -51,7 +52,8 @@ export default function MgmtPage(props: Props) {
     returnOnInvestmentListItems,
     vaultForm,
     children,
-    graphTitle
+    graphTitle,
+    priceCurSymbol
   } = props
 
   const isDownMd = useBreakpoint('md')
@@ -118,7 +120,7 @@ export default function MgmtPage(props: Props) {
             {pageTitle && (
               <ProductCardHeader
                 title={pageTitle}
-                priceCurSymbol={'BTC'}
+                priceCurSymbol={priceCurSymbol}
                 description=""
                 titleSize={isDownMd ? '32px' : '44px'}
               />

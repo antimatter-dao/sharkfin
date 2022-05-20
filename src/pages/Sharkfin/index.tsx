@@ -8,7 +8,7 @@ import { SUPPORTED_CURRENCIES, SUPPORTED_DEFI_VAULT } from 'constants/currencies
 import Select from 'components/Select/Select'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { ChainId, ChainListMap } from 'constants/chain'
-import { DefiProduct, useDefiVaultList } from 'hooks/useDefiVault'
+import { DefiProduct, useSharkfinList } from 'hooks/useSharkfin'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import NoDataCard from 'components/Card/NoDataCard'
 
@@ -42,7 +42,7 @@ export default function Sharkfin() {
   // const [sortBy, setSortBy] = useState<SortBy>(SortBy.highToLow)
   const [strategy, setStrategy] = useState<Strategy>(Strategy.all)
   const [depositAsset, setDepositAsset] = useState<string>('ALL')
-  const allList = useDefiVaultList()
+  const allList = useSharkfinList()
 
   const filteredList = useMemo(() => {
     if (!allList) return undefined
@@ -157,12 +157,12 @@ export default function Sharkfin() {
                     })
                   }
                   acc.push(
-                    <MenuItem value={formatAssetVal(+chainId, 'USDC')} key={formatAssetVal(+chainId, ' USDC')}>
+                    <MenuItem value={formatAssetVal(+chainId, 'USDT')} key={formatAssetVal(+chainId, ' USDT')}>
                       {' '}
                       <Box display="flex" alignItems={'center'} gap={10}>
-                        <CurrencyLogo currency={SUPPORTED_CURRENCIES['USDC']} size={'22px'} />
+                        <CurrencyLogo currency={SUPPORTED_CURRENCIES['USDT']} size={'22px'} />
                         <Box>
-                          USDC{' '}
+                          USDT{' '}
                           <Typography component="span" fontSize={12}>
                             ({ChainListMap[+chainId as ChainId].name})
                           </Typography>
@@ -217,7 +217,7 @@ export default function Sharkfin() {
                 <VaultProductCard
                   onChain={+chainId}
                   product={item}
-                  title={`${currency} ${type === 'CALL' ? 'Covered Call' : 'Put Selling'} Recurring Strategy`}
+                  title={`Daily Sharkfin ${currency} (Base Currency-${type === 'CALL' ? currency : 'USDT'})`}
                   onClick={() => {
                     history.push(
                       routes.sharkfinMgmt

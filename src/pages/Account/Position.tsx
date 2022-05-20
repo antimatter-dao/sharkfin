@@ -10,7 +10,7 @@ import { Currency } from 'constants/token'
 import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { SUPPORTED_CURRENCIES } from 'constants/currencies'
-import { useDefiVaultList } from '../../hooks/useDefiVault'
+import { useSharkfinList } from '../../hooks/useSharkfin'
 import { routes } from 'constants/routes'
 import { ChainListMap, NETWORK_CHAIN_ID } from 'constants/chain'
 
@@ -67,7 +67,7 @@ export default function Position() {
   // const [page] = useState(1)
   // const accountBalances = useAccountBalances()
   // const indexPrices = usePriceForAll()
-  const vaultList = useDefiVaultList()
+  const vaultList = useSharkfinList()
 
   // const totalInvest = useMemo(() => {
   //   if (!accountBalances) return '-'

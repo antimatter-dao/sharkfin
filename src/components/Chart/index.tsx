@@ -42,7 +42,6 @@ const Chart = styled('div')(({ theme }) => ({
   }
 }))
 
-const secondaryColor = '#F0B90B'
 // const toolTipMargin = 48
 
 // const tooltipFunction = ({
@@ -105,8 +104,8 @@ export default function LineChart({
   const [strikeLineLeft, setStrikeLineLeft] = useState<number | undefined>(undefined)
   const [strikeLineHeight, setStrikeLineHeight] = useState<number | undefined>(undefined)
   const [chart, setChart] = useState<IChartApi | undefined>(undefined)
-  const [priceLine, setPriceLine] = useState<ISeriesApi<'Line'> | undefined>(undefined)
-  const [lineSeries, setLineSeries] = useState<ISeriesApi<'Line'> | undefined>(undefined)
+  const [priceLine, setPriceLine] = useState<ISeriesApi<'Area'> | undefined>(undefined)
+  const [lineSeries, setLineSeries] = useState<ISeriesApi<'Area'> | undefined>(undefined)
 
   const isDownMd = useBreakpoint('md')
 
@@ -193,8 +192,10 @@ export default function LineChart({
     })
     setChart(chartEl)
 
-    const lineSeries = chartEl.addLineSeries({
-      color: lineColor ?? theme.palette.primary.main,
+    const lineSeries = chartEl.addAreaSeries({
+      lineColor: '#FF4141',
+      topColor: 'rgba(254, 240, 238, 1)',
+      bottomColor: 'rgba(254, 240, 238, 0)',
       lineWidth: 1,
       crosshairMarkerVisible: true,
       crosshairMarkerRadius: 4,
@@ -241,11 +242,13 @@ export default function LineChart({
   useEffect(() => {
     if (!chart || !strikeData) return
     if (!priceLine) {
-      const pl = chart?.addLineSeries({
+      const pl = chart?.addAreaSeries({
         lineType: LineType.Simple,
         lineStyle: LineStyle.Dashed,
         lineWidth: 1,
-        color: secondaryColor,
+        lineColor: '#11BF2D',
+        topColor: 'rgba(217, 245, 221, 1)',
+        bottomColor: 'rgba(217, 245, 221, 0)',
         crosshairMarkerVisible: false
       })
       setPriceLine(pl)
