@@ -45,7 +45,7 @@ enum DefiProductDataOrder {
 
 const APY = '20%'
 
-export function useSingleDefiVault(chainName: string, currency: string, type: string): DefiProduct | null {
+export function useSingleSharkfin(chainName: string, currency: string, type: string): DefiProduct | null {
   const { account } = useActiveWeb3React()
   const [strikePrice, setStrikePrice] = useState<any>(undefined)
   const args = useMemo(() => {
@@ -98,7 +98,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
     if (!SUPPORTED_DEFI_VAULT[productChainId as keyof typeof SUPPORTED_DEFI_VAULT]?.includes(cur)) {
       return null
     } else {
-      const investCurrency = type.toUpperCase() === 'CALL' ? SUPPORTED_CURRENCIES[cur]?.symbol ?? '' : 'USDC'
+      const investCurrency = type.toUpperCase() === 'CALL' ? SUPPORTED_CURRENCIES[cur]?.symbol ?? '' : 'USDT'
       const token = CURRENCIES[productChainId as ChainId][investCurrency]
       const shares = withdrawals.result?.shares?.toString()
       const priceResult = price.result?.[0]?.toString()
@@ -147,7 +147,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
   return result
 }
 
-export function useDefiVaultList() {
+export function useSharkfinList() {
   const { account } = useActiveWeb3React()
   const [promise, setPromise] = useState<Promise<any> | undefined>(undefined)
   const [defiVaultList, setDefiVaultList] = useState<undefined | null | DefiProduct[]>(undefined)
@@ -281,7 +281,7 @@ const defiVaultListUtil = (res?: any[][]) => {
             ? trimNumberString(
                 parseBalance(
                   resPut[DefiProductDataOrder.accountVaultBalance].toString(),
-                  CURRENCIES[+chainId as ChainId]['USDC']
+                  CURRENCIES[+chainId as ChainId]['USDT']
                 ),
                 4
               )
@@ -303,7 +303,7 @@ const defiVaultListUtil = (res?: any[][]) => {
         type: 'PUT',
         apy: APY,
         expiredAt: getExpireAt(),
-        investCurrency: 'USDC',
+        investCurrency: 'USDT',
         strikePrice: '-',
         depositAmount:
           resPut && resPut[DefiProductDataOrder.depositReceipts] && resPut[DefiProductDataOrder.decimals]

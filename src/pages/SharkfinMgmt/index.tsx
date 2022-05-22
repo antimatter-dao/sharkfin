@@ -11,8 +11,7 @@ import DualInvestChart, { PastAggrChart } from 'pages/SharkfinMgmt/Chart'
 import Card from 'components/Card/Card'
 // import dayjs from 'dayjs'
 import useBreakpoint from 'hooks/useBreakpoint'
-import { useSingleDefiVault } from 'hooks/useDefiVault'
-
+import { useSingleSharkfin } from 'hooks/useSharkfin'
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
 // import { usePrevDetails } from 'hooks/usePrevDetails'
 // import { PrevOrder } from 'utils/fetch/record'
@@ -38,13 +37,13 @@ export const StyledUnorderList = styled('ul')(({ theme }) => ({
   }
 }))
 
-export default function DefiMgmt() {
+export default function SharkfinMgmt() {
   const [investAmount, setInvestAmount] = useState('')
 
   const theme = useTheme()
   const { currency, type, chainName } = useParams<{ currency: string; type: string; chainName: string }>()
 
-  const product = useSingleDefiVault(chainName ?? '', currency ?? '', type ?? '')
+  const product = useSingleSharkfin(chainName ?? '', currency ?? '', type ?? '')
   // const prevDetails = usePrevDetails(chainName ?? '', currency ?? '', type ?? '')
   const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'
@@ -68,7 +67,7 @@ export default function DefiMgmt() {
         settlement price is the BTC price at 8:00 UTC on expiry date. Price data is sourced from an on-chain oracle.
       </>
     ]
-  }, [])
+  }, [theme.palette.primary.main])
 
   const chart = useMemo(() => {
     return (
@@ -124,7 +123,8 @@ export default function DefiMgmt() {
             graphTitle="Purchase expected income graph"
             showFaq={true}
             backLink={routes.sharkfin}
-            pageTitle={'BTC weekly sharkfin'}
+            pageTitle={`${product.currency} weekly sharkfin`}
+            priceCurSymbol={product?.currency}
             subject={Subject.Sharkfin}
             returnOnInvestmentListItems={returnOnInvestmentListItems}
             vaultForm={<VaultForm product={product} setAmount={handleInput} amount={investAmount} />}
@@ -266,7 +266,7 @@ export default function DefiMgmt() {
 //   const data = useMemo(
 //     () => ({
 //       ['APY']: prevDetails?.annualRor ? (+prevDetails.annualRor * 100).toFixed(2) + '%' : '-',
-//       ['Strike Price']: `${prevDetails?.strikePrice ?? '-'} USDC`,
+//       ['Strike Price']: `${prevDetails?.strikePrice ?? '-'} USDT`,
 //       // ['Executed Price']: `${prevDetails?.deliveryPrice ?? '-'} USDT`,
 //       // ['Status']: prevDetails?.status ?? '-',
 //       // ['Your P&L']: prevDetails?.pnl ?? '-',

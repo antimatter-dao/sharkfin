@@ -16,6 +16,7 @@ export const SYMBOL_MAP = {
   USDT: 'USDT',
   BTCT: 'BTC',
   ETH: 'ETH',
+  WETH: 'ETH',
   BTCB: 'BTC',
   BNB: 'BNB',
   WBNB: 'BNB',
@@ -76,7 +77,7 @@ export const SUPPORTED_CURRENCIES: {
       [ChainId.BSC]: '0x55d398326f99059fF775485246999027B3197955',
       [ChainId.AVAX]: '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
       [ChainId.MAINNET]: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-      [ChainId.RINKEBY]: '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16',
+      [ChainId.RINKEBY]: '0x594A2db710799D1118a491399146D0A2279808A1',
       [ChainId.MATIC]: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
       [ChainId.KOVAN]: '0x7e6edA50d1c833bE936492BF42C1BF376239E9e2'
     } as { [chainId in ChainId]: string },
@@ -109,6 +110,16 @@ export const SUPPORTED_CURRENCIES: {
     decimals: 18,
     symbol: 'ETH',
     name: 'Ethereum',
+    logoUrl: EthLogo,
+    color: '#656565'
+  },
+  WETH: {
+    address: {
+      [ChainId.RINKEBY]: '0x3ade50e667cc085b29C2EFF87F6911A7b55Bd81c'
+    },
+    decimals: 18,
+    symbol: 'WETH',
+    name: 'Wrapped Ethereum',
     logoUrl: EthLogo,
     color: '#656565'
   },
@@ -241,7 +252,7 @@ export const CURRENCY_ADDRESS_MAP = Object.keys(SUPPORTED_CURRENCIES).reduce((ac
 }, {} as { [key: string]: Token })
 
 export const SUPPORTED_DEFI_VAULT: { [chainId in ChainId]?: string[] } = IS_TEST_NET
-  ? { [ChainId.RINKEBY]: ['ETH'] }
+  ? { [ChainId.RINKEBY]: ['WETH'] }
   : {
       [ChainId.MAINNET]: ['ETH'],
       [ChainId.AVAX]: ['AVAX']
@@ -255,4 +266,9 @@ export const DEFAULT_COIN_SYMBOL: { [chainId in ChainId]: string } = {
   [ChainId.RINKEBY]: 'AVAX',
   [ChainId.MATIC]: 'MATIC',
   [ChainId.KOVAN]: 'ETH'
+}
+
+export const getMappedSymbol = (symbol: string) => {
+  const mapped = SYMBOL_MAP[symbol as keyof typeof SYMBOL_MAP]
+  return mapped ? mapped : symbol
 }

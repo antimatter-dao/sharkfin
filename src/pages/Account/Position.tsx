@@ -10,7 +10,7 @@ import { useActiveWeb3React } from 'hooks'
 import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { SUPPORTED_CURRENCIES } from 'constants/currencies'
-// import { useDefiVaultList } from '../../hooks/useDefiVault'
+import { useSharkfinList } from '../../hooks/useSharkfin'
 import { routes } from 'constants/routes'
 // import { ChainListMap, NETWORK_CHAIN_ID } from 'constants/chain'
 import { OutlinedCard } from 'components/Card/Card'
@@ -46,9 +46,13 @@ export default function Position() {
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
 
+  const vaultList = useSharkfinList()
+
   const data = useMemo(() => {
-    return [
-      [
+    if (!vaultList) return null
+
+    return vaultList.map(data => {
+      return [
         <>129000 USDT</>,
         <>Sep 21, 2021</>,
         <Typography key={1} color="#31B047">
@@ -80,8 +84,8 @@ export default function Position() {
           </Button>
         </Box>
       ]
-    ]
-  }, [])
+    })
+  }, [vaultList])
 
   const hiddenParts = useMemo(() => {
     return [

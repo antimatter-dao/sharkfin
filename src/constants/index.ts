@@ -125,6 +125,9 @@ export const SHARKFIN_ADDRESS: {
   },
   [ChainId.KOVAN]: {
     ETH: { CALL: '0x2089C2959039139A195f8F69E95306fCaaEcc231', PUT: '0x1944c84535fc07cd816475E3fa246ca87Cd0f98A' }
+  },
+  [ChainId.RINKEBY]: {
+    WETH: { PUT: '0x143393f0f6D5E55c50db35Cf6aAE113DC1128c2e', CALL: undefined }
   }
 }
 

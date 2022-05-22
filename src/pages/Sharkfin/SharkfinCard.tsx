@@ -6,7 +6,7 @@ import { SUPPORTED_CURRENCIES } from 'constants/currencies'
 import { ChainId } from 'constants/chain'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { SimpleProgress } from 'components/Progress'
-import { DefiProduct } from 'hooks/useDefiVault'
+import { DefiProduct } from 'hooks/useSharkfin'
 // import { ChainListMap } from 'constants/chain'
 // import Image from 'components/Image'
 
@@ -49,7 +49,7 @@ export default function VaultProductCard({
         style={{ zIndex: 2, position: 'absolute', right: 24, top: 36 }}
       />
 
-      <TextCard text={title} subText={description} maxWidth={240} />
+      <TextCard text={title} subText={description} maxWidth={330} />
 
       {product ? (
         <>

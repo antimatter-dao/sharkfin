@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { LineSeriesData } from 'components/Chart'
 import { priceFormatter } from 'utils/fetch/price'
 import { Time } from 'lightweight-charts'
-import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
+import { getMappedSymbol, SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import { NETWORK_CHAIN_ID } from 'constants/chain'
 import { useActiveWeb3React } from 'hooks'
 
@@ -14,7 +14,7 @@ export function usePriceSet(symbol: string | undefined) {
     let mounted = true
     if (!symbol) return
     // const id = setInterval(() => {
-    fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}USDT&interval=1d&limit=16`, {
+    fetch(`https://api.binance.com/api/v3/klines?symbol=${getMappedSymbol(symbol)}USDT&interval=1d&limit=16`, {
       method: 'GET',
       mode: 'cors',
       headers: {}
@@ -63,7 +63,7 @@ export function usePrice(symbol: string | undefined, delay = 20000) {
           return new Response(null, { status: 200, statusText: '' })
         })
       }
-      return fetch(`https://api.binance.com/api/v3/avgPrice?symbol=${symbol}USDT`, {
+      return fetch(`https://api.binance.com/api/v3/avgPrice?symbol=${getMappedSymbol(symbol)}USDT`, {
         method: 'GET',
         mode: 'cors',
         headers: {}
@@ -104,7 +104,7 @@ export function usePriceForAll() {
                 return new Response(null, { status: 200, statusText: '' })
               })
             }
-            return fetch(`https://api.binance.com/api/v3/avgPrice?symbol=${symbol}USDT`, {
+            return fetch(`https://api.binance.com/api/v3/avgPrice?symbol=${getMappedSymbol(symbol)}USDT`, {
               method: 'GET',
               mode: 'cors',
               headers: {}
