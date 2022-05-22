@@ -41,104 +41,10 @@ const BalanceTableHeader = [
   'Status'
 ]
 
-// function TokenHeader({
-//   token,
-//   investToken,
-//   type
-// }: {
-//   token: Currency | undefined
-//   investToken: Currency | undefined
-//   type: 'CALL' | 'PUT'
-// }) {
-//   return (
-//     <Box display="flex" alignItems="center" gap={16}>
-//       <CurrencyLogo currency={investToken} size="32px" />
-//       <Box>
-//         <Typography fontSize={16}>{`${token?.symbol} ${
-//           type === 'CALL' ? 'Covered Call' : 'Put Selling'
-//         } Recurring Strategy`}</Typography>
-//         <Typography fontSize={12} sx={{}}>
-//           <span style={{ opacity: 0.5, fontSize: '12px' }}>{token?.name}</span>
-//         </Typography>
-//       </Box>
-//     </Box>
-//   )
-// }
-
 export default function Position() {
-  // const [isDepositOpen, setIsDepositOpen] = useState(false)
-  // const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
-  // const [currentCurrency, setCurrentCurrency] = useState<Token | undefined>(undefined)
   const { account } = useActiveWeb3React()
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
-  // const [page] = useState(1)
-  // const accountBalances = useAccountBalances()
-  // const indexPrices = usePriceForAll()
-  // const vaultList = useDefiVaultList()
-
-  // const totalInvest = useMemo(() => {
-  //   if (!accountBalances) return '-'
-  //
-  //   const accumulated = Object.keys(accountBalances).reduce((acc: number, key: string) => {
-  //     const val = accountBalances?.[key as keyof typeof accountBalances]?.totalInvest
-  //     const price = indexPrices[key as keyof typeof indexPrices]
-  //     if (val && val !== '-' && price) {
-  //       return acc + +val * (key === 'USDT' ? 1 : +price)
-  //     } else {
-  //       return acc
-  //     }
-  //   }, 0)
-  //   return accumulated.toFixed(2) + ''
-  // }, [accountBalances, indexPrices])
-
-  // const accountDetailsData = useMemo(() => {
-  //   // const records = accountRecord?.records
-  //   if (!vaultList) return []
-  //
-  //   return vaultList.map(vault => {
-  //     //const scanLink = chainId ? getEtherscanLink(chainId, record.hash, 'transaction') : ''
-  //     const token = chainId ? SUPPORTED_CURRENCIES[vault.investCurrency] : undefined
-  //     return [
-  //       // <TransactionTypeIcon key="type" txType={RecordType[value.type]} />,
-  //       <Box key={1} display="flex" gap={10} alignItems="center">
-  //         <CurrencyLogo currency={token} size="16px" />
-  //         {vault.investCurrency}
-  //       </Box>
-  //       // <Box key={1} display="flex" alignItems="center">
-  //       //   <ExternalLink
-  //       //     href={scanLink}
-  //       //     sx={{
-  //       //       display: 'flex',
-  //       //       color: theme => theme.palette.text.primary,
-  //       //       '&:hover': {
-  //       //         color: theme => theme.palette.primary.main
-  //       //       }
-  //       //     }}
-  //       //   >
-  //       //     <Typography component="span" sx={{}}>
-  //       //       {value.amount}
-  //       //     </Typography>
-  //       //     <Box component="span" sx={{ ml: 5, display: 'flex', alignItems: 'center' }}>
-  //       //       <UpperRightIcon style={{ color: 'currentColor' }} />
-  //       //     </Box>
-  //       //   </ExternalLink>
-  //       // </Box>
-  //       // dayjs(new Date(+record.timestamp * 1000).toUTCString()).format('MMM DD, YYYY hh:mm:ss A') + ' UTC',
-  //       // <>{!isDownMd && <StatusTag key="status" status="completed" />}</>
-  //     ]
-  //   })
-  // }, [chainId, isDownMd, vaultList])
-
-  // const handleDepositOpen = useCallback(() => {
-  //   setIsDepositOpen(true)
-  // }, [])
-
-  // const handleWithdrawOpen = useCallback(() => {
-  //   setIsWithdrawOpen(true)
-  // }, [])
-
-  // const handlePage = useCallback((event, value) => setPage(value), [])
 
   const balanceData = useMemo(() => {
     return [
@@ -197,7 +103,9 @@ export default function Position() {
             }}
           >
             <Typography sx={{ opacity: 0.5 }}>Order ID:</Typography>
-            <span>76</span>
+            <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
+              76
+            </Typography>
           </Box>
           <Box
             display="flex"
@@ -209,7 +117,9 @@ export default function Position() {
             }}
           >
             <Typography sx={{ opacity: 0.5 }}>Product ID:</Typography>
-            <span>29</span>
+            <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
+              29
+            </Typography>
           </Box>
         </Box>
         <Box display="grid" gap={14}>
@@ -223,7 +133,9 @@ export default function Position() {
             }}
           >
             <Typography sx={{ opacity: 0.5 }}>Settlement Price:</Typography>
-            <span>62091.35</span>
+            <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
+              62091.35
+            </Typography>
           </Box>
           <Box
             display="flex"
@@ -235,7 +147,9 @@ export default function Position() {
             }}
           >
             <Typography sx={{ opacity: 0.5 }}>Settlement Time:</Typography>
-            <span>Sep 21, 2021 10:42 AM </span>
+            <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
+              Sep 21, 2021 10:42 AM
+            </Typography>
           </Box>
         </Box>
         <Box display="flex" alignItems="center" gap={7} sx={{ mt: { xs: 16, md: 0 } }}>
@@ -260,7 +174,7 @@ export default function Position() {
     <>
       <Box width="100%" mt={48} display="flex" flexDirection="column" gap={19}>
         <Card>
-          <Box width="100%" padding="38px 24px" display="flex" flexDirection="column" gap={36}>
+          <Box width="100%" padding="38px 24px" display="flex" flexDirection="column" gap={isDownMd ? 24 : 36}>
             <OutlinedCard padding="20px 24px 28px">
               <Typography fontSize={16} sx={{ opacity: 0.5, mb: 24 }}>
                 BTC latest spot price
@@ -287,7 +201,7 @@ export default function Position() {
 
 function AccountBalanceCards({ data, hiddenParts }: { data: any[][]; hiddenParts: JSX.Element[] }) {
   return (
-    <Box mt={24} display="flex" flexDirection="column" gap={8}>
+    <Box display="flex" flexDirection="column" gap={8}>
       {data.map((dataRow, idx) => (
         <TableCard dataRow={dataRow} key={`table-row-${idx}`} hiddenPart={hiddenParts && hiddenParts[idx]} />
       ))}
