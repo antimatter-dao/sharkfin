@@ -13,6 +13,7 @@ import { SUPPORTED_CURRENCIES } from 'constants/currencies'
 import { useDefiVaultList } from '../../hooks/useDefiVault'
 import { routes } from 'constants/routes'
 import { ChainListMap, NETWORK_CHAIN_ID } from 'constants/chain'
+import { OutlinedCard } from 'components/Card/Card'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -185,55 +186,15 @@ export default function Position() {
       <Box width="100%" mt={48} display="flex" flexDirection="column" gap={19}>
         <Card>
           <Box width="100%" padding="38px 24px" display="flex" flexDirection="column" gap={36}>
-            <Typography fontSize={{ xs: 20, sm: 24 }} fontWeight={700}>
-              Vault Details
-            </Typography>
-            {/*<Typography sx={{ color: theme => theme.palette.text.secondary, mt: 8 }}>*/}
-            {/*  Deposit funds to your Dual Investment account, you can withdraw available amount at any time*/}
-            {/*</Typography>*/}
+            <OutlinedCard padding="20px 24px 28px">
+              <Typography fontSize={16} sx={{ opacity: 0.5, mb: 24 }}>
+                BTC latest spot price
+              </Typography>
+              <Typography fontSize={24} fontWeight={700}>
+                57640.00
+              </Typography>
+            </OutlinedCard>
             <Box position="relative">
-              {/*{isDownMd ? (*/}
-              {/*  <InvestmentValueCard*/}
-              {/*    value={toLocaleNumberString(totalInvest, 6)}*/}
-              {/*    unit="$"*/}
-              {/*    // dayChange="+ 8.91% / $350.28 "*/}
-              {/*  />*/}
-              {/*) : (*/}
-              {/*  <NumericalCard*/}
-              {/*    value={toLocaleNumberString(totalInvest, 6)}*/}
-              {/*    border*/}
-              {/*    title="Portfolio Value"*/}
-              {/*    unit="$"*/}
-              {/*    padding="20px 24px"*/}
-              {/*    fontSize={'44px'}*/}
-              {/*    // dayChange="+ 8.91% / $350.28 "*/}
-              {/*  >*/}
-              {/*    <Button*/}
-              {/*      onClick={() => {*/}
-              {/*        history.push(routes.dualInvest)*/}
-              {/*      }}*/}
-              {/*      style={{*/}
-              {/*        width: 148,*/}
-              {/*        height: 44,*/}
-              {/*        fontSize: 14*/}
-              {/*      }}*/}
-              {/*    >*/}
-              {/*      Invest*/}
-              {/*    </Button>*/}
-              {/*    <OutlineButton*/}
-              {/*      href={'https://exchange.chainswap.com/'}*/}
-              {/*      primary*/}
-              {/*      style={{*/}
-              {/*        marginLeft: 12,*/}
-              {/*        width: 148,*/}
-              {/*        height: 44,*/}
-              {/*        fontSize: 14*/}
-              {/*      }}*/}
-              {/*    >*/}
-              {/*      Bridge*/}
-              {/*    </OutlineButton>*/}
-              {/*  </NumericalCard>*/}
-              {/*)}*/}
               {!balanceData || balanceData.length === 0 ? (
                 <NoDataCard height="20vh" />
               ) : isDownMd ? (
