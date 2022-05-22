@@ -1,6 +1,6 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useHistory } from 'react-router'
-import { Container, Box, Typography } from '@mui/material'
+import { Container, Box, Typography, IconButton } from '@mui/material'
 import Card from 'components/Card/Card'
 import Table from 'components/Table'
 import NoDataCard from 'components/Card/NoDataCard'
@@ -15,14 +15,19 @@ import { routes } from 'constants/routes'
 // import { ChainListMap, NETWORK_CHAIN_ID } from 'constants/chain'
 import { OutlinedCard } from 'components/Card/Card'
 import StatusTag from 'components/Status/StatusTag'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import Divider from 'components/Divider'
 
 enum BalanceTableHeaderIndex {
-  token,
-  apy,
-  size,
-  position,
-  deposit,
-  actions
+  investAmount,
+  subscribedTime,
+  finalAPY,
+  deliveryTime,
+  priceRange,
+  term,
+  returnAmount,
+  status
 }
 
 const BalanceTableHeader = [
@@ -174,74 +179,74 @@ export default function Position() {
 
   const balanceHiddenParts = useMemo(() => {
     return [
-      <Box key={1} display="flex" justifyContent="space-between" width="100%">
+      <Box
+        key={1}
+        display="flex"
+        justifyContent="space-between"
+        width="100%"
+        sx={{ flexDirection: { xs: 'column', md: 'row' } }}
+      >
         <Box display="grid" gap={14}>
-          <Box display="flex" alignItems="center" gap={17}>
+          <Box
+            display="flex"
+            alignItems="center"
+            sx={{
+              justifyContent: { xs: 'space-between', md: 'flex-start' },
+              width: { xs: '100%', md: 'fit-content' },
+              gap: { xs: 0, md: 17 }
+            }}
+          >
             <Typography sx={{ opacity: 0.5 }}>Order ID:</Typography>
             <span>76</span>
           </Box>
-          <Box display="flex" alignItems="center" gap={17}>
+          <Box
+            display="flex"
+            alignItems="center"
+            sx={{
+              justifyContent: { xs: 'space-between', md: 'flex-start' },
+              width: { xs: '100%', md: 'fit-content' },
+              gap: { xs: 0, md: 17 }
+            }}
+          >
             <Typography sx={{ opacity: 0.5 }}>Product ID:</Typography>
             <span>29</span>
           </Box>
         </Box>
         <Box display="grid" gap={14}>
-          <Box display="flex" alignItems="center" gap={17}>
+          <Box
+            display="flex"
+            alignItems="center"
+            sx={{
+              justifyContent: { xs: 'space-between', md: 'flex-start' },
+              width: { xs: '100%', md: 'fit-content' },
+              gap: { xs: 0, md: 17 }
+            }}
+          >
             <Typography sx={{ opacity: 0.5 }}>Settlement Price:</Typography>
             <span>62091.35</span>
           </Box>
-          <Box display="flex" alignItems="center" gap={17}>
+          <Box
+            display="flex"
+            alignItems="center"
+            sx={{
+              justifyContent: { xs: 'space-between', md: 'flex-start' },
+              width: { xs: '100%', md: 'fit-content' },
+              gap: { xs: 0, md: 17 }
+            }}
+          >
             <Typography sx={{ opacity: 0.5 }}>Settlement Time:</Typography>
             <span>Sep 21, 2021 10:42 AM </span>
           </Box>
         </Box>
-        <Box display="flex" alignItems="center" gap={7}>
+        <Box display="flex" alignItems="center" gap={7} sx={{ mt: { xs: 16, md: 0 } }}>
           <CurrencyLogo currency={SUPPORTED_CURRENCIES['BTC']} />
-          <Typography fontWeight={700}>Daily Sharkfin BTC(Base Currency-BTC)</Typography>
+          <Typography fontWeight={700} sx={{ fontSize: { xs: 12, md: 14 } }}>
+            Daily Sharkfin BTC(Base Currency-BTC)
+          </Typography>
         </Box>
       </Box>
     ]
-  }, [])
-
-  // const balanceData = useMemo(() => {
-  //   return vaultList
-  //     ? vaultList
-  //         .filter(vault => {
-  //           return vault.chainId === chainId
-  //         })
-  //         .map((vault, index) => {
-  //           const token = chainId ? SUPPORTED_CURRENCIES[vault.currency] : undefined
-  //           const investCurrency = chainId ? SUPPORTED_CURRENCIES[vault.investCurrency] : undefined
-  //           return [
-  //             <TokenHeader
-  //               key={vault.chainId + vault.type + vault.currency}
-  //               token={token}
-  //               type={vault.type}
-  //               investToken={investCurrency}
-  //             />,
-  //             vault.apy,
-  //             vault?.totalBalance ?? '-',
-  //             vault?.totalBalance && vault.depositAmount
-  //               ? `${(Number((Number(vault.depositAmount) / vault.totalBalance).toFixed(6)) * 100).toFixed(4)}%`
-  //               : '-',
-  //             (vault?.depositAmount ?? '-') + ' ' + (vault?.investCurrency ?? '-'),
-  //             <VaultActions
-  //               key={index}
-  //               onVisit={() => {
-  //                 // setCurrentCurrency(CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key])
-  //                 // handleDepositOpen()
-  //                 history.push(
-  //                   routes.sharkfinMgmt
-  //                     .replace(':currency', vault.currency ?? '')
-  //                     .replace(':type', vault.type)
-  //                     .replace(':chainName', ChainListMap[vault?.chainId ?? NETWORK_CHAIN_ID].symbol)
-  //                 )
-  //               }}
-  //             />
-  //           ]
-  //         })
-  //     : []
-  // }, [chainId, history, vaultList])
+  }, [isDownMd])
 
   if (!account) {
     return (
@@ -268,7 +273,7 @@ export default function Position() {
               {!balanceData || balanceData.length === 0 ? (
                 <NoDataCard height="20vh" />
               ) : isDownMd ? (
-                <AccountBalanceCards data={balanceData} />
+                <AccountBalanceCards data={balanceData} hiddenParts={balanceHiddenParts} />
               ) : (
                 <Table header={BalanceTableHeader} rows={balanceData} hiddenParts={balanceHiddenParts} collapsible />
               )}
@@ -280,35 +285,55 @@ export default function Position() {
   )
 }
 
-function AccountBalanceCards({ data }: { data: any[][] }) {
+function AccountBalanceCards({ data, hiddenParts }: { data: any[][]; hiddenParts: JSX.Element[] }) {
   return (
     <Box mt={24} display="flex" flexDirection="column" gap={8}>
       {data.map((dataRow, idx) => (
-        <Card color="#F2F5FA" padding="17px 16px" key={`balance-row-${idx}`}>
-          <Box display="flex" flexDirection="column" gap={20}>
-            {dataRow[BalanceTableHeaderIndex.token]}
-            {dataRow[BalanceTableHeaderIndex.actions]}
-          </Box>
-
-          <Box display="flex" flexDirection="column" gap={16} mt={24}>
-            {dataRow.map((datum, idx2) => {
-              if (idx2 === BalanceTableHeaderIndex.token) return null
-              if (idx2 === BalanceTableHeaderIndex.actions) return null
-              return (
-                <Box key={`balance-row-${idx}-datum-${idx2}`} display="flex" justifyContent="space-between">
-                  <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
-                    {BalanceTableHeader[idx2]}
-                  </Typography>
-                  <Typography fontSize={12} fontWeight={600} component="div">
-                    {datum}
-                  </Typography>
-                </Box>
-              )
-            })}
-          </Box>
-        </Card>
+        <TableCard dataRow={dataRow} key={`table-row-${idx}`} hiddenPart={hiddenParts && hiddenParts[idx]} />
       ))}
     </Box>
+  )
+}
+
+function TableCard({ dataRow, hiddenPart }: { dataRow: any[]; hiddenPart: JSX.Element }) {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <Card color="#F2F5FA" padding="16px">
+      <Box display="flex" flexDirection="column" gap={16}>
+        {dataRow.map((datum, idx) => {
+          if (idx === BalanceTableHeaderIndex.status) return null
+          return (
+            <Box key={`datum-${idx}`} display="flex" justifyContent="space-between">
+              <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
+                {BalanceTableHeader[idx]}
+              </Typography>
+              <Typography fontSize={12} fontWeight={600} component="div">
+                {datum}
+              </Typography>
+            </Box>
+          )
+        })}
+      </Box>
+      <Box display="flex" alignItems={'center'} justifyContent="space-between" mt={20}>
+        {dataRow[BalanceTableHeaderIndex.status]}
+
+        <IconButton
+          aria-label="expand row"
+          size="small"
+          onClick={() => setIsOpen(isOpen => !isOpen)}
+          sx={{ flexGrow: 0, border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: '50%' }}
+        >
+          {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+        </IconButton>
+      </Box>
+      {isOpen && (
+        <>
+          <Divider sx={{ opacity: 0.1 }} extension={16} style={{ marginTop: 20, marginBottom: 20 }} />
+          <Box width="100%">{hiddenPart}</Box>
+        </>
+      )}
+    </Card>
   )
 }
 
