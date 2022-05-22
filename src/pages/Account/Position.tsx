@@ -6,14 +6,15 @@ import Table from 'components/Table'
 import NoDataCard from 'components/Card/NoDataCard'
 import Button from 'components/Button/Button'
 import { useActiveWeb3React } from 'hooks'
-import { Currency } from 'constants/token'
+// import { Currency } from 'constants/token'
 import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { SUPPORTED_CURRENCIES } from 'constants/currencies'
-import { useDefiVaultList } from '../../hooks/useDefiVault'
+// import { useDefiVaultList } from '../../hooks/useDefiVault'
 import { routes } from 'constants/routes'
-import { ChainListMap, NETWORK_CHAIN_ID } from 'constants/chain'
+// import { ChainListMap, NETWORK_CHAIN_ID } from 'constants/chain'
 import { OutlinedCard } from 'components/Card/Card'
+import StatusTag from 'components/Status/StatusTag'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -24,51 +25,52 @@ enum BalanceTableHeaderIndex {
   actions
 }
 
-// const RecordType: { [key in number]: 'withdraw' | 'deposit' | 'vault deposit' | 'vault withdraw' } = {
-//   1: 'deposit',
-//   2: 'withdraw',
-//   3: 'vault deposit',
-//   4: 'vault withdraw'
+const BalanceTableHeader = [
+  'Invest Amount',
+  'Subscribed Time',
+  'Final APY',
+  'Delivery Time',
+  'Price Range(USDT)',
+  'Term',
+  'Return Amount',
+  'Status'
+]
+
+// function TokenHeader({
+//   token,
+//   investToken,
+//   type
+// }: {
+//   token: Currency | undefined
+//   investToken: Currency | undefined
+//   type: 'CALL' | 'PUT'
+// }) {
+//   return (
+//     <Box display="flex" alignItems="center" gap={16}>
+//       <CurrencyLogo currency={investToken} size="32px" />
+//       <Box>
+//         <Typography fontSize={16}>{`${token?.symbol} ${
+//           type === 'CALL' ? 'Covered Call' : 'Put Selling'
+//         } Recurring Strategy`}</Typography>
+//         <Typography fontSize={12} sx={{}}>
+//           <span style={{ opacity: 0.5, fontSize: '12px' }}>{token?.name}</span>
+//         </Typography>
+//       </Box>
+//     </Box>
+//   )
 // }
-
-const BalanceTableHeader = ['', 'Approximate APY', 'Vault Size', 'Your Position', 'Your Deposit', '']
-// const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
-
-function TokenHeader({
-  token,
-  investToken,
-  type
-}: {
-  token: Currency | undefined
-  investToken: Currency | undefined
-  type: 'CALL' | 'PUT'
-}) {
-  return (
-    <Box display="flex" alignItems="center" gap={16}>
-      <CurrencyLogo currency={investToken} size="32px" />
-      <Box>
-        <Typography fontSize={16}>{`${token?.symbol} ${
-          type === 'CALL' ? 'Covered Call' : 'Put Selling'
-        } Recurring Strategy`}</Typography>
-        <Typography fontSize={12} sx={{}}>
-          <span style={{ opacity: 0.5, fontSize: '12px' }}>{token?.name}</span>
-        </Typography>
-      </Box>
-    </Box>
-  )
-}
 
 export default function Position() {
   // const [isDepositOpen, setIsDepositOpen] = useState(false)
   // const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
   // const [currentCurrency, setCurrentCurrency] = useState<Token | undefined>(undefined)
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
   // const [page] = useState(1)
   // const accountBalances = useAccountBalances()
   // const indexPrices = usePriceForAll()
-  const vaultList = useDefiVaultList()
+  // const vaultList = useDefiVaultList()
 
   // const totalInvest = useMemo(() => {
   //   if (!accountBalances) return '-'
@@ -134,44 +136,112 @@ export default function Position() {
   // const handlePage = useCallback((event, value) => setPage(value), [])
 
   const balanceData = useMemo(() => {
-    return vaultList
-      ? vaultList
-          .filter(vault => {
-            return vault.chainId === chainId
-          })
-          .map((vault, index) => {
-            const token = chainId ? SUPPORTED_CURRENCIES[vault.currency] : undefined
-            const investCurrency = chainId ? SUPPORTED_CURRENCIES[vault.investCurrency] : undefined
-            return [
-              <TokenHeader
-                key={vault.chainId + vault.type + vault.currency}
-                token={token}
-                type={vault.type}
-                investToken={investCurrency}
-              />,
-              vault.apy,
-              vault?.totalBalance ?? '-',
-              vault?.totalBalance && vault.depositAmount
-                ? `${(Number((Number(vault.depositAmount) / vault.totalBalance).toFixed(6)) * 100).toFixed(4)}%`
-                : '-',
-              (vault?.depositAmount ?? '-') + ' ' + (vault?.investCurrency ?? '-'),
-              <VaultActions
-                key={index}
-                onVisit={() => {
-                  // setCurrentCurrency(CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key])
-                  // handleDepositOpen()
-                  history.push(
-                    routes.sharkfinMgmt
-                      .replace(':currency', vault.currency ?? '')
-                      .replace(':type', vault.type)
-                      .replace(':chainName', ChainListMap[vault?.chainId ?? NETWORK_CHAIN_ID].symbol)
-                  )
-                }}
-              />
-            ]
-          })
-      : []
-  }, [chainId, history, vaultList])
+    return [
+      [
+        <>129000 USDT</>,
+        <>Sep 21, 2021</>,
+        <Typography key={1} color="#31B047">
+          5% ~ 12%
+        </Typography>,
+        <>
+          Sep 21, 2021
+          <br />
+          08:30 AM UTC{' '}
+        </>,
+        <>59,000~62,000</>,
+        <>7 Days</>,
+        <>--</>,
+        <Box key={1} display="flex" gap={10} pl={isDownMd ? 0 : 20}>
+          <StatusTag key="status" status="finished" />
+          <Button
+            fontSize={14}
+            style={{ width: 92, borderRadius: 4, height: 36 }}
+            onClick={() => {
+              history.push(
+                routes.sharkfinMgmt
+                  .replace(':currency', '')
+                  .replace(':type', '')
+                  .replace(':chainName', '')
+              )
+            }}
+          >
+            Claim
+          </Button>
+        </Box>
+      ]
+    ]
+  }, [])
+
+  const balanceHiddenParts = useMemo(() => {
+    return [
+      <Box key={1} display="flex" justifyContent="space-between" width="100%">
+        <Box display="grid" gap={14}>
+          <Box display="flex" alignItems="center" gap={17}>
+            <Typography sx={{ opacity: 0.5 }}>Order ID:</Typography>
+            <span>76</span>
+          </Box>
+          <Box display="flex" alignItems="center" gap={17}>
+            <Typography sx={{ opacity: 0.5 }}>Product ID:</Typography>
+            <span>29</span>
+          </Box>
+        </Box>
+        <Box display="grid" gap={14}>
+          <Box display="flex" alignItems="center" gap={17}>
+            <Typography sx={{ opacity: 0.5 }}>Settlement Price:</Typography>
+            <span>62091.35</span>
+          </Box>
+          <Box display="flex" alignItems="center" gap={17}>
+            <Typography sx={{ opacity: 0.5 }}>Settlement Time:</Typography>
+            <span>Sep 21, 2021 10:42 AM </span>
+          </Box>
+        </Box>
+        <Box display="flex" alignItems="center" gap={7}>
+          <CurrencyLogo currency={SUPPORTED_CURRENCIES['BTC']} />
+          <Typography fontWeight={700}>Daily Sharkfin BTC(Base Currency-BTC)</Typography>
+        </Box>
+      </Box>
+    ]
+  }, [])
+
+  // const balanceData = useMemo(() => {
+  //   return vaultList
+  //     ? vaultList
+  //         .filter(vault => {
+  //           return vault.chainId === chainId
+  //         })
+  //         .map((vault, index) => {
+  //           const token = chainId ? SUPPORTED_CURRENCIES[vault.currency] : undefined
+  //           const investCurrency = chainId ? SUPPORTED_CURRENCIES[vault.investCurrency] : undefined
+  //           return [
+  //             <TokenHeader
+  //               key={vault.chainId + vault.type + vault.currency}
+  //               token={token}
+  //               type={vault.type}
+  //               investToken={investCurrency}
+  //             />,
+  //             vault.apy,
+  //             vault?.totalBalance ?? '-',
+  //             vault?.totalBalance && vault.depositAmount
+  //               ? `${(Number((Number(vault.depositAmount) / vault.totalBalance).toFixed(6)) * 100).toFixed(4)}%`
+  //               : '-',
+  //             (vault?.depositAmount ?? '-') + ' ' + (vault?.investCurrency ?? '-'),
+  //             <VaultActions
+  //               key={index}
+  //               onVisit={() => {
+  //                 // setCurrentCurrency(CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key])
+  //                 // handleDepositOpen()
+  //                 history.push(
+  //                   routes.sharkfinMgmt
+  //                     .replace(':currency', vault.currency ?? '')
+  //                     .replace(':type', vault.type)
+  //                     .replace(':chainName', ChainListMap[vault?.chainId ?? NETWORK_CHAIN_ID].symbol)
+  //                 )
+  //               }}
+  //             />
+  //           ]
+  //         })
+  //     : []
+  // }, [chainId, history, vaultList])
 
   if (!account) {
     return (
@@ -200,7 +270,7 @@ export default function Position() {
               ) : isDownMd ? (
                 <AccountBalanceCards data={balanceData} />
               ) : (
-                <Table header={BalanceTableHeader} rows={balanceData} />
+                <Table header={BalanceTableHeader} rows={balanceData} hiddenParts={balanceHiddenParts} collapsible />
               )}
             </Box>
           </Box>
@@ -242,17 +312,17 @@ function AccountBalanceCards({ data }: { data: any[][] }) {
   )
 }
 
-function VaultActions({ onVisit }: { onVisit: () => void }) {
-  const isDownMd = useBreakpoint('md')
+// function VaultActions({ onVisit }: { onVisit: () => void }) {
+//   const isDownMd = useBreakpoint('md')
 
-  return (
-    <Box display="flex" key="action" gap={10} pl={isDownMd ? 0 : 20} component="div">
-      <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onVisit}>
-        Visit
-      </Button>
-    </Box>
-  )
-}
+//   return (
+//     <Box display="flex" key="action" gap={10} pl={isDownMd ? 0 : 20} component="div">
+//       <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onVisit}>
+//         Visit
+//       </Button>
+//     </Box>
+//   )
+// }
 
 // function InvestmentValueCard({ value, unit }: { value?: string; unit?: string; dayChange?: string }) {
 //   const theme = useTheme()
