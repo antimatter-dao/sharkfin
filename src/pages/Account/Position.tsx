@@ -19,7 +19,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import Divider from 'components/Divider'
 
-enum BalanceTableHeaderIndex {
+enum TableHeaderIndex {
   investAmount,
   subscribedTime,
   finalAPY,
@@ -30,7 +30,7 @@ enum BalanceTableHeaderIndex {
   status
 }
 
-const BalanceTableHeader = [
+const TableHeader = [
   'Invest Amount',
   'Subscribed Time',
   'Final APY',
@@ -46,7 +46,7 @@ export default function Position() {
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
 
-  const balanceData = useMemo(() => {
+  const data = useMemo(() => {
     return [
       [
         <>129000 USDT</>,
@@ -83,7 +83,7 @@ export default function Position() {
     ]
   }, [])
 
-  const balanceHiddenParts = useMemo(() => {
+  const hiddenParts = useMemo(() => {
     return [
       <Box
         key={1}
@@ -184,12 +184,12 @@ export default function Position() {
               </Typography>
             </OutlinedCard>
             <Box position="relative">
-              {!balanceData || balanceData.length === 0 ? (
+              {!data || data.length === 0 ? (
                 <NoDataCard height="20vh" />
               ) : isDownMd ? (
-                <AccountBalanceCards data={balanceData} hiddenParts={balanceHiddenParts} />
+                <TableCards data={data} hiddenParts={hiddenParts} />
               ) : (
-                <Table header={BalanceTableHeader} rows={balanceData} hiddenParts={balanceHiddenParts} collapsible />
+                <Table header={TableHeader} rows={data} hiddenParts={hiddenParts} collapsible />
               )}
             </Box>
           </Box>
@@ -199,7 +199,7 @@ export default function Position() {
   )
 }
 
-function AccountBalanceCards({ data, hiddenParts }: { data: any[][]; hiddenParts: JSX.Element[] }) {
+function TableCards({ data, hiddenParts }: { data: any[][]; hiddenParts: JSX.Element[] }) {
   return (
     <Box display="flex" flexDirection="column" gap={8}>
       {data.map((dataRow, idx) => (
@@ -216,11 +216,11 @@ function TableCard({ dataRow, hiddenPart }: { dataRow: any[]; hiddenPart: JSX.El
     <Card color="#F2F5FA" padding="16px">
       <Box display="flex" flexDirection="column" gap={16}>
         {dataRow.map((datum, idx) => {
-          if (idx === BalanceTableHeaderIndex.status) return null
+          if (idx === TableHeaderIndex.status) return null
           return (
             <Box key={`datum-${idx}`} display="flex" justifyContent="space-between">
               <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
-                {BalanceTableHeader[idx]}
+                {TableHeader[idx]}
               </Typography>
               <Typography fontSize={12} fontWeight={600} component="div">
                 {datum}
@@ -230,7 +230,7 @@ function TableCard({ dataRow, hiddenPart }: { dataRow: any[]; hiddenPart: JSX.El
         })}
       </Box>
       <Box display="flex" alignItems={'center'} justifyContent="space-between" mt={20}>
-        {dataRow[BalanceTableHeaderIndex.status]}
+        {dataRow[TableHeaderIndex.status]}
 
         <IconButton
           aria-label="expand row"
@@ -250,90 +250,3 @@ function TableCard({ dataRow, hiddenPart }: { dataRow: any[]; hiddenPart: JSX.El
     </Card>
   )
 }
-
-// function VaultActions({ onVisit }: { onVisit: () => void }) {
-//   const isDownMd = useBreakpoint('md')
-
-//   return (
-//     <Box display="flex" key="action" gap={10} pl={isDownMd ? 0 : 20} component="div">
-//       <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onVisit}>
-//         Visit
-//       </Button>
-//     </Box>
-//   )
-// }
-
-// function InvestmentValueCard({ value, unit }: { value?: string; unit?: string; dayChange?: string }) {
-//   const theme = useTheme()
-//   const history = useHistory()
-//   return (
-//     <Card style={{ position: 'relative', border: '1px solid #00000010' }}>
-//       <Box
-//         sx={{
-//           padding: '16px',
-//           gap: '12px',
-//           height: 'auto',
-//           display: 'flex',
-//           flexDirection: 'column'
-//         }}
-//       >
-//         <Box display="flex">
-//           <Typography variant="inherit" color={theme.palette.text.secondary}>
-//             Total Investment Value
-//           </Typography>
-//         </Box>
-//         <Box
-//           sx={{
-//             display: 'flex',
-//             alignItems: 'baseline',
-//             color: theme.palette.text.primary
-//           }}
-//         >
-//           <Typography
-//             sx={{
-//               fontSize: 20,
-//               fontWeight: 700,
-//               lineHeight: 1
-//             }}
-//             component="div"
-//           >
-//             {value}
-//           </Typography>
-//           <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }} component="div">
-//             {unit}
-//           </Typography>
-//           {/* <Box
-//             component="div"
-//             borderRadius={22}
-//             color="#31B047"
-//             bgcolor="rgba(49, 176, 71, 0.16)"
-//             fontSize={14}
-//             display="flex"
-//             alignItems="center"
-//             justifyContent="center"
-//             width={120}
-//             height={24}
-//             ml={12}
-//           >
-//             <Typography
-//               sx={{
-//                 color: '#11BF2D',
-//                 fontSize: '12px'
-//               }}
-//             >
-//               {dayChange}
-//             </Typography>
-//           </Box> */}
-//         </Box>
-//         <Button
-//           onClick={() => {
-//             history.push(routes.dualInvest)
-//           }}
-//           style={{ width: '100%', height: 36, fontSize: 14, borderRadius: 22 }}
-//         >
-//           Invest
-//         </Button>
-//       </Box>
-//     </Card>
-//   )
-// }
