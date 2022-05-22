@@ -209,7 +209,7 @@ export default function VaultCard(props: Props) {
                   available={initiated ? product?.completeBalance : product?.lockedBalance}
                 >
                   <Tabs
-                    titles={[' Initiate Withdrawal', 'Complete Withdrawal']}
+                    titles={['Initiate Withdrawal', 'Complete Withdrawal']}
                     contents={['', '']}
                     CustomTab={CustomTab}
                     customCurrentTab={standardWithdrawlStep}

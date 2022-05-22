@@ -124,7 +124,7 @@ export default function History() {
         </Box>
       </Box>
     ]
-  }, [isDownMd])
+  }, [])
 
   if (!account) {
     return (
