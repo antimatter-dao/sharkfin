@@ -130,7 +130,7 @@ export default function VaultForm({
             <>
               <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 14, width: 14, mr: 8 }} />
               <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
-                Your deposit allows us to invest your {currencySymbol} in the strategy by default.
+                Once subscribed the APY will get locked in, the product can&apos;t be cancelled after subscription.
               </Typography>
             </>
           )}
