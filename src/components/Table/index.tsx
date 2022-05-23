@@ -328,8 +328,17 @@ function Row({
                 borderBottomLeftRadius: 0,
                 borderBottomRightRadius: 0,
                 '& .MuiTableCell-root': {
-                  '&:first-of-type': { borderBottomLeftRadius: 0 },
-                  '&:last-child': { borderBottomRightRadius: 0 }
+                  borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+                  '&:first-of-type': {
+                    borderBottomLeftRadius: 0,
+                    borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+                    borderLeft: '1px solid rgba(0, 0, 0, 0.1)'
+                  },
+                  '&:last-child': {
+                    borderBottomRightRadius: 0,
+                    borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+                    borderRight: '1px solid rgba(0, 0, 0, 0.1)'
+                  }
                 }
               }
             : undefined
@@ -352,33 +361,36 @@ function Row({
         )}
       </StyledTableRow>
       {collapsible && (
-        <TableRow>
-          <TableCell style={{ padding: 0 }} colSpan={row.length + 5}>
-            <Collapse
-              in={isOpen}
-              timeout="auto"
-              sx={{
-                borderBottomRightRadius: 16,
-                borderBottomLeftRadius: 16,
-                width: '100%',
-                marginTop: -8
-              }}
-            >
-              <Box
+        <>
+          <TableRow>
+            <TableCell style={{ padding: 0 }} colSpan={row.length + 5}>
+              <Collapse
+                in={isOpen}
+                timeout="auto"
                 sx={{
-                  padding: 28,
-                  borderTop: '1px solid rgba(0, 0, 0, 0.1)',
-                  transition: '.5s',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
+                  borderBottomRightRadius: 16,
+                  borderBottomLeftRadius: 16,
+                  width: '100%',
+                  marginTop: -8,
+                  border: '1px solid rgba(0, 0, 0, 0.1)'
                 }}
               >
-                {hiddenPart}
-              </Box>
-            </Collapse>
-          </TableCell>
-        </TableRow>
+                <Box
+                  sx={{
+                    padding: 28,
+                    borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+                    transition: '.5s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  {hiddenPart}
+                </Box>
+              </Collapse>
+            </TableCell>
+          </TableRow>
+        </>
       )}
     </>
   )

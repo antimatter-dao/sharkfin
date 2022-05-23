@@ -9,7 +9,7 @@ interface Props {
 interface Style {
   statusText: string
   color: string
-  bgColor: string
+  bgColor?: string
   borderColor?: string
 }
 
@@ -17,12 +17,14 @@ const statusStyles: { [key in StatusType]: Style } = {
   progressing: {
     statusText: 'Progressing',
     color: '#18A0FB',
-    bgColor: '#18A0FB16'
+    // bgColor: '#18A0FB16',
+    borderColor: '#18A0FB16'
   },
   finished: {
     statusText: 'Finished',
     color: '#31B047',
-    bgColor: 'rgba(49, 176, 71, 0.16)'
+    // bgColor: 'rgba(49, 176, 71, 0.16)',
+    borderColor: '#31B047'
   },
   completed: { statusText: 'Completed', color: '#11BF2D', bgColor: 'rgba(17, 191, 45, 0.16)' },
   failed: { statusText: 'Failed', color: '#FF0000', bgColor: 'rgba(255,3,3,0.16)' },
@@ -39,7 +41,7 @@ export default function StatusTag(props: Props) {
       borderRadius={22}
       sx={{ border: '1px solid ' + statusStyles[status]?.borderColor ?? 'transparent' }}
       color={statusStyles[status].color}
-      bgcolor={statusStyles[status].bgColor}
+      // bgcolor={statusStyles[status].bgColor}
       fontSize={14}
       display="flex"
       alignItems="center"
