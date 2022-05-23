@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 // import { useHistory } from 'react-router'
 import { Container, Box, Typography, IconButton } from '@mui/material'
 import Card from 'components/Card/Card'
@@ -11,6 +11,8 @@ import { SUPPORTED_CURRENCIES } from 'constants/currencies'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import Divider from 'components/Divider'
+import Pagination from 'components/Pagination'
+import { useHistoryRecords } from 'hooks/useHistoryRecords'
 
 const TableHeader = [
   'Invest Amount',
@@ -26,10 +28,14 @@ export default function History() {
   const { account } = useActiveWeb3React()
   // const history = useHistory()
   const isDownMd = useBreakpoint('md')
+  const [page, setPage] = useState(1)
+  const { orderList: records, pageParams } = useHistoryRecords(page)
 
   const data = useMemo(() => {
-    return [
-      [
+    if (!records) return undefined
+
+    return records.map(record => {
+      return [
         <>129000 USDT</>,
         <>Sep 21, 2021</>,
         <Typography key={1} color="#31B047">
@@ -44,8 +50,10 @@ export default function History() {
         <>7 Days</>,
         <>62091.35 USDT</>
       ]
-    ]
-  }, [])
+    })
+  }, [records])
+
+  const handlePage = useCallback((event, value) => setPage(value), [])
 
   const hiddenParts = useMemo(() => {
     return [
@@ -140,12 +148,25 @@ export default function History() {
         <Card>
           <Box width="100%" padding="38px 24px" display="flex" flexDirection="column" gap={isDownMd ? 24 : 36}>
             <Box position="relative">
-              {!data || data.length === 0 ? (
-                <NoDataCard height="20vh" />
-              ) : isDownMd ? (
-                <TableCards data={data} hiddenParts={hiddenParts} />
-              ) : (
-                <Table header={TableHeader} rows={data} hiddenParts={hiddenParts} collapsible />
+              {(!data || data.length == 0) && <NoDataCard height="20vh" />}
+
+              {data && data.length > 0 && (
+                <>
+                  {isDownMd ? (
+                    <TableCards data={data} hiddenParts={hiddenParts} />
+                  ) : (
+                    <Table header={TableHeader} rows={data} hiddenParts={hiddenParts} collapsible />
+                  )}
+
+                  <Pagination
+                    count={pageParams?.count}
+                    page={page}
+                    perPage={pageParams?.perPage}
+                    boundaryCount={0}
+                    total={pageParams.total}
+                    onChange={handlePage}
+                  />
+                </>
               )}
             </Box>
           </Box>
