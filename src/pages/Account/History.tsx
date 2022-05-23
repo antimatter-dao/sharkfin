@@ -150,7 +150,7 @@ export default function History() {
             <Box position="relative">
               {(!data || data.length == 0) && <NoDataCard height="20vh" />}
 
-              {data && data.length > 0 && (
+              {data && data?.length > 0 && (
                 <>
                   {isDownMd ? (
                     <TableCards data={data} hiddenParts={hiddenParts} />
