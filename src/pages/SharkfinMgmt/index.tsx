@@ -7,7 +7,8 @@ import { Subject } from 'components/MgmtPage/stableContent'
 // import TextButton from 'components/Button/TextButton'
 // import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
-import DualInvestChart, { PastAggrChart } from 'pages/SharkfinMgmt/Chart'
+import SharkfinChart from 'pages/SharkfinMgmt/Chart'
+import { PastAggrChart } from 'components/Chart/DualInvestChart'
 import Card from 'components/Card/Card'
 // import dayjs from 'dayjs'
 import useBreakpoint from 'hooks/useBreakpoint'
@@ -46,8 +47,6 @@ export default function SharkfinMgmt() {
   const product = useSingleSharkfin(chainName ?? '', currency ?? '', type ?? '')
   // const prevDetails = usePrevDetails(chainName ?? '', currency ?? '', type ?? '')
   const isDownMd = useBreakpoint('md')
-  const strikePrice = product?.strikePrice ?? '-'
-  const isCall = type.toUpperCase() === 'CALL'
 
   const returnOnInvestmentListItems = useMemo(() => {
     return [
@@ -70,14 +69,8 @@ export default function SharkfinMgmt() {
   }, [theme.palette.primary.main])
 
   const chart = useMemo(() => {
-    return (
-      <DualInvestChart
-        product={product ?? undefined}
-        str1={`Settlement Price ${isCall ? '≥' : '≤'} ${strikePrice} USDT, will be exercised`}
-        str2={`Settlement Price ${isCall ? '<' : '>'} ${strikePrice} USDT, will not be exercised`}
-      />
-    )
-  }, [isCall, product, strikePrice])
+    return <SharkfinChart />
+  }, [])
 
   const handleInput = useCallback((val: string) => {
     setInvestAmount(val)

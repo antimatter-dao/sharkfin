@@ -36,7 +36,7 @@ export default function History() {
 
     return records.map(record => {
       return [
-        <>129000 USDT</>,
+        <>129000 {record.investCurrency ?? '-'}</>,
         <>Sep 21, 2021</>,
         <Typography key={1} color="#31B047">
           5% ~ 12%

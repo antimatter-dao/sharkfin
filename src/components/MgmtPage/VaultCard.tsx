@@ -8,6 +8,7 @@ import { DefiProduct } from 'hooks/useSharkfin'
 import { useActiveWeb3React } from 'hooks'
 // import { Timer } from 'components/Timer'
 import { trimNumberString } from 'utils/trimNumberString'
+import useBreakpoint from 'hooks/useBreakpoint'
 // import dayjs from 'dayjs'
 
 const StyledBox = styled(Box)<{ selected?: boolean }>(({ theme, selected }) => ({
@@ -18,7 +19,8 @@ const StyledBox = styled(Box)<{ selected?: boolean }>(({ theme, selected }) => (
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  marginRight: 5
+  marginRight: 5,
+  paddingTop: 2
 }))
 
 export enum TYPE {
@@ -65,6 +67,7 @@ export default function VaultCard(props: Props) {
   const [currentTab, setCurrentTab] = useState<TYPE>(0)
   const [standardWithdrawlStep, setStandardWithdrawlStep] = useState<StandardWithdrawType>(0)
   const { chainId } = useActiveWeb3React()
+  const isDownSm = useBreakpoint('sm')
 
   const productChainId = product?.chainId
   const currencySymbol = product?.investCurrency ?? ''
@@ -132,6 +135,7 @@ export default function VaultCard(props: Props) {
               customOnChange={handleTabClick}
               titles={['Invest', 'Standard Withdrawal', 'Instant Withdrawal']}
               tabPadding="12px 0px 12px 0px"
+              scrollable={isDownSm ? 'scrollable' : 'standard'}
               contents={[
                 <VaultForm
                   error={error}

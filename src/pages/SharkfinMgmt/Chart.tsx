@@ -1,102 +1,42 @@
-import { Box, Grid } from '@mui/material'
-import Card from 'components/Card/Card'
-import LineChart from 'components/Chart'
-import BarChart from 'components/Chart/BarChart'
-import Spinner from 'components/Spinner'
+import { Box, Typography, useTheme } from '@mui/material'
+import { ReactComponent as SharkfinChartSvg } from 'assets/svg/sharkfin_chart.svg'
+import { ReactComponent as SharkfinChartMobileSvg } from 'assets/svg/sharkfin_chart_mobile.svg'
 import useBreakpoint from 'hooks/useBreakpoint'
-import { usePriceSet } from 'hooks/usePriceSet'
-import { Time } from 'lightweight-charts'
-import { useMemo, useRef } from 'react'
 
-export default function DualInvestChart({
-  product,
-  str1,
-  str2
-}: {
-  product: { [key: string]: any; currency: string; expiredAt: number; strikePrice: string } | undefined
-  str1: string
-  str2: string
-}) {
-  const graphContainer = useRef<HTMLDivElement>(null)
-  const priceSet = usePriceSet(product?.currency)
-  const isDownMd = useBreakpoint('md')
-
-  const strikeLineData = useMemo(() => {
-    return product?.expiredAt ? { time: product.expiredAt as Time, value: +product.strikePrice ?? 0 } : undefined
-  }, [product?.expiredAt, product?.strikePrice])
-
+export default function SharkfinChart() {
+  const isDownSm = useBreakpoint('sm')
+  const theme = useTheme()
   return (
-    <>
-      <Grid
-        item
-        xs={12}
-        md={9}
-        sx={{
-          height: {
-            xs: '300px',
-            md: '100%',
-            maxWidth: { xs: '100%', md: 'calc(100% - 100px)' },
-            width: { xs: '100%', md: 'auto' }
-          }
-        }}
-        ref={graphContainer}
-      >
-        {product && priceSet ? (
-          <LineChart
-            lineColor="#18A0FB"
-            lineSeriesData={priceSet}
-            unit={product.currency}
-            id={product.currency + 'PriceGraph'}
-            height={graphContainer?.current?.offsetHeight ?? 280}
-            strikeData={strikeLineData}
-          />
+    <Box display="flex" flexDirection={'column'} width="100%" gap="6px">
+      <Box display="flex" width="100%" gap="12px">
+        <Box
+          height="100%"
+          display="grid"
+          gridTemplateRows={isDownSm ? '15% 25% 12% 45% 3%' : '10% 38% 10% 35% 3%'}
+          sx={{ textAlign: 'right', color: theme.palette.text.primary + '60' }}
+        >
+          <Typography fontWeight={500}>APY</Typography>
+
+          <Typography>15%</Typography>
+          <Typography>5%</Typography>
+          <Typography>3%</Typography>
+
+          <Typography>0</Typography>
+        </Box>
+        {isDownSm ? (
+          <SharkfinChartMobileSvg width={'100%'} height={'auto'} />
         ) : (
-          <Box sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-            <Spinner size={60} marginRight="auto" marginLeft="auto" />
-          </Box>
+          <SharkfinChartSvg width={'100%'} height={'auto'} />
         )}
-      </Grid>
-      {!isDownMd && (
-        <Grid item xs={12} md={3} sx={{ height: { xs: 'auto', md: '100%' } }} paddingBottom={{ xs: 0, md: 22 }}>
-          <Box display={{ xs: 'flex', md: 'grid' }} gap={20} maxWidth="100%">
-            <Card gray width="100%">
-              <Box padding="16px" fontSize={14} sx={{ overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}>
-                {str1}
-              </Box>
-            </Card>
-            <Card gray width="100%">
-              <Box
-                padding="16px"
-                fontSize={14}
-                maxWidth="100%"
-                sx={{ overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}
-              >
-                {str2}
-              </Box>
-            </Card>
-          </Box>
-        </Grid>
-      )}
-    </>
-  )
-}
-
-export function PastAggrChart() {
-  const graphContainer = useRef<HTMLDivElement>(null)
-
-  return (
-    <>
-      <Grid
-        item
-        sx={{
-          height: { xs: '100%', md: '100%' },
-          maxWidth: '100%',
-          width: { xs: '100%', md: 'auto' }
-        }}
-        ref={graphContainer}
-      >
-        <BarChart />
-      </Grid>
-    </>
+      </Box>
+      <Box display="flex" justifyContent={'space-between'} width="100%" sx={{ color: theme.palette.primary.main }}>
+        <span style={{ width: 60 }}></span>
+        <Typography fontWeight={700}>$38500</Typography>
+        <Typography fontWeight={700}>$42500</Typography>
+        <Typography fontWeight={500} color={theme.palette.text.primary + '60'}>
+          PRICE
+        </Typography>
+      </Box>
+    </Box>
   )
 }

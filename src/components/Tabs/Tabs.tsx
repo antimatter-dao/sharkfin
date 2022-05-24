@@ -9,6 +9,7 @@ interface Props {
   tabPadding?: string
   CustomTab?: React.FC<TabProps & { selected?: boolean }>
   fontWeight?: number
+  scrollable?: 'standard' | 'scrollable'
 }
 
 function TabPanel({ children, value, index }: { children: React.ReactNode; value: number; index: number }) {
@@ -16,7 +17,7 @@ function TabPanel({ children, value, index }: { children: React.ReactNode; value
 }
 
 export default function Tabs(props: Props) {
-  const { titles, contents, customCurrentTab, customOnChange, tabPadding, CustomTab } = props
+  const { titles, contents, customCurrentTab, customOnChange, tabPadding, CustomTab, scrollable } = props
   const [value, setValue] = React.useState(0)
 
   const onChange = useCallback(
@@ -32,9 +33,15 @@ export default function Tabs(props: Props) {
         <MuiTabs
           allowScrollButtonsMobile
           scrollButtons="auto"
+          variant={scrollable}
           value={customCurrentTab !== undefined ? customCurrentTab : value}
           onChange={onChange}
-          sx={{ mb: -1 }}
+          sx={{
+            mb: -1,
+            '.MuiTabs-scrollButtons.Mui-disabled': {
+              opacity: 0.3
+            }
+          }}
           TabIndicatorProps={CustomTab ? { style: { display: 'none' } } : undefined}
         >
           {CustomTab

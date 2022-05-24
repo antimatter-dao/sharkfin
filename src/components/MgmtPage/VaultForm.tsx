@@ -15,21 +15,19 @@ import Divider from 'components/Divider'
 
 enum TYPE {
   invest = 'Invest',
-  redeem = 'Redeem'
+  standard = 'Standard',
+  instant = 'Instant'
 }
 
-const Instructions: { [type in TYPE]: JSX.Element | string | undefined } = {
-  [TYPE.invest]: undefined,
-  [TYPE.redeem]: (
-    <>
-      Standard withdrawals are for funds that have been deployed in the vault&apos;s weekly strategy and involve a
-      2-step withdrawal process:
-      <br /> Step 1: User submits the amount to be withdrawn <br />
-      Step 2: After the investment expires, the actual withdrawal will be completed, and the withdrawal amount includes
-      part of the income.
-    </>
-  )
-}
+const Instructions: JSX.Element = (
+  <>
+    Standard withdrawals are for funds that have been deployed in the vault&apos;s weekly strategy and involve a 2-step
+    withdrawal process:
+    <br /> Step 1: User submits the amount to be withdrawn <br />
+    Step 2: After the investment expires, the actual withdrawal will be completed, and the withdrawal amount includes
+    part of the income.
+  </>
+)
 
 export default function VaultForm({
   type,
@@ -78,8 +76,8 @@ export default function VaultForm({
 
   return (
     <Box pt="20px" display="flex" flexDirection="column" width="100%">
-      <Box display="grid" gap="30px" width={'100%'}>
-        <Box minHeight="48px" display="flex" alignItems={'flex-end'}>
+      <Box display="grid" gap={type === TYPE.invest ? '30px' : '16px'} width={'100%'}>
+        <Box display="flex" alignItems={'flex-end'}>
           {children}
         </Box>
         <InputNumerical
@@ -137,8 +135,8 @@ export default function VaultForm({
         </Box>
       </Box>
 
-      <Box width={'100%'} padding="24px 22px 27px" display="flex" flexDirection={'column'} gap={24}>
-        {type === TYPE.redeem && (
+      {type !== TYPE.invest && (
+        <Box width={'100%'} padding="24px 22px 27px" display="flex" flexDirection={'column'} gap={24}>
           <>
             <Divider
               sx={{
@@ -160,7 +158,7 @@ export default function VaultForm({
                     }}
                   />
                   <Typography fontSize={14} sx={{ color: theme => theme.palette.text.secondary }}>
-                    {Instructions[type as TYPE]}
+                    {Instructions}
                   </Typography>
                 </Box>
               </Box>
@@ -181,8 +179,8 @@ export default function VaultForm({
               ))}
             </Box>
           </>
-        )}
-      </Box>
+        </Box>
+      )}
     </Box>
   )
 }

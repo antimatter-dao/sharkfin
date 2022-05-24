@@ -53,7 +53,7 @@ export default function Position() {
 
     return vaultList.map(data => {
       return [
-        <>129000 USDT</>,
+        <>129000 {data.investCurrency ?? '-'}</>,
         <>Sep 21, 2021</>,
         <Typography key={1} color="#31B047">
           5% ~ 12%
@@ -85,7 +85,7 @@ export default function Position() {
         </Box>
       ]
     })
-  }, [vaultList])
+  }, [history, isDownMd, vaultList])
 
   const hiddenParts = useMemo(() => {
     return [
@@ -164,7 +164,7 @@ export default function Position() {
         </Box>
       </Box>
     ]
-  }, [isDownMd])
+  }, [])
 
   if (!account) {
     return (
