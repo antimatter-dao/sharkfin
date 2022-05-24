@@ -136,7 +136,7 @@ export default function VaultForm({
       </Box>
 
       {type !== TYPE.invest && (
-        <Box width={'100%'} padding="24px 22px 27px" display="flex" flexDirection={'column'} gap={24}>
+        <Box width={'100%'} display="flex" flexDirection={'column'} gap={24}>
           <>
             <Divider
               sx={{
@@ -165,7 +165,7 @@ export default function VaultForm({
             </Card>
             <Box display="flex" flexDirection="column" gap={16}>
               {Object.keys(formData).map(key => (
-                <Box key={key} display={{ xs: 'grid', md: 'flex' }} justifyContent="space-between" gap={5}>
+                <Box key={key} display={'flex'} justifyContent="space-between" gap={5}>
                   <Typography fontSize={16}>{key}</Typography>
                   <Typography
                     fontSize={16}

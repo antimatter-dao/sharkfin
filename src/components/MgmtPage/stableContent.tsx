@@ -92,11 +92,11 @@ export function RiskStatement({ subject }: { subject: Subject }) {
         </Typography>
       ],
       [Subject.Sharkfin]: [
-        'As the product return is determined by where the observed prices are to the specified price range, the final return might be the lower return, as market conditions changes all the time.',
+        'As the product return is determined by where the observed prices are to the specified price range, the final return might be a lower return, as market conditions change all the time.',
         'The investment amount is calculated in real time with the market, please refer to the actual purchase transaction.',
         'The annualized rate of return changes in real time with the market, please refer to the actual rate of return of the purchase transaction.',
-        'The settlement price is the BTC price at 16:00 UTC on expiry date. Price data is sourced from an on-chain oracle.',
-        'Early redemption is not supported, and users can only get rewards after the expiry date.',
+        'The average spot price of the underlying asset at 8:00 (UTC) on the delivery date will be used as the settlement price.',
+        'Early redemption is not supported, users can only redeem after the expiry date.',
         'After the product is purchased, you can view it on my currency holding page, and the payment will be automatically issued to the Account after the delivery.'
       ]
     }
@@ -250,13 +250,12 @@ export function FAQ({ subject }: { subject: Subject }) {
       [Subject.RecurringVault]: [],
       [Subject.Sharkfin]: [
         {
-          summary: 'What is Dual Investment?',
+          summary: 'What is Daily Sharkfin?',
           details: (
             <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
-              Antimatter Dual Investment is an advanced options derivative based on a decentralised protocol. The
-              product has a &quot;market-neutral, returns guaranteed&quot; feature, where the yield is clear and fixed
-              at the time of purchase, while the settlement currency is uncertain. At maturity, the settlement currency
-              depends on the outcome of the settlement price at maturity compared to the strike price.
+              Daily Sharkfin is a principal protected product, where users subscribe using the required currency and
+              earn varying yield based on a specified price range of the underlying asset. The product runs on a weekly
+              basis and redemption is only possible at maturity.
             </AccordionDetailText>
           )
         },
@@ -264,55 +263,38 @@ export function FAQ({ subject }: { subject: Subject }) {
           summary: 'How is my return calculated?',
           details: (
             <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
+              <p>The product return has a lower and upper limit.</p>
+              <p>Observed price was **always** within the price range:</p>
               <p>
-                When a product is &quot;exercised&quot;, the subscription amount and yields will be swapped at the
-                strike price in the alternative currency.
+                Annualised Percentage Return (APR) = Annualised Lower Return + (Settlement Price at Maturity-Lower
+                Price) / (Upper Price - Lower Price) * (Annualised Upper Return - Annualised Lower Return), the higher
+                the settlement price, the higher the product return.
               </p>
-              <p>
-                <b>Up-and-Exercised:</b> Yields = (Subscription Amount * Strike Price) * [1 + (APY % * Period (days) /
-                365)]
-              </p>
-              <p>
-                <b>Down-and-Exercised:</b> Yields = (Subscription Amount / Strike Price) * [1 + (APY % * Cycle (Days) /
-                365)]
-              </p>
-              <p>
-                When a subscription is &quot;unexercised&quot;, the subscription amount and yields will not be
-                transferred into the alternative currency and the user will receive the currency they invested.
-              </p>
-              <p>
-                <b>Yields</b> = Subscription Amount * [1 + (APY% * Period (days) / 365)]
-              </p>
-              <p>Yields will be automatically credited to the user&apos;s account within 24 hours of settlement.</p>
+              <p>Return = Principal * Annualised Percentage Return / 365 * Investment term.</p>
+              <p>Observed price was atleast once below Lower Limit or above Upper Limit:</p>
+              <p>Return = Principal * Annualised Lower Return / 365 * Investment term.</p>
             </AccordionDetailText>
           )
         },
         {
           summary:
-            'What are “Strike Price”, “Underlying Asset”, “Deposit Currency”, “Alternate Currency”, “Deposit Days”, and “Settlement Price”?',
+            'What are “Price Range”, “Observed Price”, “Underlying Asset”, “Deposit Currency” and “Delivery Date”?',
           details: (
             <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
               <p>
-                <b>Strike Price</b> - A set price at which deposit currency will be converted into alternate currency if
-                the product is exercised.
+                Price Range - A specified intervall of the price of an underlying asset. Observed price and price range
+                determine the outcome.
               </p>
               <p>
-                <b>Underlying Asset</b> - An asset on which a Dual Investment product is based. For instance, if you are
-                making reference to BTC spot price and BTC strike price, then the underlying asset is BTC.
+                Observed Price - Price action of the underlying asset in the given timeframe. Observed price and price
+                range determine the outcome.
               </p>
               <p>
-                <b>Deposit Currency</b> - The currency you have used to subscribe to a Dual Investment product.
+                Underlying Asset - An asset on which a Dual Investment product is based. For instance, if you are making
+                reference to BTC spot price and BTC strike price, then the underlying asset is BTC.
               </p>
-              <p>
-                <b>Alternate Currency</b> - The currency you will be receiving if the product is exercised.
-              </p>
-              <p>
-                <b>Deposit Days</b> - A number of days remaining until the delivery date.
-              </p>
-              <p>
-                <b>Settlement Price</b> - Average of the spot price in the last 30 minutes before 08:00 (UTC) on the
-                delivery date. Settlement price and strike price determines whether a product is exercised or not.
-              </p>
+              <p>Deposit Currency - The currency you have used to subscribe to a Daily Sharkfin product.</p>
+              <p>Delivery Date - Date on which the product expires and has two outcomes.</p>
             </AccordionDetailText>
           )
         }
