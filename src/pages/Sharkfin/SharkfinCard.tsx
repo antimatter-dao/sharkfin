@@ -3,7 +3,7 @@ import { Box, Typography, TextField } from '@mui/material'
 import Button from 'components/Button/Button'
 import Spinner from 'components/Spinner'
 import { SUPPORTED_CURRENCIES } from 'constants/currencies'
-import { ChainId } from 'constants/chain'
+// import { ChainId } from 'constants/chain'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { SimpleProgress } from 'components/Progress'
 import { DefiProduct } from 'hooks/useSharkfin'
@@ -15,15 +15,15 @@ export default function VaultProductCard({
   description,
   onClick,
   color,
-  product,
-  onChain
-}: {
+  product
+}: // onChain
+{
   title: string
   description?: string
   onClick: () => void
   color: string
   product: DefiProduct | undefined
-  onChain: ChainId
+  // onChain: ChainId
 }) {
   return (
     <Box

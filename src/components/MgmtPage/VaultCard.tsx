@@ -8,7 +8,6 @@ import { DefiProduct } from 'hooks/useSharkfin'
 import { useActiveWeb3React } from 'hooks'
 // import { Timer } from 'components/Timer'
 import { trimNumberString } from 'utils/trimNumberString'
-import useBreakpoint from 'hooks/useBreakpoint'
 // import dayjs from 'dayjs'
 
 const StyledBox = styled(Box)<{ selected?: boolean }>(({ theme, selected }) => ({
@@ -67,7 +66,6 @@ export default function VaultCard(props: Props) {
   const [currentTab, setCurrentTab] = useState<TYPE>(0)
   const [standardWithdrawlStep, setStandardWithdrawlStep] = useState<StandardWithdrawType>(0)
   const { chainId } = useActiveWeb3React()
-  const isDownSm = useBreakpoint('sm')
 
   const productChainId = product?.chainId
   const currencySymbol = product?.investCurrency ?? ''
@@ -135,7 +133,7 @@ export default function VaultCard(props: Props) {
               customOnChange={handleTabClick}
               titles={['Invest', 'Standard Withdrawal', 'Instant Withdrawal']}
               tabPadding="12px 0px 12px 0px"
-              scrollable={isDownSm ? 'scrollable' : 'standard'}
+              scrollable={'scrollable'}
               contents={[
                 <VaultForm
                   error={error}
@@ -256,7 +254,7 @@ function CustomTab(props: TabProps & { selected?: boolean }) {
       {...props}
       disableRipple
       label={
-        <Box display={'flex'} alignItems="center">
+        <Box display={'flex'} alignItems="center" sx={{ fontSize: { xs: 12, sm: 14 } }}>
           <StyledBox component="span" selected={props.selected}>
             {props.value + 1}
           </StyledBox>
@@ -268,6 +266,7 @@ function CustomTab(props: TabProps & { selected?: boolean }) {
         borderRadius: 1,
         color: theme => theme.palette.text.secondary,
         border: '1px solid transparent',
+        padding: 10,
         opacity: 1,
         '&.Mui-selected': {
           color: theme => theme.palette.primary.main

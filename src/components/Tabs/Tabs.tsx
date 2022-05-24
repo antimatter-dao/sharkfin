@@ -37,10 +37,10 @@ export default function Tabs(props: Props) {
           value={customCurrentTab !== undefined ? customCurrentTab : value}
           onChange={onChange}
           sx={{
-            mb: -1,
-            '.MuiTabs-scrollButtons.Mui-disabled': {
-              opacity: 0.3
-            }
+            mb: -1
+            // '.MuiTabs-scrollButtons.Mui-disabled': {
+            //   opacity: 0.3
+            // }
           }}
           TabIndicatorProps={CustomTab ? { style: { display: 'none' } } : undefined}
         >

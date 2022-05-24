@@ -24,9 +24,9 @@ export default function SharkfinChart() {
           <Typography>0</Typography>
         </Box>
         {isDownSm ? (
-          <SharkfinChartMobileSvg width={'100%'} height={'auto'} />
+          <SharkfinChartMobileSvg width={'100%'} style={{ height: 'auto' }} />
         ) : (
-          <SharkfinChartSvg width={'100%'} height={'auto'} />
+          <SharkfinChartSvg width={'100%'} style={{ height: 'auto' }} />
         )}
       </Box>
       <Box display="flex" justifyContent={'space-between'} width="100%" sx={{ color: theme.palette.primary.main }}>

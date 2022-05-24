@@ -215,7 +215,7 @@ export default function Sharkfin() {
             return (
               <React.Fragment key={chainId + (currency ?? '') + type}>
                 <VaultProductCard
-                  onChain={+chainId}
+                  // onChain={+chainId}
                   product={item}
                   title={`Daily Sharkfin ${currency} (Base Currency-${type === 'CALL' ? currency : 'USDT'})`}
                   onClick={() => {
