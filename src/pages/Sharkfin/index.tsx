@@ -226,7 +226,7 @@ export default function Sharkfin() {
                         .replace(':chainName', ChainListMap[+chainId].symbol)
                     )
                   }}
-                  color={'#F99F33'}
+                  color={SUPPORTED_CURRENCIES[type === 'CALL' ? currency ?? 'ETH' : 'USDT'].color ?? '#3164B0'}
                 />
               </React.Fragment>
             )

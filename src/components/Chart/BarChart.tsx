@@ -1,6 +1,9 @@
 // import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip } from 'chart.js'
 // import { Bar } from 'react-chartjs-2'
 
+import { Grid } from '@mui/material'
+import { useRef } from 'react'
+
 export default function BarChart() {
   // ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip)
   // const options = {
@@ -44,4 +47,24 @@ export default function BarChart() {
 
   // return <Bar options={options} data={data} />
   return null
+}
+
+export function PastAggrChart() {
+  const graphContainer = useRef<HTMLDivElement>(null)
+
+  return (
+    <>
+      <Grid
+        item
+        sx={{
+          height: { xs: '100%', md: '100%' },
+          maxWidth: '100%',
+          width: { xs: '100%', md: 'auto' }
+        }}
+        ref={graphContainer}
+      >
+        <BarChart />
+      </Grid>
+    </>
+  )
 }

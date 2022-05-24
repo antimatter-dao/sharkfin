@@ -86,7 +86,7 @@ export const SUPPORTED_CURRENCIES: {
     name: 'Tether USD',
     // name: 'Binance-Peg BSC-USDT',
     logoUrl: UsdtLogo,
-    color: '#1BA27A'
+    color: '#31B047'
   },
   USDC: {
     address: {
@@ -111,7 +111,7 @@ export const SUPPORTED_CURRENCIES: {
     symbol: 'ETH',
     name: 'Ethereum',
     logoUrl: EthLogo,
-    color: '#656565'
+    color: '#3164B0'
   },
   WETH: {
     address: {
@@ -121,7 +121,7 @@ export const SUPPORTED_CURRENCIES: {
     symbol: 'WETH',
     name: 'Wrapped Ethereum',
     logoUrl: EthLogo,
-    color: '#656565'
+    color: '#3164B0'
   },
   BNB: {
     address: {

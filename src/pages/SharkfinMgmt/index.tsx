@@ -8,7 +8,7 @@ import { Subject } from 'components/MgmtPage/stableContent'
 // import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
 import SharkfinChart from 'pages/SharkfinMgmt/Chart'
-import { PastAggrChart } from 'components/Chart/DualInvestChart'
+import { PastAggrChart } from 'components/Chart/BarChart'
 import Card from 'components/Card/Card'
 // import dayjs from 'dayjs'
 import useBreakpoint from 'hooks/useBreakpoint'
@@ -16,10 +16,10 @@ import { useSingleSharkfin } from 'hooks/useSharkfin'
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
 // import { usePrevDetails } from 'hooks/usePrevDetails'
 // import { PrevOrder } from 'utils/fetch/record'
-import Divider from 'components/Divider'
-import { Timer } from 'components/Timer'
-import { ExternalLink } from 'theme/components'
-import SwitchToggle from 'components/SwitchToggle'
+// import Divider from 'components/Divider'
+// import { Timer } from 'components/Timer'
+// import { ExternalLink } from 'theme/components'
+// import SwitchToggle from 'components/SwitchToggle'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -123,10 +123,10 @@ export default function SharkfinMgmt() {
             vaultForm={<VaultForm product={product} setAmount={handleInput} amount={investAmount} />}
             chart={chart}
           >
-            <Grid xs={12} md={4} item>
+            {/* <Grid xs={12} md={4} item>
               <RecurringSwitch />
-            </Grid>
-            <Grid xs={12} md={8} item>
+            </Grid> */}
+            <Grid xs={12} item>
               <PastAggregate />
               {/* <PrevCycleStats prevDetails={prevDetails} /> */}
             </Grid>
@@ -297,61 +297,61 @@ export default function SharkfinMgmt() {
 //   )
 // }
 
-function RecurringSwitch() {
-  const theme = useTheme()
-  const data = useMemo(
-    () => ({
-      ['Subscribed orders in progress']: <ExternalLink href="">Details</ExternalLink>,
-      ['Progress order due time']: <Timer timer={0} />
-    }),
-    []
-  )
-  return (
-    <Card width="100%" padding="43px 22px" height={400}>
-      <Card gray>
-        <Box padding="20px 22px" display="grid" gap={30} minHeight={141}>
-          <Box display={'flex'} alignItems="center">
-            <Divider
-              orientation="vertical"
-              sx={{
-                marginRight: 12,
-                width: 2,
-                backgroundColor: theme => theme.palette.primary.main,
-                borderColor: 'transparent'
-              }}
-            />
-            <Typography fontSize={14} sx={{ color: theme => theme.palette.text.secondary }}>
-              When you stop recurring, all your existing orders will not be taken into next cycle and you can redeem
-              your tokens once your existing orders expire.
-            </Typography>
-          </Box>
-          <Box display="flex" gap="13px" alignItems="center">
-            <SwitchToggle checked={true} onChange={() => {}} />
-            <Typography fontWeight={600} fontSize={16}>
-              Recurring
-            </Typography>
-          </Box>
-        </Box>
-      </Card>
-      <Box display="flex" gap="17px" flexDirection="column" mt={28}>
-        {Object.keys(data).map((key, idx) => (
-          <Box key={idx} display="flex" justifyContent={'space-between'}>
-            <Typography fontSize={16} sx={{ opacity: 0.8 }}>
-              {key}
-            </Typography>
+// function RecurringSwitch() {
+//   const theme = useTheme()
+//   const data = useMemo(
+//     () => ({
+//       ['Subscribed orders in progress']: <ExternalLink href="">Details</ExternalLink>,
+//       ['Progress order due time']: <Timer timer={0} />
+//     }),
+//     []
+//   )
+//   return (
+//     <Card width="100%" padding="43px 22px" height={400}>
+//       <Card gray>
+//         <Box padding="20px 22px" display="grid" gap={30} minHeight={141}>
+//           <Box display={'flex'} alignItems="center">
+//             <Divider
+//               orientation="vertical"
+//               sx={{
+//                 marginRight: 12,
+//                 width: 2,
+//                 backgroundColor: theme => theme.palette.primary.main,
+//                 borderColor: 'transparent'
+//               }}
+//             />
+//             <Typography fontSize={14} sx={{ color: theme => theme.palette.text.secondary }}>
+//               When you stop recurring, all your existing orders will not be taken into next cycle and you can redeem
+//               your tokens once your existing orders expire.
+//             </Typography>
+//           </Box>
+//           <Box display="flex" gap="13px" alignItems="center">
+//             <SwitchToggle checked={true} onChange={() => {}} />
+//             <Typography fontWeight={600} fontSize={16}>
+//               Recurring
+//             </Typography>
+//           </Box>
+//         </Box>
+//       </Card>
+//       <Box display="flex" gap="17px" flexDirection="column" mt={28}>
+//         {Object.keys(data).map((key, idx) => (
+//           <Box key={idx} display="flex" justifyContent={'space-between'}>
+//             <Typography fontSize={16} sx={{ opacity: 0.8 }}>
+//               {key}
+//             </Typography>
 
-            <Typography
-              fontWeight={key === 'APY' ? 400 : 500}
-              color={key === 'APY' ? theme.palette.primary.main : theme.palette.text.primary}
-            >
-              {data[key as keyof typeof data]}
-            </Typography>
-          </Box>
-        ))}
-      </Box>
-    </Card>
-  )
-}
+//             <Typography
+//               fontWeight={key === 'APY' ? 400 : 500}
+//               color={key === 'APY' ? theme.palette.primary.main : theme.palette.text.primary}
+//             >
+//               {data[key as keyof typeof data]}
+//             </Typography>
+//           </Box>
+//         ))}
+//       </Box>
+//     </Card>
+//   )
+// }
 
 function PastAggregate() {
   return (
