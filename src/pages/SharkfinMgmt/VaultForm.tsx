@@ -69,7 +69,6 @@ export default function VaultForm({
 
   const formData = useMemo(
     () => ({
-      ['']: '',
       ['Current cycle invested amount']:
         (product?.lockedBalance ? trimNumberString(product.lockedBalance, 6) : '-') + ' ' + currencySymbol,
       ['Progress order due time']: <Timer timer={product?.expiredAt ?? 0} />

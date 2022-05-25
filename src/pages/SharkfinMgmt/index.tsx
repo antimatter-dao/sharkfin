@@ -1,8 +1,8 @@
 import { useMemo, useState, useCallback } from 'react'
-import { NavLink, useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Typography, Box, useTheme, styled, Grid } from '@mui/material'
 import MgmtPage from 'components/MgmtPage'
-import { routes } from 'constants/routes'
+// import { routes } from 'constants/routes'
 import { Subject } from 'components/MgmtPage/stableContent'
 // import TextButton from 'components/Button/TextButton'
 // import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
@@ -42,6 +42,7 @@ export default function SharkfinMgmt() {
   const [investAmount, setInvestAmount] = useState('')
 
   const theme = useTheme()
+  const history = useHistory()
   const { currency, type, chainName } = useParams<{ currency: string; type: string; chainName: string }>()
 
   const product = useSingleSharkfin(chainName ?? '', currency ?? '', type ?? '')
@@ -96,10 +97,19 @@ export default function SharkfinMgmt() {
           sx={{ background: '#ffffff' }}
         >
           <Box
-            component={NavLink}
-            to={routes.sharkfin}
+            // component={NavLink}
+            // to={routes.sharkfin}
+            component="span"
+            onClick={history.goBack}
             zIndex={2}
-            style={{ textDecoration: 'none', display: 'block', width: 'max-content' }}
+            sx={{
+              textDecoration: 'none',
+              display: 'block',
+              width: 'max-content',
+              '&:hover': {
+                cursor: 'pointer'
+              }
+            }}
           >
             <ArrowLeft />
             <Typography component="span" color={theme.bgColor.bg1} fontSize={{ xs: 12, md: 14 }} ml={16}>
@@ -115,7 +125,7 @@ export default function SharkfinMgmt() {
           <MgmtPage
             graphTitle="Purchase expected income graph"
             showFaq={true}
-            backLink={routes.sharkfin}
+            // backLink={routes.sharkfin}
             pageTitle={`${product.currency} weekly sharkfin(Base Currency-${
               product.type === 'CALL' ? product.currency : 'USDT'
             })`}

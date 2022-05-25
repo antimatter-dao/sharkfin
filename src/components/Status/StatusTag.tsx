@@ -18,7 +18,7 @@ const statusStyles: { [key in StatusType]: Style } = {
     statusText: 'Progressing',
     color: '#18A0FB',
     // bgColor: '#18A0FB16',
-    borderColor: '#18A0FB16'
+    borderColor: '#18A0FB'
   },
   finished: {
     statusText: 'Finished',

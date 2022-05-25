@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { Typography, Paper, styled } from '@mui/material'
-import { routes } from 'constants/routes'
 import { Dots } from 'theme/components'
 import useBreakpoint from 'hooks/useBreakpoint'
 
@@ -28,7 +27,7 @@ const Backdrop = styled('div')({
   backdropFilter: 'blur(2px)'
 })
 
-const availablePath = [routes.dualInvest]
+const availablePath: string[] = []
 
 export default function ComingSoonMoadal() {
   const [isOpen, setIsOpen] = useState(false)

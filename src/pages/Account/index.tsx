@@ -7,18 +7,21 @@ import Position from './Position'
 //import Position from './Position/index'
 import History from './History'
 import positionUrl from 'assets/images/position.png'
+import dashboardUrl from 'assets/images/dashboard.png'
 import historyUrl from 'assets/images/history.png'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { routes } from 'constants/routes'
 
 export enum AccountTabs {
   position = 0,
-  history = 1
+  history = 1,
+  past = 2
 }
 
 export const AccountTabsRoute = {
   [AccountTabs.position]: 'position',
-  [AccountTabs.history]: 'history'
+  [AccountTabs.history]: 'history',
+  [AccountTabs.past]: 'past'
 }
 
 export default function Account() {
@@ -54,9 +57,10 @@ export default function Account() {
         customOnChange={handleTabClick}
         titles={[
           <Tab text="Position" iconUrl={positionUrl} key="dashboard" />,
-          <Tab text="History" iconUrl={historyUrl} key="history" />
+          <Tab text="History" iconUrl={historyUrl} key="history" />,
+          <Tab text="Past Positions" iconUrl={dashboardUrl} key="past" />
         ]}
-        contents={[<Position key="position" />, <History key="history" />]}
+        contents={[<Position key="position" />, <History key="history" />, <div key="past"></div>]}
         tabPadding="18px 0"
       />
     </Box>

@@ -209,6 +209,7 @@ export default function VaultCard(props: Props) {
                   productChainId={productChainId}
                   formData={formData}
                   available={initiated ? product?.completeBalance : product?.lockedBalance}
+                  initiatedAmount={product?.completeBalance}
                 >
                   <Tabs
                     titles={['Initiate Withdrawal', 'Complete Withdrawal']}

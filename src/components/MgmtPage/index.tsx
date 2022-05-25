@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { NavLink } from 'react-router-dom'
+// import { NavLink } from 'react-router-dom'
 import { Box, Typography, Grid, styled } from '@mui/material'
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
 import theme from 'theme'
@@ -8,6 +8,7 @@ import Divider from 'components/Divider'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { RiskStatement, FAQ, Subject } from './stableContent'
 import ProductCardHeader from 'components/ProductCardHeader'
+import { useHistory } from 'react-router-dom'
 
 const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -26,7 +27,7 @@ const StyledUnorderList = styled('ul')(({ theme }) => ({
 
 interface Props {
   showFaq?: boolean
-  backLink: string
+  // backLink: string
   pageTitle?: string
   chart: React.ReactNode
   chart2?: React.ReactNode
@@ -42,7 +43,7 @@ interface Props {
 
 export default function MgmtPage(props: Props) {
   const {
-    backLink,
+    // backLink,
     pageTitle,
     chart,
     subject,
@@ -57,6 +58,7 @@ export default function MgmtPage(props: Props) {
   } = props
 
   const isDownMd = useBreakpoint('md')
+  const history = useHistory()
 
   const returnOnInvestment = useMemo(() => {
     return (
@@ -96,10 +98,19 @@ export default function MgmtPage(props: Props) {
         >
           <Box maxWidth={theme.width.maxContent} width="100%" display="grid" position="relative">
             <Box
-              component={NavLink}
-              to={backLink}
+              // component={NavLink}
+              // to={backLink}
+              component="span"
+              onClick={history.goBack}
               zIndex={2}
-              style={{ textDecoration: 'none', display: 'block', width: 'max-content' }}
+              sx={{
+                textDecoration: 'none',
+                display: 'block',
+                width: 'max-content',
+                '&:hover': {
+                  cursor: 'pointer'
+                }
+              }}
             >
               <ArrowLeft />
               <Typography component="span" color={theme.bgColor.bg1} fontSize={{ xs: 12, md: 14 }} ml={16}>
@@ -169,7 +180,7 @@ export default function MgmtPage(props: Props) {
                             </Box> */}
                           </Box>
                         </Box>
-                        <Box sx={{ maxWidth: '100%', height: '100%', flexGrow: 1 }} mt={20}>
+                        <Box sx={{ maxWidth: '100%' }} mt={20}>
                           <Box maxHeight="100%" height="100%" gap={0} display={{ xs: 'grid', md: 'flex' }}>
                             {chart}
                           </Box>

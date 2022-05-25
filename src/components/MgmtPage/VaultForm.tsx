@@ -41,7 +41,8 @@ export default function VaultForm({
   productChainId,
   formData,
   children,
-  buttonText
+  buttonText,
+  initiatedAmount
 }: {
   type: string
   currencySymbol: string
@@ -55,6 +56,7 @@ export default function VaultForm({
   formData: { [key: string]: any }
   children: React.ReactNode
   buttonText: string
+  initiatedAmount?: string
 }) {
   const { account, chainId } = useActiveWeb3React()
   const toggleWallet = useWalletModalToggle()
@@ -77,7 +79,7 @@ export default function VaultForm({
   return (
     <Box pt="20px" display="flex" flexDirection="column" width="100%">
       <Box display="grid" gap={type === TYPE.invest ? '30px' : '16px'} width={'100%'}>
-        <Box display="flex" alignItems={'flex-end'}>
+        <Box display="flex" alignItems={'flex-end'} minHeight="48px">
           {children}
         </Box>
         <InputNumerical
@@ -126,10 +128,12 @@ export default function VaultForm({
             </>
           ) : (
             <>
-              <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 14, width: 14, mr: 8 }} />
-              <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
-                Once subscribed the APY will get locked in, the product can&apos;t be cancelled after subscription.
-              </Typography>
+              {/* <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 14, width: 14, mr: 8 }} /> */}
+              {type === TYPE.standard && (
+                <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
+                  Pending Withdrawal: {initiatedAmount ?? '-'} {currencySymbol}
+                </Typography>
+              )}
             </>
           )}
         </Box>
