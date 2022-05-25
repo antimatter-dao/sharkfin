@@ -148,40 +148,41 @@ export function useSingleSharkfin(chainName: string, currency: string, type: str
 }
 
 export function useSharkfinList() {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const [promise, setPromise] = useState<Promise<any> | undefined>(undefined)
   const [defiVaultList, setDefiVaultList] = useState<undefined | null | DefiProduct[]>(undefined)
   const blockNumber = useBlockNumber()
 
   useEffect(() => {
-    const list = Object.keys(SUPPORTED_DEFI_VAULT).reduce((acc, chainId: string) => {
-      const library = getOtherNetworkLibrary(+chainId)
-      const addresses = SHARKFIN_ADDRESS[+chainId as ChainId]
-      const list = SUPPORTED_DEFI_VAULT[+chainId as keyof typeof SUPPORTED_DEFI_VAULT]?.reduce(
-        (acc, symbol: string) => {
-          const addressCall = addresses?.[symbol]?.CALL
-          const addressPut = addresses?.[symbol]?.PUT
-          const contractCall = addressCall && library ? getContract(addressCall, DEFI_VAULT_ABI, library) : null
-          const contractPut = addressPut && library ? getContract(addressPut, DEFI_VAULT_ABI, library) : null
-          acc.push(callsFactory(contractCall, account))
-          acc.push(callsFactory(contractPut, account))
-          return acc
-        },
-        [] as any[]
-      )
-      acc.push(list ? Promise.all(list) : undefined)
+    if (!chainId) return
+    // const list = Object.keys(SUPPORTED_DEFI_VAULT).reduce((acc, chainId: string) => {
+    const library = getOtherNetworkLibrary(chainId)
+    const addresses = SHARKFIN_ADDRESS[chainId as ChainId]
+    const list = SUPPORTED_DEFI_VAULT[chainId as keyof typeof SUPPORTED_DEFI_VAULT]?.reduce((acc, symbol: string) => {
+      const addressCall = addresses?.[symbol]?.CALL
+      const addressPut = addresses?.[symbol]?.PUT
+      const contractCall = addressCall && library ? getContract(addressCall, DEFI_VAULT_ABI, library) : null
+      const contractPut = addressPut && library ? getContract(addressPut, DEFI_VAULT_ABI, library) : null
+      acc.push(callsFactory(contractCall, account))
+      acc.push(callsFactory(contractPut, account))
       return acc
     }, [] as any[])
-    setPromise(Promise.all(list))
-  }, [account])
+
+    // acc.push(list ? Promise.all(list) : undefined)
+    // return acc
+    // }, [] as any[])
+    if (list) {
+      setPromise(Promise.all(list))
+    }
+  }, [account, chainId])
 
   useEffect(() => {
     let mounted = true
     ;(async () => {
-      if (!promise) setDefiVaultList(defiVaultListUtil())
+      if (!promise) setDefiVaultList(defiVaultListUtil(chainId, undefined))
       try {
         const res = await promise
-        const mappedRes = defiVaultListUtil(res)
+        const mappedRes = defiVaultListUtil(chainId, res)
         if (mounted) {
           setDefiVaultList(mappedRes)
         }
@@ -214,10 +215,12 @@ const callsFactory = (contract: Contract | null, account: string | null | undefi
   ])
 }
 
-const defiVaultListUtil = (res?: any[][]) => {
-  return Object.keys(SUPPORTED_DEFI_VAULT).reduce((accMain, chainId: string, idx1: number) => {
-    SUPPORTED_DEFI_VAULT[+chainId as keyof typeof SUPPORTED_DEFI_VAULT]?.map((symbol: string, idx2: number) => {
-      const resCall = res?.[idx1][idx2 * 2]
+const defiVaultListUtil = (chainId: ChainId | null | undefined, res?: any[][]) => {
+  // return Object.keys(SUPPORTED_DEFI_VAULT).reduce((accMain, chainId: string, idx1: number) => {
+  if (!chainId || !SUPPORTED_DEFI_VAULT[chainId as keyof typeof SUPPORTED_DEFI_VAULT]) return undefined
+  return SUPPORTED_DEFI_VAULT[+chainId as keyof typeof SUPPORTED_DEFI_VAULT]?.reduce(
+    (accMain, symbol: string, idx2: number) => {
+      const resCall = res?.[idx2 * 2]
       const resCallIsRound = resCall
         ? resCall?.[DefiProductDataOrder.vaultState]?.round === resCall[DefiProductDataOrder.depositReceipts]?.round
         : false
@@ -268,7 +271,7 @@ const defiVaultListUtil = (res?: any[][]) => {
             : '-'
       })
 
-      const resPut = res?.[idx1][idx2 * 2 + 1]
+      const resPut = res?.[idx2 * 2 + 1]
       const resPutIsRound = resPut
         ? resPut?.[DefiProductDataOrder.vaultState]?.round === resPut[DefiProductDataOrder.depositReceipts]?.round
         : false
@@ -319,10 +322,10 @@ const defiVaultListUtil = (res?: any[][]) => {
               )
             : '-'
       })
-    })
-
-    return accMain
-  }, [] as DefiProduct[])
+      return accMain
+    },
+    [] as DefiProduct[]
+  )
 }
 
 const getStrikePrice = async (contractAddress: string | undefined, library: Web3Provider | undefined) => {

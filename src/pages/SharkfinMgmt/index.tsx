@@ -116,7 +116,9 @@ export default function SharkfinMgmt() {
             graphTitle="Purchase expected income graph"
             showFaq={true}
             backLink={routes.sharkfin}
-            pageTitle={`${product.currency} weekly sharkfin`}
+            pageTitle={`${product.currency} weekly sharkfin(Base Currency-${
+              product.type === 'CALL' ? product.currency : 'USDT'
+            })`}
             priceCurSymbol={product?.currency}
             subject={Subject.Sharkfin}
             returnOnInvestmentListItems={returnOnInvestmentListItems}

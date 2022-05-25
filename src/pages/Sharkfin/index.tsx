@@ -11,17 +11,12 @@ import { ChainId, ChainListMap } from 'constants/chain'
 import { DefiProduct, useSharkfinList } from 'hooks/useSharkfin'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import NoDataCard from 'components/Card/NoDataCard'
+import { useActiveWeb3React } from 'hooks'
 
 // enum SortBy {
 //   highToLow = 'hl',
 //   lowToHigh = 'lh'
 // }
-
-enum Strategy {
-  all = 'ALL',
-  call = 'CALL',
-  put = 'PUT'
-}
 
 const formatAssetVal = (chainId: ChainId, curSymbol: string) => {
   return chainId + '-' + curSymbol
@@ -37,22 +32,19 @@ const filterDepositAsset = (selected: string, item: DefiProduct) => {
 
 export default function Sharkfin() {
   const history = useHistory()
+  const { chainId } = useActiveWeb3React()
   // const theme = useTheme()
   const isDownSm = useBreakpoint('sm')
   // const [sortBy, setSortBy] = useState<SortBy>(SortBy.highToLow)
-  const [strategy, setStrategy] = useState<Strategy>(Strategy.all)
+
   const [depositAsset, setDepositAsset] = useState<string>('ALL')
   const allList = useSharkfinList()
 
   const filteredList = useMemo(() => {
     if (!allList) return undefined
     const list = allList.reduce((acc, item) => {
-      if (strategy === Strategy.all || item.type == strategy) {
-        if (depositAsset === 'ALL' || filterDepositAsset(depositAsset, item)) {
-          acc.push(item)
-        }
-
-        return acc
+      if (depositAsset === 'ALL' || filterDepositAsset(depositAsset, item)) {
+        acc.push(item)
       }
 
       return acc
@@ -64,19 +56,52 @@ export default function Sharkfin() {
     // })
     // return sorted
     return list
-  }, [allList, depositAsset, strategy])
+  }, [allList, depositAsset])
 
   // const handleSortBy = useCallback(e => {
   //   setSortBy(e.target.value)
   // }, [])
 
-  const handleStreragy = useCallback(e => {
-    setStrategy(e.target.value)
-  }, [])
-
   const handleDepositAsset = useCallback(e => {
     setDepositAsset(e.target.value)
   }, [])
+
+  const selectOptions = useMemo(() => {
+    const defaultOption = (
+      <MenuItem value={'ALL'} key="ALL">
+        All
+      </MenuItem>
+    )
+    if (!chainId || !SUPPORTED_DEFI_VAULT[chainId as ChainId]) return defaultOption
+
+    const optionList = SUPPORTED_DEFI_VAULT[+chainId as ChainId]?.reduce(
+      (acc, curSymbol) => {
+        const val = formatAssetVal(+chainId, curSymbol)
+        acc.push(
+          <MenuItem value={val} key={val}>
+            <Box display="flex" alignItems={'center'} gap={10}>
+              <CurrencyLogo currency={SUPPORTED_CURRENCIES[curSymbol]} size={'22px'} />
+              <Box>{curSymbol} </Box>
+            </Box>
+          </MenuItem>
+        )
+
+        return acc
+      },
+      [defaultOption] as JSX.Element[]
+    )
+    if (optionList) {
+      optionList.push(
+        <MenuItem value={formatAssetVal(+chainId, 'USDT')} key={formatAssetVal(+chainId, ' USDT')}>
+          <Box display="flex" alignItems={'center'} gap={10}>
+            <CurrencyLogo currency={SUPPORTED_CURRENCIES['USDT']} size={'22px'} />
+            <Box>USDT</Box>
+          </Box>
+        </MenuItem>
+      )
+    }
+    return optionList
+  }, [chainId])
 
   return (
     <Box
@@ -89,7 +114,7 @@ export default function Sharkfin() {
       gap={{ xs: 36, md: 48 }}
     >
       <ProductBanner
-        title="Daily Sharkfin"
+        title="Weekly Sharkfin"
         checkpoints={['Principal protected products', 'Low-risk profile']}
         imgFileName={'shark'}
         svgMargin={'0 0 40px'}
@@ -113,20 +138,6 @@ export default function Sharkfin() {
       >
         <Box display={{ xs: 'grid', sm: 'flex' }} gap={{ xs: 10, sm: 32 }} width="100%">
           <Box display={{ xs: 'grid', sm: 'flex' }} width={{ xs: '100%', sm: 'auto' }} alignItems="center" gap="14px">
-            <Typography fontSize={16}>Strategy:</Typography>
-            <Select
-              width={isDownSm ? '100%' : '176px'}
-              height={'44px'}
-              defaultValue="ALL"
-              onChange={handleStreragy}
-              value={strategy}
-            >
-              <MenuItem value={'ALL'}>All </MenuItem>
-              <MenuItem value={'CALL'}>Covered Call </MenuItem>
-              <MenuItem value={'PUT'}>Put Selling </MenuItem>
-            </Select>
-          </Box>
-          <Box display={{ xs: 'grid', sm: 'flex' }} width={{ xs: '100%', sm: 'auto' }} alignItems="center" gap="14px">
             <Typography fontSize={16}>Deposit Asset:</Typography>
             <Select
               width={isDownSm ? '100%' : '232px'}
@@ -135,49 +146,7 @@ export default function Sharkfin() {
               value={depositAsset}
               onChange={handleDepositAsset}
             >
-              {Object.keys(SUPPORTED_DEFI_VAULT).reduce(
-                (acc, chainId) => {
-                  const list = SUPPORTED_DEFI_VAULT[+chainId as ChainId]
-                  if (list) {
-                    list.map(curSymbol => {
-                      const val = formatAssetVal(+chainId, curSymbol)
-                      acc.push(
-                        <MenuItem value={val} key={val}>
-                          <Box display="flex" alignItems={'center'} gap={10}>
-                            <CurrencyLogo currency={SUPPORTED_CURRENCIES[curSymbol]} size={'22px'} />
-                            <Box>
-                              {curSymbol}{' '}
-                              <Typography component="span" fontSize={12}>
-                                ({ChainListMap[+chainId as ChainId]?.name})
-                              </Typography>
-                            </Box>
-                          </Box>
-                        </MenuItem>
-                      )
-                    })
-                  }
-                  acc.push(
-                    <MenuItem value={formatAssetVal(+chainId, 'USDT')} key={formatAssetVal(+chainId, ' USDT')}>
-                      {' '}
-                      <Box display="flex" alignItems={'center'} gap={10}>
-                        <CurrencyLogo currency={SUPPORTED_CURRENCIES['USDT']} size={'22px'} />
-                        <Box>
-                          USDT{' '}
-                          <Typography component="span" fontSize={12}>
-                            ({ChainListMap[+chainId as ChainId].name})
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </MenuItem>
-                  )
-                  return acc
-                },
-                [
-                  <MenuItem value={'ALL'} key="ALL">
-                    All
-                  </MenuItem>
-                ] as JSX.Element[]
-              )}
+              {selectOptions}
             </Select>
           </Box>
         </Box>
@@ -217,7 +186,7 @@ export default function Sharkfin() {
                 <VaultProductCard
                   // onChain={+chainId}
                   product={item}
-                  title={`Daily Sharkfin ${currency} (Base Currency-${type === 'CALL' ? currency : 'USDT'})`}
+                  title={`Weekly Sharkfin ${currency} (Base Currency-${type === 'CALL' ? currency : 'USDT'})`}
                   onClick={() => {
                     history.push(
                       routes.sharkfinMgmt

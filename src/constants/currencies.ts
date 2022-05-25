@@ -252,10 +252,10 @@ export const CURRENCY_ADDRESS_MAP = Object.keys(SUPPORTED_CURRENCIES).reduce((ac
 }, {} as { [key: string]: Token })
 
 export const SUPPORTED_DEFI_VAULT: { [chainId in ChainId]?: string[] } = IS_TEST_NET
-  ? { [ChainId.RINKEBY]: ['WETH'] }
+  ? { [ChainId.RINKEBY]: ['WETH', 'BTC'], [ChainId.BSC]: ['BTC', 'ETH'] }
   : {
-      [ChainId.MAINNET]: ['ETH'],
-      [ChainId.AVAX]: ['AVAX']
+      [ChainId.MAINNET]: ['ETH', 'BTC'],
+      [ChainId.BSC]: ['BTC', 'ETH']
     }
 
 export const DEFAULT_COIN_SYMBOL: { [chainId in ChainId]: string } = {

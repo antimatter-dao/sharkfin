@@ -127,7 +127,7 @@ export default function History() {
         <Box display="flex" alignItems="center" gap={7} sx={{ mt: { xs: 16, md: 0 } }}>
           <CurrencyLogo currency={SUPPORTED_CURRENCIES['BTC']} />
           <Typography fontWeight={700} sx={{ fontSize: { xs: 12, md: 14 } }}>
-            Daily Sharkfin BTC(Base Currency-BTC)
+            Weekly Sharkfin BTC(Base Currency-BTC)
           </Typography>
         </Box>
       </Box>
