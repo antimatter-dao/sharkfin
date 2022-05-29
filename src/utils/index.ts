@@ -157,3 +157,7 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
+
+export function shortenHash(address: string, chars = 4): string {
+  return `${address.substring(0, chars + 2)}...${address.substring(address.length - chars, address.length)}`
+}

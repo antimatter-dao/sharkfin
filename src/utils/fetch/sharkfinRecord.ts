@@ -1,4 +1,4 @@
-export interface DefiRecordRaw {
+export interface SharkfinRecordRaw {
   id: string
   account: string
   hash: string
@@ -11,7 +11,7 @@ export interface DefiRecordRaw {
   chainId: number
 }
 
-export interface DefiRecord {
+export interface SharkfinRecord {
   id: string
   account: string
   hash: string
@@ -20,7 +20,7 @@ export interface DefiRecord {
   amount: string
   timestamp: string
   type: number
-  investCurrency: string
+  underlying: string
   chainId: number
   actionType: 'deposit' | 'withdraw'
   callPut: 'call' | 'put'

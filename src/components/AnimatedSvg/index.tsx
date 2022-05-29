@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import Lottie from 'lottie-web'
-import { Box, SxProps } from '@mui/material'
+import { Box } from '@mui/material'
+import { SxProps } from '@mui/system'
 
 export default function AnimatedSvg({
   fileName,
@@ -16,22 +17,27 @@ export default function AnimatedSvg({
   const ref = useRef(null)
 
   useEffect(() => {
-    if (!ref.current) return
+    if (!ref || !ref.current) return
 
     Lottie.loadAnimation({
-      container: ref.current, // the dom element that will contain the animation
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      container: ref.current!, // the dom element that will contain the animation
       renderer: 'svg',
       loop: true,
       autoplay: true,
       path: `/animations/${fileName}.json`
     })
-  }, [fileName])
+  }, [fileName, ref])
 
   return (
     <Box
       ref={ref}
       className={className}
-      style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'flex-end' }}
+      style={{
+        width: '100%',
+        display: 'flex',
+        alignItems: 'flex-start'
+      }}
       sx={sx}
       onClick={onClick}
     ></Box>

@@ -49,7 +49,7 @@ export function useSuccessImage(orderId: string) {
         1
       )} ${investCurrency}`
       const deliveryDate = dayjs(+expiredAt * 1000).format('MMM DD, YYYY')
-      const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
+      const exercised = type === 'SELF' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
 
       showModal(
         <ClaimSuccessModal
@@ -120,7 +120,7 @@ export function useShowClaimSuccessModal() {
         1
       )} ${investCurrency}`
       const deliveryDate = dayjs(+expiredAt * 1000).format('MMM DD, YYYY')
-      const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
+      const exercised = type === 'SELF' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
 
       showModal(
         <ClaimSuccessModal

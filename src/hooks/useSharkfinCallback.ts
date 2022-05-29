@@ -8,7 +8,7 @@ import { DEFAULT_COIN_SYMBOL } from 'constants/currencies'
 export function useSharkfinCallback(
   chainId: ChainId | undefined,
   currencySymbol: string | undefined,
-  type: 'CALL' | 'PUT' | undefined
+  type: 'SELF' | 'U' | undefined
 ) {
   const contract = useSharkfinContract(chainId, currencySymbol, type)
   // const { account } = useActiveWeb3React()
@@ -39,7 +39,7 @@ export function useSharkfinCallback(
 
   const depositCallback = useCallback(
     (val: string): Promise<any> => {
-      if (chainId && DEFAULT_COIN_SYMBOL[chainId] === currencySymbol && type === 'CALL') {
+      if (chainId && DEFAULT_COIN_SYMBOL[chainId] === currencySymbol && type === 'SELF') {
         return depositETH(val)
       } else {
         return deposit(val)

@@ -1,28 +1,30 @@
 import { useMemo, useState, useEffect } from 'react'
 import { Contract } from 'ethers'
-import { Web3Provider } from '@ethersproject/providers'
 import JSBI from 'jsbi'
 import { ChainId, ChainList, NETWORK_CHAIN_ID } from 'constants/chain'
-import { CURRENCIES, SUPPORTED_CURRENCIES, SUPPORTED_DEFI_VAULT } from 'constants/currencies'
+import { CURRENCIES, getMappedSymbol, SUPPORTED_CURRENCIES, SUPPORTED_DEFI_VAULT } from 'constants/currencies'
 import { getOtherNetworkLibrary } from 'connectors/multiNetworkConnectors'
-import { getContract, isAddress } from 'utils'
-import { SHARKFIN_ADDRESS, ZERO_ADDRESS } from 'constants/index'
+import { getContract } from 'utils'
+import { SHARKFIN_ADDRESS } from 'constants/index'
 import DEFI_VAULT_ABI from '../constants/abis/defi_vault.json'
-import DEFI_VAULT_OPTION_ABI from '../constants/abis/defi_vault_option.json'
 import { useActiveWeb3React } from 'hooks'
 import { useBlockNumber } from 'state/application/hooks'
 import { parseBalance, parsePrecision } from 'utils/parseAmount'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useSharkfinContract } from './useContract'
 import { trimNumberString } from 'utils/trimNumberString'
+import { Axios } from 'utils/axios'
 
 export interface DefiProduct {
   apy: string
-  type: 'CALL' | 'PUT'
+  type: 'SELF' | 'U'
   expiredAt: number
   beginAt: number
-  strikePrice: string
+  barrierPrice0?: string
+  barrierPrice1?: string
+  //equals underlying in api
   currency: string
+  //equals currency in api
   investCurrency: string
   chainId: ChainId | undefined
   instantBalance?: string
@@ -46,14 +48,16 @@ enum DefiProductDataOrder {
 
 const APY = '3% ~ 15%'
 
-export function useSingleSharkfin(chainName: string, currency: string, type: string): DefiProduct | null {
-  const { account } = useActiveWeb3React()
-  const [strikePrice, setStrikePrice] = useState<any>(undefined)
+export function useSingleSharkfin(chainName: string, underlying: string, currency: string): DefiProduct | null {
+  const { account, chainId } = useActiveWeb3React()
+  const [product, setProduct] = useState<any>(undefined)
+
   const args = useMemo(() => {
     return [account ?? undefined]
   }, [account])
 
-  const cur = currency.toUpperCase()
+  const cur = underlying.toUpperCase()
+  const type = currency == underlying ? 'SELF' : 'U'
   const productChainId: number = useMemo(() => {
     return (
       ChainList.find(chain => {
@@ -67,11 +71,10 @@ export function useSingleSharkfin(chainName: string, currency: string, type: str
     )
   }, [chainName])
 
-  const contract = useSharkfinContract(productChainId, cur, type === 'CALL' ? 'CALL' : 'PUT')
+  const contract = useSharkfinContract(productChainId, underlying, type)
   const depositReceipts = useSingleCallResult(contract, 'depositReceipts', args)
   const lockedBalance = useSingleCallResult(contract, 'accountVaultBalance', args)
   const withdrawals = useSingleCallResult(contract, 'withdrawals', args)
-  const optionAddress = useSingleCallResult(contract, 'currentOption')
   const vaultState = useSingleCallResult(contract, 'vaultState')
   const vaultParams = useSingleCallResult(contract, 'vaultParams')
   const pricePerShare = useSingleCallResult(contract, 'pricePerShare')
@@ -79,27 +82,47 @@ export function useSingleSharkfin(chainName: string, currency: string, type: str
   const argPrice = useMemo(() => {
     return [withdrawals?.result?.round]
   }, [withdrawals?.result?.round])
-  const price = useSingleCallResult(contract, 'roundPricePerShare', argPrice)
 
+  const price = useSingleCallResult(contract, 'roundPricePerShare', argPrice)
+  console.log(product)
+  console.log('begin', getExpireAt(true))
+  console.log('end', getExpireAt())
   useEffect(() => {
-    let mounted = true
-    if (!optionAddress.result?.[0]) return
-    ;(async () => {
-      const price = await getStrikePrice(optionAddress.result?.[0], getOtherNetworkLibrary(+productChainId))
-      if (mounted) {
-        setStrikePrice(price)
-      }
-    })()
+    let isMounted = true
+    Axios.get('getProducts', { chainId, currency, underlying: getMappedSymbol(underlying) })
+      .then(r => {
+        if (r.data.code !== 200) {
+          throw Error(r.data.msg)
+        }
+        if (!r.data.data) {
+          return
+        }
+        const closest = r.data.data.reduce((acc: any, data: any) => {
+          if (!acc) return data
+          if (Math.abs(acc.liquidated_at - getExpireAt()) > Math.abs(data.liquidated_at - getExpireAt())) {
+            return data
+          } else {
+            return acc
+          }
+        }, undefined)
+        console.log(closest)
+        setProduct(closest)
+        if (isMounted) {
+        }
+      })
+      .catch(e => {
+        console.error(e)
+      })
     return () => {
-      mounted = false
+      isMounted = false
     }
-  }, [optionAddress.result, productChainId])
+  }, [chainId, currency, underlying])
 
   const result = useMemo(() => {
     if (!SUPPORTED_DEFI_VAULT[productChainId as keyof typeof SUPPORTED_DEFI_VAULT]?.includes(cur)) {
       return null
     } else {
-      const investCurrency = type.toUpperCase() === 'CALL' ? SUPPORTED_CURRENCIES[cur]?.symbol ?? '' : 'USDT'
+      const investCurrency = type.toUpperCase() === 'SELF' ? underlying ?? '' : 'USDT'
       const token = CURRENCIES[productChainId as ChainId][investCurrency]
       const shares = withdrawals.result?.shares?.toString()
       const priceResult = price.result?.[0]?.toString()
@@ -111,10 +134,11 @@ export function useSingleSharkfin(chainName: string, currency: string, type: str
               JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(vaultParams.result?.decimals.toString() ?? 18))
             )
           : undefined
+      const isRound = vaultState.result?.round === depositReceipts.result?.round
 
       return {
         chainId: productChainId,
-        type: type.toUpperCase() === 'CALL' ? 'CALL' : 'PUT',
+        type: type,
         currency: SUPPORTED_CURRENCIES[cur]?.symbol ?? '',
         investCurrency: investCurrency,
         instantBalance:
@@ -126,21 +150,34 @@ export function useSingleSharkfin(chainName: string, currency: string, type: str
         contractDecimals: vaultParams.result?.decimals.toString(),
         lockedBalance:
           lockedBalance?.result && productChainId ? parseBalance(lockedBalance.result?.[0].toString(), token) : '-',
-        strikePrice: strikePrice,
         expiredAt: getExpireAt(),
-        apy: APY
+        apy: APY,
+        barrierPrice0: product?.barrier_prices?.[0].price ?? '-',
+        barrierPrice1: product?.barrier_prices?.[1].price ?? '-',
+        depositAmount: depositReceipts.result
+          ? trimNumberString(
+              parsePrecision(
+                JSBI.ADD(
+                  JSBI.BigInt(isRound ? depositReceipts.result.amount.toString() : '0'),
+                  JSBI.BigInt(lockedBalance.result?.toString() ?? '0')
+                ).toString(),
+                vaultParams.result?.decimals ?? 18
+              ),
+              4
+            )
+          : '-'
       } as DefiProduct
     }
   }, [
     cur,
-    depositReceipts.result?.amount,
-    depositReceipts.result?.round,
+    depositReceipts.result,
     lockedBalance.result,
     price.result,
     pricePerShare.result,
+    product?.barrier_prices,
     productChainId,
-    strikePrice,
     type,
+    underlying,
     vaultParams.result?.decimals,
     vaultState.result?.round,
     withdrawals.result?.shares
@@ -160,8 +197,8 @@ export function useSharkfinList() {
     const library = getOtherNetworkLibrary(chainId)
     const addresses = SHARKFIN_ADDRESS[chainId as ChainId]
     const list = SUPPORTED_DEFI_VAULT[chainId as keyof typeof SUPPORTED_DEFI_VAULT]?.reduce((acc, symbol: string) => {
-      const addressCall = addresses?.[symbol]?.CALL
-      const addressPut = addresses?.[symbol]?.PUT
+      const addressCall = addresses?.[symbol]?.SELF
+      const addressPut = addresses?.[symbol]?.U
       const contractCall = addressCall && library ? getContract(addressCall, DEFI_VAULT_ABI, library) : null
       const contractPut = addressPut && library ? getContract(addressPut, DEFI_VAULT_ABI, library) : null
       acc.push(callsFactory(contractCall, account))
@@ -252,12 +289,11 @@ const defiVaultListUtil = (chainId: ChainId | null | undefined, res?: any[][]) =
                 4
               )
             : 0,
-        type: 'CALL',
+        type: 'SELF',
         apy: APY,
         expiredAt: getExpireAt(),
         beginAt: getExpireAt(true),
         investCurrency: symbol,
-        strikePrice: '-',
         depositAmount:
           resCall && resCall[DefiProductDataOrder.depositReceipts] && resCall[DefiProductDataOrder.decimals]
             ? trimNumberString(
@@ -305,12 +341,11 @@ const defiVaultListUtil = (chainId: ChainId | null | undefined, res?: any[][]) =
                 4
               )
             : 0,
-        type: 'PUT',
+        type: 'U',
         apy: APY,
         expiredAt: getExpireAt(),
         beginAt: getExpireAt(true),
         investCurrency: 'USDT',
-        strikePrice: '-',
         depositAmount:
           resPut && resPut[DefiProductDataOrder.depositReceipts] && resPut[DefiProductDataOrder.decimals]
             ? trimNumberString(
@@ -331,26 +366,13 @@ const defiVaultListUtil = (chainId: ChainId | null | undefined, res?: any[][]) =
   )
 }
 
-const getStrikePrice = async (contractAddress: string | undefined, library: Web3Provider | undefined) => {
-  if (!contractAddress || !library || !isAddress(contractAddress) || contractAddress === ZERO_ADDRESS) return '-'
-  try {
-    const contract = getContract(contractAddress, DEFI_VAULT_OPTION_ABI, library)
-    const price = await contract?.strikePrice()
-    const decimals = await contract?.decimals()
-    return parsePrecision(price.toString(), decimals)
-  } catch (e) {
-    console.error(e)
-    return '-'
-  }
-}
-
 const getExpireAt = (beginAt?: boolean) => {
   const now = new Date(Date.now())
   const UTCh = now.getUTCHours()
   const displacement = (5 + 7 - now.getUTCDay()) % 7
   const fridayDate = now.getUTCDate() + (displacement === 0 && UTCh >= 8 ? 7 : displacement)
   now.setUTCDate(fridayDate)
-  //UTC 8:00
-  now.setUTCHours(8, 0, 0)
+  //UTC 12:00
+  now.setUTCHours(12, 0, 0)
   return beginAt ? now.getTime() - 1000 * 60 * 60 * 24 * 7 : now.getTime()
 }

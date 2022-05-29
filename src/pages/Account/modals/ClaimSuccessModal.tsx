@@ -196,7 +196,7 @@ export default function ClaimSuccessModal({
                 </Typography>
                 <Divider orientation="vertical" color="#00000024" />
                 <Typography>
-                  {currency}-{type === 'CALL' ? 'Upward' : 'Down'}
+                  {currency}-{type === 'SELF' ? 'Upward' : 'Down'}
                 </Typography>
                 <Divider orientation="vertical" color="#00000024" />
                 <Typography color="primary">{exercised ? 'Exercised' : 'Unexercised'}</Typography>

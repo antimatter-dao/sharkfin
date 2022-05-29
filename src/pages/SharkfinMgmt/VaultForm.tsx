@@ -137,11 +137,8 @@ export default function VaultForm({
   const handleInvest = useMemo(() => {
     if (!currency || !depositCallback || !product || !investCurrency) return () => {}
     return callbackFactory(
-      `Subscribed ${amount} ${product.investCurrency} to ${
-        product.type === 'CALL'
-          ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-          : `${product?.currency ?? ''} Put Selling Recurring Strategy`
-      }`,
+      `Subscribed ${amount} ${product.investCurrency} to ${`${product?.currency ??
+        ''} weekly sharkfin (Base Currency-${product?.investCurrency ?? ''} )`}`,
       depositCallback
     )
   }, [currency, depositCallback, product, investCurrency, callbackFactory, amount])
@@ -150,7 +147,7 @@ export default function VaultForm({
     if (!investCurrency || !instantWithdrawCallback || !product || !currency) return () => {}
     return callbackFactory(
       `Instantly withdrawed ${amount} ${product.investCurrency} from ${
-        product.type === 'CALL'
+        product.type === 'SELF'
           ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
           : `${product?.currency ?? ''} Put Selling Recurring Strategy`
       }`,
@@ -182,7 +179,7 @@ export default function VaultForm({
 
             callbackFactory(
               `${initiated ? 'Initiated' : 'Completed'} withdrawal ${amount} ${product.investCurrency} from ${
-                product.type === 'CALL'
+                product.type === 'SELF'
                   ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
                   : `${product?.currency ?? ''} Put Selling Recurring Strategy`
               }`,

@@ -1,20 +1,20 @@
 import { useState, useMemo, useCallback } from 'react'
 import { useActiveWeb3React } from 'hooks'
-import { DefiRecord } from 'utils/fetch/defiRecord'
+import { SharkfinRecord } from 'utils/fetch/sharkfinRecord'
 import { Axios } from 'utils/axios'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
-import { DEFAULT_COIN_SYMBOL, SUPPORTED_CURRENCIES } from 'constants/currencies'
+import { SUPPORTED_CURRENCIES } from 'constants/currencies'
 import { parsePrecision } from 'utils/parseAmount'
 import { trimNumberString } from 'utils/trimNumberString'
 import qs from 'qs'
 
 const PageSize = 8
 
-const types = [5, 6, 7, 8].join('&types=')
+// const types = [11, 12].join('&types=')
 
 export function useHistoryRecords(pageNum: number) {
   const { account, chainId } = useActiveWeb3React()
-  const [orderList, setOrderList] = useState<DefiRecord[] | undefined>(undefined)
+  const [orderList, setOrderList] = useState<SharkfinRecord[] | undefined>(undefined)
   const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
     count: 0,
     perPage: 0,
@@ -24,22 +24,21 @@ export function useHistoryRecords(pageNum: number) {
   const filteredOrderList = useMemo(() => {
     if (!orderList) return undefined
     return orderList.reduce((acc, order) => {
-      const currency = DEFAULT_COIN_SYMBOL[order.chainId as keyof typeof DEFAULT_COIN_SYMBOL]
-      const isCall = [5, 6].includes(order.type)
-      const investCurrency = isCall ? currency : 'USDT'
-      if ([5, 6, 7, 8].includes(order.type)) {
+      const underlying = SUPPORTED_CURRENCIES.WETH.symbol
+      const isCall = [11].includes(order.type)
+      const investCurrency = isCall ? underlying : 'USDT'
+      if ([11, 12].includes(order.type)) {
         acc.push({
           ...order,
-          actionType: [6, 8].includes(order.type) ? 'withdraw' : 'deposit',
-          currency: currency,
-          callPut: isCall ? 'call' : 'put',
-          investCurrency: investCurrency,
+          actionType: [11].includes(order.type) ? 'withdraw' : 'deposit',
+          underlying: underlying,
+          currency: investCurrency,
           amount: parsePrecision(trimNumberString(order.amount, 0), SUPPORTED_CURRENCIES[investCurrency].decimals)
         })
         return acc
       }
       return acc
-    }, [] as DefiRecord[])
+    }, [] as SharkfinRecord[])
   }, [orderList])
 
   const promiseFn = useCallback(() => {
@@ -53,11 +52,11 @@ export function useHistoryRecords(pageNum: number) {
       pageNum,
       chainId
     }
-    return Axios.get<{ records: DefiRecord[] }>('getAccountRecord?' + qs.stringify(params) + '&types=' + types)
+    return Axios.get<{ records: SharkfinRecord[] }>('getDepositRecord?' + qs.stringify(params))
   }, [account, chainId, pageNum])
 
   const callbackFn = useCallback(r => {
-    setOrderList(r.data.data.list)
+    setOrderList(r.data.data)
     setPageParams({
       count: parseInt(r.data.data.pages, 10),
       perPage: parseInt(r.data.data.size, 10),

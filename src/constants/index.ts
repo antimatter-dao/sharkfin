@@ -115,28 +115,22 @@ export const NO_REFERRER = '0x0000000000000000000000000000000000000000'
 export const feeRate = '3%'
 
 export const SHARKFIN_ADDRESS: {
-  [chainId in ChainId]?: { [currencySymbol: string]: { CALL: string | undefined; PUT: string | undefined } }
+  [chainId in ChainId]?: { [currencySymbol: string]: { SELF: string | undefined; U: string | undefined } }
 } = {
-  [ChainId.AVAX]: {
-    AVAX: { CALL: '0xF0150cD4c2F597507011cFBC8AF9Ab2ab617a392', PUT: '0x8AB81E5d87b31F179f25dEE10A20b138C7E4f290' }
-  },
   [ChainId.MAINNET]: {
-    ETH: { CALL: '0xB98d809402Ae20eC28BEdC11d88eF4a7ad75D29d', PUT: '0x6bDf446D6C9DB8AF61A6889F0163EEb235A9CD7a' }
-  },
-  [ChainId.KOVAN]: {
-    ETH: { CALL: '0x2089C2959039139A195f8F69E95306fCaaEcc231', PUT: '0x1944c84535fc07cd816475E3fa246ca87Cd0f98A' }
+    ETH: { SELF: undefined, U: undefined }
   },
   [ChainId.RINKEBY]: {
-    WETH: { PUT: '0x143393f0f6D5E55c50db35Cf6aAE113DC1128c2e', CALL: undefined }
+    WETH: { U: '0x143393f0f6D5E55c50db35Cf6aAE113DC1128c2e', SELF: undefined }
   }
 }
 
 export const getSharkfinAddress = (
-  currencySymbol: string | undefined,
+  underlying: string | undefined,
   chainId: ChainId | undefined,
   type: string | undefined
 ) => {
-  return currencySymbol && chainId && type
-    ? SHARKFIN_ADDRESS[chainId]?.[currencySymbol]?.[type === 'CALL' ? 'CALL' : 'PUT']
+  return underlying && chainId && type
+    ? SHARKFIN_ADDRESS[chainId]?.[underlying]?.[type === 'SELF' ? 'SELF' : 'U']
     : undefined
 }

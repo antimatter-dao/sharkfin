@@ -42,7 +42,7 @@ export default function VaultProductCard({
         width: '100%'
       }}
     >
-      {/* <ChainTag chainId={onChain} isCall={product?.type === 'CALL'} /> */}
+      {/* <ChainTag chainId={onChain} isCall={product?.type === 'SELF'} /> */}
       <TermTag days={7} color={color} />
       <CurrencyLogo
         currency={SUPPORTED_CURRENCIES[product?.investCurrency ?? '']}

@@ -100,8 +100,8 @@ export function useAntiMatterGovernanceContract(): Contract | null {
 
 export function useSharkfinContract(
   chainId: ChainId | undefined,
-  currencySymbol: string | undefined,
-  type: 'CALL' | 'PUT' | undefined
+  underlying: string | undefined,
+  type: 'SELF' | 'U' | undefined
 ): Contract | null {
-  return useContract(getSharkfinAddress(currencySymbol?.toUpperCase(), chainId, type), SHARKFIN_ABI, true)
+  return useContract(getSharkfinAddress(underlying?.toUpperCase(), chainId, type), SHARKFIN_ABI, true)
 }

@@ -1,8 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useHistory } from 'react-router'
 import { Container, Box, Typography, IconButton } from '@mui/material'
-import dayjsPluginUTC from 'dayjs-plugin-utc'
-import dayjs from 'dayjs'
 import Card from 'components/Card/Card'
 import Table from 'components/Table'
 import NoDataCard from 'components/Card/NoDataCard'
@@ -24,8 +22,8 @@ import { Currency } from 'constants/token'
 import { ChainListMap } from 'constants/chain'
 import { usePrice } from 'hooks/usePriceSet'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
-
-dayjs.extend(dayjsPluginUTC)
+import { dayjsUTC } from 'utils/dayjsUTC'
+import { Loader } from 'components/AnimatedSvg/Loader'
 
 enum TableHeaderIndex {
   vault,
@@ -45,7 +43,7 @@ function TokenHeader({
 }: {
   token: Currency | undefined
   investToken: Currency | undefined
-  type: 'CALL' | 'PUT'
+  type: 'SELF' | 'U'
 }) {
   return (
     <Box display="flex" alignItems="center" gap={16}>
@@ -54,7 +52,7 @@ function TokenHeader({
         <Typography fontSize={16}>{`${token?.symbol} weekly sharkfin`}</Typography>
         <Typography fontSize={12} sx={{}}>
           <span style={{ opacity: 0.5, fontSize: '12px' }}>{`(Base Currency- ${
-            type === 'CALL' ? token?.symbol : investToken?.symbol
+            type === 'SELF' ? token?.symbol : investToken?.symbol
           })`}</span>
         </Typography>
       </Box>
@@ -73,7 +71,10 @@ export default function Position() {
   const data = useMemo(() => {
     if (!vaultList) return { balanceData: undefined, hiddenParts: undefined }
     const hiddenParts: any[] = []
-    const balanceData = vaultList.map(data => {
+    const balanceData = vaultList.reduce((acc, data) => {
+      if (!data.depositAmount || +data.depositAmount == 0 || data.depositAmount === '-') {
+        return acc
+      }
       const token = SUPPORTED_CURRENCIES[data.currency]
       const investCurrency = SUPPORTED_CURRENCIES[data.investCurrency]
       hiddenParts.push(
@@ -152,15 +153,15 @@ export default function Position() {
           </Box>
         </Box>
       )
-      return [
+      acc.push([
         <TokenHeader key={data.type + data.currency} token={token} type={data.type} investToken={investCurrency} />,
 
         <Typography key={1} color="#31B047">
           {data.apy}
         </Typography>,
         '59,000~62,000',
-        data.depositAmount ?? '-',
-        data?.expiredAt ? (dayjs(data.expiredAt) as any).utc().format('MMM DD, YYYY hh:mm A') + ' UTC' : '-',
+        data ? data.depositAmount + ' ' + data.investCurrency : '-',
+        data?.expiredAt ? dayjsUTC(data.expiredAt).format('MMM DD, YYYY hh:mm A') + ' UTC' : '-',
         <Box
           key={1}
           display="flex"
@@ -176,21 +177,19 @@ export default function Position() {
             style={{ width: 92, borderRadius: 4, height: 36 }}
             onClick={() => {
               history.push(
-                routes.sharkfinMgmt
-                  .replace(
-                    ':chainName/:currency/:type',
-                    `${chainId ? ChainListMap[chainId].symbol : 'ETH'}/${data.currency}/${data.type}`
-                  )
-                  .replace(':type', '')
-                  .replace(':chainName', '')
+                routes.sharkfinMgmt.replace(
+                  ':chainName/:underlying/:currency',
+                  `${chainId ? ChainListMap[chainId].symbol : 'ETH'}/${data.currency}/${data.investCurrency}`
+                )
               )
             }}
           >
             View
           </Button>
         </Box>
-      ]
-    })
+      ])
+      return acc
+    }, [] as any[])
     return { balanceData, hiddenParts }
   }, [chainId, history, isDownMd, vaultList])
 
@@ -216,7 +215,9 @@ export default function Position() {
               </Typography>
             </OutlinedCard>
             <Box position="relative">
-              {!data.balanceData || data.balanceData.length === 0 ? (
+              {!data.balanceData ? (
+                <Loader />
+              ) : data.balanceData.length === 0 ? (
                 <NoDataCard height="20vh" />
               ) : isDownMd ? (
                 <TableCards data={data.balanceData} hiddenParts={data.hiddenParts} />

@@ -90,14 +90,14 @@ export function MgmtForm({
             ? (
                 +product.multiplier *
                 +amount *
-                (product ? (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
+                (product ? (product.type === 'SELF' ? 1 : +product.strikePrice) : 1)
               ).toFixed(2)
             : '-'
         }
         data={confirmData}
         investCurrency={CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product?.investCurrency ?? 'USDT']}
         title={` ${product?.investCurrency} Financial Management`}
-        subTitle={`  [${product?.type === 'CALL' ? 'upward' : 'down'} exercise]`}
+        subTitle={`  [${product?.type === 'SELF' ? 'upward' : 'down'} exercise]`}
         showCancelWarning={false}
       />
       <Box

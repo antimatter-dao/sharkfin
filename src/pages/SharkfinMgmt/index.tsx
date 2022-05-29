@@ -43,9 +43,9 @@ export default function SharkfinMgmt() {
 
   const theme = useTheme()
   const history = useHistory()
-  const { currency, type, chainName } = useParams<{ currency: string; type: string; chainName: string }>()
+  const { currency, underlying, chainName } = useParams<{ currency: string; underlying: string; chainName: string }>()
 
-  const product = useSingleSharkfin(chainName ?? '', currency ?? '', type ?? '')
+  const product = useSingleSharkfin(chainName ?? '', underlying ?? '', currency ?? '')
   // const prevDetails = usePrevDetails(chainName ?? '', currency ?? '', type ?? '')
   const isDownMd = useBreakpoint('md')
 
@@ -127,7 +127,7 @@ export default function SharkfinMgmt() {
             showFaq={true}
             // backLink={routes.sharkfin}
             pageTitle={`${product.currency} weekly sharkfin(Base Currency-${
-              product.type === 'CALL' ? product.currency : 'USDT'
+              product.type === 'SELF' ? product.currency : 'USDT'
             })`}
             priceCurSymbol={product?.currency}
             subject={Subject.Sharkfin}
@@ -163,7 +163,7 @@ export default function SharkfinMgmt() {
 
 // function RecurringPolicy({ type, currencySymbol }: { type: 'call' | 'put'; currencySymbol: string }) {
 //   const [curIdx, setCurIdx] = useState(0)
-//   const policy = type === 'call' ? vaultPolicyCall : vaultPolicyPut
+//   const policy = type === 'SELF' ? vaultPolicyCall : vaultPolicyPut
 //   const Text = vaultPolicyText[type]
 
 //   const theme = useTheme()

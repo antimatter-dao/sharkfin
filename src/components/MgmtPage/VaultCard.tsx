@@ -8,6 +8,7 @@ import { DefiProduct } from 'hooks/useSharkfin'
 import { useActiveWeb3React } from 'hooks'
 // import { Timer } from 'components/Timer'
 import { trimNumberString } from 'utils/trimNumberString'
+import { dayjsUTC } from 'utils/dayjsUTC'
 // import dayjs from 'dayjs'
 
 const StyledBox = styled(Box)<{ selected?: boolean }>(({ theme, selected }) => ({
@@ -66,7 +67,6 @@ export default function VaultCard(props: Props) {
   const [currentTab, setCurrentTab] = useState<TYPE>(0)
   const [standardWithdrawlStep, setStandardWithdrawlStep] = useState<StandardWithdrawType>(0)
   const { chainId } = useActiveWeb3React()
-
   const productChainId = product?.chainId
   const currencySymbol = product?.investCurrency ?? ''
   const disabled = !product || !amount || chainId !== product?.chainId || +amount === 0
@@ -153,11 +153,13 @@ export default function VaultCard(props: Props) {
                     {[
                       {
                         title: 'Price Range(USDT)',
-                        data: '59,000~62,000'
+                        data: `${product?.barrierPrice0}${product?.barrierPrice0 && product?.barrierPrice1 ? '' : '~'}${
+                          product?.barrierPrice1
+                        }`
                       },
                       {
                         title: 'APR',
-                        data: '12%'
+                        data: product?.apy
                       },
                       {
                         title: 'Term',
@@ -165,11 +167,15 @@ export default function VaultCard(props: Props) {
                       },
                       {
                         title: 'Duration',
-                        data: '21 Oct 2022 ~ 27 Oct 2022'
+                        data: product
+                          ? `${dayjsUTC(product?.beginAt).format('MMM DD YYYY')} ~ ${dayjsUTC(
+                              product?.expiredAt
+                            ).format('MMM DD YYYY')}`
+                          : '-'
                       },
                       {
                         title: 'Your Position',
-                        data: '123BTC'
+                        data: product ? product.depositAmount + ' ' + product.investCurrency : '-'
                       }
                     ].map(({ title, data }) => {
                       return (

@@ -1,31 +1,33 @@
 import { useMemo, useState, useCallback } from 'react'
 // import { useHistory } from 'react-router'
-import { Container, Box, Typography, IconButton } from '@mui/material'
+import { Container, Box, Typography } from '@mui/material'
 import Card from 'components/Card/Card'
 import Table from 'components/Table'
 import NoDataCard from 'components/Card/NoDataCard'
 import { useActiveWeb3React } from 'hooks'
 import useBreakpoint from 'hooks/useBreakpoint'
-import CurrencyLogo from 'components/essential/CurrencyLogo'
-import { SUPPORTED_CURRENCIES } from 'constants/currencies'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import Divider from 'components/Divider'
 import Pagination from 'components/Pagination'
 import { useHistoryRecords } from 'hooks/useHistoryRecords'
+import { dayjsUTC } from 'utils/dayjsUTC'
+import TransactionTypeIcon from 'components/Icon/TransactionTypeIcon'
+import { ExternalLink } from 'theme/components'
+import { getEtherscanLink, shortenHash } from 'utils'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 
-const TableHeader = [
-  'Invest Amount',
-  'Subscribed Time',
-  'Final APY',
-  'Delivery Time',
-  'Price Range(USDT)',
-  'Term',
-  'Return Amount'
-]
+// const TableHeader = [
+//   'Invest Amount',
+//   'Subscribed Time',
+//   'Final APY',
+//   'Delivery Time',
+//   'Price Range(USDT)',
+//   'Term',
+//   'Return Amount'
+// ]
+
+const TableHeader = ['Product', 'Type', 'Amount', 'Tx ID', 'Time']
 
 export default function History() {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   // const history = useHistory()
   const isDownMd = useBreakpoint('md')
   const [page, setPage] = useState(1)
@@ -36,103 +38,33 @@ export default function History() {
 
     return records.map(record => {
       return [
-        <>129000 {record.investCurrency ?? '-'}</>,
-        <>Sep 21, 2021</>,
-        <Typography key={1} color="#31B047">
-          5% ~ 12%
-        </Typography>,
+        `${record.underlying ?? '-'} weekly sharkfin`,
+        <TransactionTypeIcon key="type" txType={record.actionType} />,
         <>
-          Sep 21, 2021
-          <br />
-          08:30 AM UTC{' '}
+          {record.amount} {record.currency ?? '-'}
         </>,
-        <>59,000~62,000</>,
-        <>7 Days</>,
-        <>62091.35 USDT</>
+        record.hash ? (
+          <ExternalLink
+            href={getEtherscanLink(chainId ?? NETWORK_CHAIN_ID, record.hash, 'transaction')}
+            color="#252525"
+          >
+            {shortenHash(record.hash)}{' '}
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M11.5417 11.5417H2.20833V2.20833H6.875V0.875H2.20833C1.46833 0.875 0.875 1.475 0.875 2.20833V11.5417C0.875 12.275 1.46833 12.875 2.20833 12.875H11.5417C12.275 12.875 12.875 12.275 12.875 11.5417V6.875H11.5417V11.5417ZM8.20833 0.875V2.20833H10.6017L4.04833 8.76167L4.98833 9.70167L11.5417 3.14833V5.54167H12.875V0.875H8.20833Z"
+                fill="black"
+              />
+            </svg>
+          </ExternalLink>
+        ) : (
+          record.hash
+        ),
+        record.timestamp ? `${dayjsUTC(+record.timestamp * 1000).format('MMM DD, YYYY\nhh:mm:ss A')} UTC` : '-'
       ]
     })
-  }, [records])
+  }, [chainId, records])
 
   const handlePage = useCallback((event, value) => setPage(value), [])
-
-  const hiddenParts = useMemo(() => {
-    return [
-      <Box
-        key={1}
-        display="flex"
-        justifyContent="space-between"
-        width="100%"
-        sx={{ flexDirection: { xs: 'column', md: 'row' } }}
-      >
-        <Box display="grid" gap={14}>
-          <Box
-            display="flex"
-            alignItems="center"
-            sx={{
-              justifyContent: { xs: 'space-between', md: 'flex-start' },
-              width: { xs: '100%', md: 'fit-content' },
-              gap: { xs: 0, md: 17 }
-            }}
-          >
-            <Typography sx={{ opacity: 0.5 }}>Order ID:</Typography>
-            <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-              76
-            </Typography>
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            sx={{
-              justifyContent: { xs: 'space-between', md: 'flex-start' },
-              width: { xs: '100%', md: 'fit-content' },
-              gap: { xs: 0, md: 17 }
-            }}
-          >
-            <Typography sx={{ opacity: 0.5 }}>Product ID:</Typography>
-            <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-              29
-            </Typography>
-          </Box>
-        </Box>
-        <Box display="grid" gap={14}>
-          <Box
-            display="flex"
-            alignItems="center"
-            sx={{
-              justifyContent: { xs: 'space-between', md: 'flex-start' },
-              width: { xs: '100%', md: 'fit-content' },
-              gap: { xs: 0, md: 17 }
-            }}
-          >
-            <Typography sx={{ opacity: 0.5 }}>Settlement Price:</Typography>
-            <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-              62091.35
-            </Typography>
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            sx={{
-              justifyContent: { xs: 'space-between', md: 'flex-start' },
-              width: { xs: '100%', md: 'fit-content' },
-              gap: { xs: 0, md: 17 }
-            }}
-          >
-            <Typography sx={{ opacity: 0.5 }}>Settlement Time:</Typography>
-            <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-              Sep 21, 2021 10:42 AM
-            </Typography>
-          </Box>
-        </Box>
-        <Box display="flex" alignItems="center" gap={7} sx={{ mt: { xs: 16, md: 0 } }}>
-          <CurrencyLogo currency={SUPPORTED_CURRENCIES['BTC']} />
-          <Typography fontWeight={700} sx={{ fontSize: { xs: 12, md: 14 } }}>
-            Weekly Sharkfin BTC(Base Currency-BTC)
-          </Typography>
-        </Box>
-      </Box>
-    ]
-  }, [])
 
   if (!account) {
     return (
@@ -152,11 +84,7 @@ export default function History() {
 
               {data && data?.length > 0 && (
                 <>
-                  {isDownMd ? (
-                    <TableCards data={data} hiddenParts={hiddenParts} />
-                  ) : (
-                    <Table header={TableHeader} rows={data} hiddenParts={hiddenParts} collapsible />
-                  )}
+                  {isDownMd ? <TableCards data={data} /> : <Table header={TableHeader} rows={data} />}
 
                   <Pagination
                     count={pageParams?.count}
@@ -176,19 +104,17 @@ export default function History() {
   )
 }
 
-function TableCards({ data, hiddenParts }: { data: any[][]; hiddenParts: JSX.Element[] }) {
+function TableCards({ data }: { data: any[][] }) {
   return (
     <Box display="flex" flexDirection="column" gap={8}>
       {data.map((dataRow, idx) => (
-        <TableCard dataRow={dataRow} key={`table-row-${idx}`} hiddenPart={hiddenParts && hiddenParts[idx]} />
+        <TableCard dataRow={dataRow} key={`table-row-${idx}`} />
       ))}
     </Box>
   )
 }
 
-function TableCard({ dataRow, hiddenPart }: { dataRow: any[]; hiddenPart: JSX.Element }) {
-  const [isOpen, setIsOpen] = useState(false)
-
+function TableCard({ dataRow }: { dataRow: any[] }) {
   return (
     <Card color="#F2F5FA" padding="16px">
       <Box display="flex" flexDirection="column" gap={16}>
@@ -205,22 +131,6 @@ function TableCard({ dataRow, hiddenPart }: { dataRow: any[]; hiddenPart: JSX.El
           )
         })}
       </Box>
-      <Box display="flex" alignItems={'center'} justifyContent="center" mt={20}>
-        <IconButton
-          aria-label="expand row"
-          size="small"
-          onClick={() => setIsOpen(isOpen => !isOpen)}
-          sx={{ flexGrow: 0, border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: '50%' }}
-        >
-          {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-        </IconButton>
-      </Box>
-      {isOpen && (
-        <>
-          <Divider sx={{ opacity: 0.1 }} extension={16} style={{ marginTop: 20, marginBottom: 20 }} />
-          <Box width="100%">{hiddenPart}</Box>
-        </>
-      )}
     </Card>
   )
 }

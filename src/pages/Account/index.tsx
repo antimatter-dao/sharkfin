@@ -11,6 +11,7 @@ import dashboardUrl from 'assets/images/dashboard.png'
 import historyUrl from 'assets/images/history.png'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { routes } from 'constants/routes'
+import PastPosition from './PastPositions'
 
 export enum AccountTabs {
   position = 0,
@@ -60,7 +61,7 @@ export default function Account() {
           <Tab text="History" iconUrl={historyUrl} key="history" />,
           <Tab text="Past Positions" iconUrl={dashboardUrl} key="past" />
         ]}
-        contents={[<Position key="position" />, <History key="history" />, <div key="past"></div>]}
+        contents={[<Position key="position" />, <History key="history" />, <PastPosition key="past" />]}
         tabPadding="18px 0"
       />
     </Box>
