@@ -17,9 +17,9 @@ const AvaxNetwork = new NetworkConnector({
     43114: 'https://api.avax.network/ext/bc/C/rpc'
   }
 })
-// const RinkebyNetwork = new NetworkConnector({
-//   urls: { 4: 'https://rinkeby.infura.io/v3/ab440a3a67f74b6b8a0a8e8e13a76a52' }
-// })
+const RinkebyNetwork = new NetworkConnector({
+  urls: { 4: 'https://rinkeby.infura.io/v3/ab440a3a67f74b6b8a0a8e8e13a76a52' }
+})
 const KovanNetwork = new NetworkConnector({
   urls: { 42: 'https://kovan.infura.io/v3/ab440a3a67f74b6b8a0a8e8e13a76a52' }
 })
@@ -34,8 +34,8 @@ export function getOtherNetworkLibrary(chainId: number) {
       return new Web3Provider(BscNetwork.provider as any)
     case 43114:
       return new Web3Provider(AvaxNetwork.provider as any)
-    // case 4:
-    //   return new Web3Provider(RinkebyNetwork.provider as any)
+    case 4:
+      return new Web3Provider(RinkebyNetwork.provider as any)
     case 42:
       return new Web3Provider(KovanNetwork.provider as any)
     default:

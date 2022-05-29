@@ -7,6 +7,7 @@ import { SUPPORTED_CURRENCIES } from 'constants/currencies'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { SimpleProgress } from 'components/Progress'
 import { DefiProduct } from 'hooks/useSharkfin'
+import { Timer } from 'components/Timer'
 // import { ChainListMap } from 'constants/chain'
 // import Image from 'components/Image'
 
@@ -71,8 +72,8 @@ export default function VaultProductCard({
           </Box>
           <Box display="grid" gap={9}>
             <SimpleProgress
-              val={product?.totalBalance ?? 0}
-              total={product?.cap ?? 100}
+              val={product?.beginAt ? Date.now() - product.beginAt : 0}
+              total={product?.expiredAt ? product.expiredAt - product.beginAt : 100}
               hideValue
               width="100%"
               customColor={color}
@@ -83,7 +84,7 @@ export default function VaultProductCard({
                 Count Down to the start
               </Typography>
               <Typography fontSize={12} fontWeight={700}>
-                11d:10h:05m
+                <Timer timer={product?.expiredAt ?? 0} />
               </Typography>
             </Box>
           </Box>

@@ -20,6 +20,7 @@ export interface DefiProduct {
   apy: string
   type: 'CALL' | 'PUT'
   expiredAt: number
+  beginAt: number
   strikePrice: string
   currency: string
   investCurrency: string
@@ -43,7 +44,7 @@ enum DefiProductDataOrder {
   vaultState
 }
 
-const APY = '20%'
+const APY = '3% ~ 15%'
 
 export function useSingleSharkfin(chainName: string, currency: string, type: string): DefiProduct | null {
   const { account } = useActiveWeb3React()
@@ -254,6 +255,7 @@ const defiVaultListUtil = (chainId: ChainId | null | undefined, res?: any[][]) =
         type: 'CALL',
         apy: APY,
         expiredAt: getExpireAt(),
+        beginAt: getExpireAt(true),
         investCurrency: symbol,
         strikePrice: '-',
         depositAmount:
@@ -306,6 +308,7 @@ const defiVaultListUtil = (chainId: ChainId | null | undefined, res?: any[][]) =
         type: 'PUT',
         apy: APY,
         expiredAt: getExpireAt(),
+        beginAt: getExpireAt(true),
         investCurrency: 'USDT',
         strikePrice: '-',
         depositAmount:
@@ -341,12 +344,13 @@ const getStrikePrice = async (contractAddress: string | undefined, library: Web3
   }
 }
 
-const getExpireAt = () => {
+const getExpireAt = (beginAt?: boolean) => {
   const now = new Date(Date.now())
   const UTCh = now.getUTCHours()
   const displacement = (5 + 7 - now.getUTCDay()) % 7
   const fridayDate = now.getUTCDate() + (displacement === 0 && UTCh >= 8 ? 7 : displacement)
   now.setUTCDate(fridayDate)
+  //UTC 8:00
   now.setUTCHours(8, 0, 0)
-  return now.getTime()
+  return beginAt ? now.getTime() - 1000 * 60 * 60 * 24 * 7 : now.getTime()
 }

@@ -205,9 +205,7 @@ export default function Header() {
                       paddingBottom: '30px',
                       borderBottom: '2px solid transparent',
                       borderColor: theme =>
-                        title === 'Invest' && pathname.includes(routes.sharkfin)
-                          ? theme.palette.text.primary
-                          : 'transparnet',
+                        title === 'Invest' && pathname === routes.sharkfin ? theme.palette.text.primary : 'transparnet',
                       display: 'inline'
                     }}
                     key={title + idx}
