@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { useHistory } from 'react-router'
 import { Container, Box, Typography, IconButton } from '@mui/material'
 import Card from 'components/Card/Card'
@@ -24,6 +24,7 @@ import { usePrice } from 'hooks/usePriceSet'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 import { dayjsUTC } from 'utils/dayjsUTC'
 import { Loader } from 'components/AnimatedSvg/Loader'
+import Pagination from 'components/Pagination'
 
 enum TableHeaderIndex {
   vault,
@@ -65,8 +66,11 @@ export default function Position() {
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
   const price = usePrice('BTC', 10000)
+  const [page, setPage] = useState(1)
 
   const vaultList = useSharkfinList()
+
+  const handlePage = useCallback((event, value) => setPage(value), [])
 
   const data = useMemo(() => {
     if (!vaultList) return { balanceData: undefined, hiddenParts: undefined }
@@ -214,15 +218,26 @@ export default function Position() {
                 {price ? toLocaleNumberString(price, 4) : '-'}
               </Typography>
             </OutlinedCard>
-            <Box position="relative">
-              {!data.balanceData ? (
-                <Loader />
-              ) : data.balanceData.length === 0 ? (
-                <NoDataCard height="20vh" />
-              ) : isDownMd ? (
-                <TableCards data={data.balanceData} hiddenParts={data.hiddenParts} />
-              ) : (
-                <Table header={TableHeader} rows={data.balanceData} hiddenParts={data.hiddenParts} collapsible />
+            <Box position="relative" display="grid" gap={24}>
+              {!data.balanceData && <Loader />}
+              {data.balanceData?.length === 0 && <NoDataCard height="20vh" />}
+
+              {data.balanceData && data.balanceData?.length > 0 && (
+                <>
+                  {isDownMd ? (
+                    <TableCards data={data.balanceData} hiddenParts={data.hiddenParts} />
+                  ) : (
+                    <Table header={TableHeader} rows={data.balanceData} hiddenParts={data.hiddenParts} collapsible />
+                  )}
+                  <Pagination
+                    count={Math.ceil(data.balanceData.length / 6)}
+                    page={page}
+                    perPage={6}
+                    boundaryCount={0}
+                    total={data.balanceData.length}
+                    onChange={handlePage}
+                  />
+                </>
               )}
             </Box>
           </Box>
