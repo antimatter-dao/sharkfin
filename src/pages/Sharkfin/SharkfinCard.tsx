@@ -57,18 +57,16 @@ export default function VaultProductCard({
           <Box
             display={{ xs: 'flex', sm: 'grid', md: 'flex' }}
             gap={21}
-            maxWidth={260}
+            maxWidth={'100%'}
             justifyContent={'space-between'}
             alignItems="center"
           >
             <TextCard subTextBold color={color} text={product?.apy ?? '-'} subText="Current APY" />
-            <Box display="flex" alignItems={'center'} justifyContent="space-between">
-              <TextCard
-                subTextBold
-                text={`${product?.lockedBalance ?? '-'}  ${product?.investCurrency ?? '-'}`}
-                subText="Initial investment"
-              />
-            </Box>
+            <TextCard
+              subTextBold
+              text={`${product?.lockedBalance ?? '-'}  ${product?.investCurrency ?? '-'}`}
+              subText="Initial investment"
+            />
           </Box>
           <Box display="grid" gap={9}>
             <SimpleProgress
