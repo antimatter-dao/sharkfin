@@ -34,17 +34,16 @@ export default function VaultForm({
   setAmount: (val: string) => void
 }) {
   const { account, chainId } = useActiveWeb3React()
-  const currencySymbol = product?.investCurrency ?? ''
   const investCurrency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.investCurrency ?? '']
-  const currency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.underlying ?? '']
-  const title = `${currencySymbol} weekly sharkfin\n (Principle protected)`
+  const underlying = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.underlying ?? '']
+  const title = `${underlying.symbol} weekly sharkfin\n (Principle protected)`
 
   const ETHBalance = useETHBalances([account ?? undefined])?.[account ?? '']
   const tokenBalance = useTokenBalance(account ?? undefined, investCurrency)
   // const [snackbarOpen, setSnackbarOpen] = useState(true)
   const [wdConfirmOpen, setWdConfirmOpen] = useState(false)
   const [investConfirmOpen, setInvestConfirmOpen] = useState(false)
-  const spotPrice = usePrice(currencySymbol, 60000)
+  const spotPrice = usePrice(product?.underlying, 60000)
 
   const balance =
     product?.investCurrency === SUPPORTED_NETWORKS[chainId ?? NETWORK_CHAIN_ID].nativeCurrency.symbol
@@ -70,20 +69,24 @@ export default function VaultForm({
   const formData = useMemo(
     () => ({
       ['Current cycle invested amount']:
-        (product?.lockedBalance ? trimNumberString(product.lockedBalance, 6) : '-') + ' ' + currencySymbol,
+        (product?.lockedBalance ? trimNumberString(product.lockedBalance, 6) : '-') + ' ' + investCurrency.symbol,
       ['Progress order due time']: <Timer timer={product?.expiredAt ?? 0} />
     }),
-    [currencySymbol, product?.expiredAt, product?.lockedBalance]
+    [investCurrency.symbol, product?.expiredAt, product?.lockedBalance]
   )
 
-  const confirmData = useMemo(
-    () => ({
-      ['Platform service fee']: feeRate,
-      ['Spot Price']: (spotPrice ? trimNumberString(spotPrice, 2) : '-') + ' USDT',
-      ['APY']: product?.apy ?? '-'
-    }),
-    [product?.apy, spotPrice]
-  )
+  const confirmData = useMemo(() => {
+    return product?.investCurrency === 'USDT'
+      ? {
+          ['Platform service fee']: feeRate,
+          ['APY']: product?.apy ?? '-'
+        }
+      : {
+          ['Platform service fee']: feeRate,
+          ['Spot Price']: (spotPrice ? trimNumberString(spotPrice, 2) : '-') + ' USDT',
+          ['APY']: product?.apy ?? '-'
+        }
+  }, [product?.apy, product?.investCurrency, spotPrice])
 
   // const handleCloseSnakebar = useCallback(() => {
   //   setSnackbarOpen(false)
@@ -135,22 +138,22 @@ export default function VaultForm({
   )
 
   const handleInvest = useMemo(() => {
-    if (!currency || !depositCallback || !product || !investCurrency) return () => {}
+    if (!underlying || !depositCallback || !product || !investCurrency) return () => {}
     return callbackFactory(
       `Subscribed ${amount} ${product.investCurrency} to ${`${product?.underlying ?? ''} weekly sharkfin`}`,
       depositCallback
     )
-  }, [currency, depositCallback, product, investCurrency, callbackFactory, amount])
+  }, [underlying, depositCallback, product, investCurrency, callbackFactory, amount])
 
   const handleInstantWd = useMemo(() => {
-    if (!investCurrency || !instantWithdrawCallback || !product || !currency) return () => {}
+    if (!investCurrency || !instantWithdrawCallback || !product || !underlying) return () => {}
     return callbackFactory(
       `Instantly withdrawed ${amount} ${product.investCurrency} from ${product?.underlying ?? ''} weekly sharkfin
          
       }`,
       instantWithdrawCallback
     )
-  }, [investCurrency, instantWithdrawCallback, product, currency, callbackFactory, amount])
+  }, [investCurrency, instantWithdrawCallback, product, underlying, callbackFactory, amount])
 
   const handleStandardWd = useCallback(
     (amount: string, initiated: boolean) => {
@@ -170,7 +173,7 @@ export default function VaultForm({
           isOpen={true}
           onDismiss={hideModal}
           onConfirm={() => {
-            if (!investCurrency || !standardWithdrawCallback || !product || !currency) {
+            if (!investCurrency || !standardWithdrawCallback || !product || !underlying) {
               return
             }
 
@@ -189,13 +192,13 @@ export default function VaultForm({
     },
     [
       callbackFactory,
-      currency,
       hideModal,
       investCurrency,
       product,
       showModal,
       standardCompleteCallback,
-      standardWithdrawCallback
+      standardWithdrawCallback,
+      underlying
     ]
   )
 
