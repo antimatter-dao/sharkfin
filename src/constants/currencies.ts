@@ -52,7 +52,8 @@ export const SUPPORTED_CURRENCIES: {
   BTC: {
     address: {
       [ChainId.ROPSTEN]: '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93',
-      [ChainId.BSC]: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c'
+      [ChainId.BSC]: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
+      [ChainId.RINKEBY]: '0x329695b36c66d2d44160Cf84be6e2c6FF76F981F'
     },
     decimals: 18,
     symbol: 'BTC',
@@ -63,7 +64,8 @@ export const SUPPORTED_CURRENCIES: {
   BTCB: {
     address: {
       [ChainId.ROPSTEN]: '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93',
-      [ChainId.BSC]: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c'
+      [ChainId.BSC]: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
+      [ChainId.RINKEBY]: '0x329695b36c66d2d44160Cf84be6e2c6FF76F981F'
     },
     decimals: 18,
     symbol: 'BTC',
@@ -105,7 +107,8 @@ export const SUPPORTED_CURRENCIES: {
       [ChainId.ROPSTEN]: '0x55795b02C44Bd098D21bC1854036C2E75d7E7c43',
       [ChainId.BSC]: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
       [ChainId.MAINNET]: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-      [ChainId.KOVAN]: '0xd0A1E359811322d97991E03f863a0C30C2cF029C'
+      [ChainId.KOVAN]: '0xd0A1E359811322d97991E03f863a0C30C2cF029C',
+      [ChainId.RINKEBY]: '0x3ade50e667cc085b29C2EFF87F6911A7b55Bd81c'
     },
     decimals: 18,
     symbol: 'ETH',
@@ -252,7 +255,7 @@ export const CURRENCY_ADDRESS_MAP = Object.keys(SUPPORTED_CURRENCIES).reduce((ac
 }, {} as { [key: string]: Token })
 
 export const SUPPORTED_DEFI_VAULT: { [chainId in ChainId]?: string[] } = IS_TEST_NET
-  ? { [ChainId.RINKEBY]: ['WETH', 'BTC'], [ChainId.BSC]: ['BTC', 'ETH'] }
+  ? { [ChainId.RINKEBY]: ['ETH', 'BTC'], [ChainId.BSC]: ['BTC', 'ETH'] }
   : {
       [ChainId.MAINNET]: ['ETH', 'BTC'],
       [ChainId.BSC]: ['BTC', 'ETH']

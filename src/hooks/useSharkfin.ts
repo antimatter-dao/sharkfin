@@ -84,9 +84,7 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
   }, [withdrawals?.result?.round])
 
   const price = useSingleCallResult(contract, 'roundPricePerShare', argPrice)
-  console.log(product)
-  console.log('begin', getExpireAt(true))
-  console.log('end', getExpireAt())
+
   useEffect(() => {
     let isMounted = true
     Axios.get('getProducts', { chainId, currency, underlying: getMappedSymbol(underlying) })
@@ -105,7 +103,7 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
             return acc
           }
         }, undefined)
-        console.log(closest)
+
         setProduct(closest)
         if (isMounted) {
         }
@@ -372,7 +370,7 @@ const getExpireAt = (beginAt?: boolean) => {
   const displacement = (5 + 7 - now.getUTCDay()) % 7
   const fridayDate = now.getUTCDate() + (displacement === 0 && UTCh >= 8 ? 7 : displacement)
   now.setUTCDate(fridayDate)
-  //UTC 12:00
-  now.setUTCHours(12, 0, 0)
+  //UTC 8:00
+  now.setUTCHours(8, 0, 0)
   return beginAt ? now.getTime() - 1000 * 60 * 60 * 24 * 7 : now.getTime()
 }
