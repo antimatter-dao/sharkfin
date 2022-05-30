@@ -12,12 +12,12 @@ export default function DualInvestChart({
   str1,
   str2
 }: {
-  product: { [key: string]: any; currency: string; expiredAt: number; strikePrice: string } | undefined
+  product: { [key: string]: any; underlying: string; expiredAt: number; strikePrice: string } | undefined
   str1: string
   str2: string
 }) {
   const graphContainer = useRef<HTMLDivElement>(null)
-  const priceSet = usePriceSet(product?.currency)
+  const priceSet = usePriceSet(product?.underlying)
   const isDownMd = useBreakpoint('md')
 
   const strikeLineData = useMemo(() => {

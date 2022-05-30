@@ -75,7 +75,7 @@ export default function Position() {
       if (!data.depositAmount || +data.depositAmount == 0 || data.depositAmount === '-') {
         return acc
       }
-      const token = SUPPORTED_CURRENCIES[data.currency]
+      const token = SUPPORTED_CURRENCIES[data.underlying]
       const investCurrency = SUPPORTED_CURRENCIES[data.investCurrency]
       hiddenParts.push(
         <Box
@@ -154,7 +154,7 @@ export default function Position() {
         </Box>
       )
       acc.push([
-        <TokenHeader key={data.type + data.currency} token={token} type={data.type} investToken={investCurrency} />,
+        <TokenHeader key={data.type + data.underlying} token={token} type={data.type} investToken={investCurrency} />,
 
         <Typography key={1} color="#31B047">
           {data.apy}
@@ -178,8 +178,8 @@ export default function Position() {
             onClick={() => {
               history.push(
                 routes.sharkfinMgmt.replace(
-                  ':chainName/:underlying/:currency',
-                  `${chainId ? ChainListMap[chainId].symbol : 'ETH'}/${data.currency}/${data.investCurrency}`
+                  ':chainName/:underlying/:investCurrency',
+                  `${chainId ? ChainListMap[chainId].symbol : 'ETH'}/${data.underlying}/${data.investCurrency}`
                 )
               )
             }}

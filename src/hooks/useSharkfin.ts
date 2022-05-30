@@ -23,7 +23,7 @@ export interface DefiProduct {
   barrierPrice0?: string
   barrierPrice1?: string
   //equals underlying in api
-  currency: string
+  underlying: string
   //equals currency in api
   investCurrency: string
   chainId: ChainId | undefined
@@ -137,7 +137,7 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
       return {
         chainId: productChainId,
         type: type,
-        currency: SUPPORTED_CURRENCIES[cur]?.symbol ?? '',
+        underlying: SUPPORTED_CURRENCIES[cur]?.symbol ?? '',
         investCurrency: investCurrency,
         instantBalance:
           depositReceipts?.result?.amount && productChainId
@@ -262,7 +262,7 @@ const defiVaultListUtil = (chainId: ChainId | null | undefined, res?: any[][]) =
         : false
       accMain.push({
         chainId: +chainId,
-        currency: symbol,
+        underlying: symbol,
         lockedBalance:
           resCall && resCall[DefiProductDataOrder.accountVaultBalance]
             ? trimNumberString(
@@ -314,7 +314,7 @@ const defiVaultListUtil = (chainId: ChainId | null | undefined, res?: any[][]) =
 
       accMain.push({
         chainId: +chainId,
-        currency: symbol,
+        underlying: symbol,
         lockedBalance:
           resPut && resPut[DefiProductDataOrder.accountVaultBalance]
             ? trimNumberString(

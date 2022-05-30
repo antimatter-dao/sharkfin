@@ -179,23 +179,23 @@ export default function Sharkfin() {
         {filteredList &&
           filteredList.map((item: DefiProduct) => {
             if (!item) return null
-            const { chainId, currency, type, investCurrency } = item
-            if (!chainId || !currency) return null
+            const { chainId, underlying, type, investCurrency } = item
+            if (!chainId || !underlying) return null
             return (
-              <React.Fragment key={chainId + (currency ?? '') + type}>
+              <React.Fragment key={chainId + (underlying ?? '') + type}>
                 <VaultProductCard
                   // onChain={+chainId}
                   product={item}
-                  title={`Weekly Sharkfin ${currency} (Base Currency-${type === 'SELF' ? currency : 'USDT'})`}
+                  title={`Weekly Sharkfin ${underlying} (Base Currency-${investCurrency})`}
                   onClick={() => {
                     history.push(
                       routes.sharkfinMgmt.replace(
-                        ':chainName/:underlying/:currency',
-                        `${chainId ? ChainListMap[chainId].symbol : 'ETH'}/${currency}/${investCurrency}`
+                        ':chainName/:underlying/:investCurrency',
+                        `${chainId ? ChainListMap[chainId].symbol : 'ETH'}/${underlying}/${investCurrency}`
                       )
                     )
                   }}
-                  color={SUPPORTED_CURRENCIES[type === 'SELF' ? currency ?? 'ETH' : 'USDT'].color ?? '#3164B0'}
+                  color={SUPPORTED_CURRENCIES[investCurrency]?.color ?? '#3164B0'}
                 />
               </React.Fragment>
             )

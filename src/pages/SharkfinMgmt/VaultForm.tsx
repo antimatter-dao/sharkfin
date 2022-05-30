@@ -36,7 +36,7 @@ export default function VaultForm({
   const { account, chainId } = useActiveWeb3React()
   const currencySymbol = product?.investCurrency ?? ''
   const investCurrency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.investCurrency ?? '']
-  const currency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.currency ?? '']
+  const currency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.underlying ?? '']
   const title = `${currencySymbol} weekly sharkfin\n (Principle protected)`
 
   const ETHBalance = useETHBalances([account ?? undefined])?.[account ?? '']
@@ -58,13 +58,13 @@ export default function VaultForm({
     instantWithdrawCallback,
     standardWithdrawCallback,
     standardCompleteCallback
-  } = useSharkfinCallback(product?.chainId, product?.currency, product?.type)
+  } = useSharkfinCallback(product?.chainId, product?.underlying, product?.type)
 
   const { showModal, hideModal } = useModal()
   const addPopup = useTransactionAdder()
   const [approvalState, approveCallback] = useApproveCallback(
     tryParseAmount(amount, investCurrency),
-    getSharkfinAddress(product?.currency, product?.chainId, product?.type)
+    getSharkfinAddress(product?.underlying, product?.chainId, product?.type)
   )
 
   const formData = useMemo(
@@ -137,8 +137,7 @@ export default function VaultForm({
   const handleInvest = useMemo(() => {
     if (!currency || !depositCallback || !product || !investCurrency) return () => {}
     return callbackFactory(
-      `Subscribed ${amount} ${product.investCurrency} to ${`${product?.currency ??
-        ''} weekly sharkfin (Base Currency-${product?.investCurrency ?? ''} )`}`,
+      `Subscribed ${amount} ${product.investCurrency} to ${`${product?.underlying ?? ''} weekly sharkfin`}`,
       depositCallback
     )
   }, [currency, depositCallback, product, investCurrency, callbackFactory, amount])
@@ -146,10 +145,8 @@ export default function VaultForm({
   const handleInstantWd = useMemo(() => {
     if (!investCurrency || !instantWithdrawCallback || !product || !currency) return () => {}
     return callbackFactory(
-      `Instantly withdrawed ${amount} ${product.investCurrency} from ${
-        product.type === 'SELF'
-          ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-          : `${product?.currency ?? ''} Put Selling Recurring Strategy`
+      `Instantly withdrawed ${amount} ${product.investCurrency} from ${product?.underlying ?? ''} weekly sharkfin
+         
       }`,
       instantWithdrawCallback
     )
@@ -178,10 +175,9 @@ export default function VaultForm({
             }
 
             callbackFactory(
-              `${initiated ? 'Initiated' : 'Completed'} withdrawal ${amount} ${product.investCurrency} from ${
-                product.type === 'SELF'
-                  ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-                  : `${product?.currency ?? ''} Put Selling Recurring Strategy`
+              `${initiated ? 'Initiated' : 'Completed'} withdrawal ${amount} ${
+                product.investCurrency
+              } from ${product?.underlying ?? ''} weekly sharkfin
               }`,
               initiated ? standardCompleteCallback : standardWithdrawCallback
             )(amount, parsedAmount)

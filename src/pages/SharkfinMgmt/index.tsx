@@ -43,9 +43,13 @@ export default function SharkfinMgmt() {
 
   const theme = useTheme()
   const history = useHistory()
-  const { currency, underlying, chainName } = useParams<{ currency: string; underlying: string; chainName: string }>()
+  const { investCurrency, underlying, chainName } = useParams<{
+    investCurrency: string
+    underlying: string
+    chainName: string
+  }>()
 
-  const product = useSingleSharkfin(chainName ?? '', underlying ?? '', currency ?? '')
+  const product = useSingleSharkfin(chainName ?? '', underlying ?? '', investCurrency ?? '')
   // const prevDetails = usePrevDetails(chainName ?? '', currency ?? '', type ?? '')
   const isDownMd = useBreakpoint('md')
 
@@ -126,10 +130,10 @@ export default function SharkfinMgmt() {
             graphTitle="Purchase expected income graph"
             showFaq={true}
             // backLink={routes.sharkfin}
-            pageTitle={`${product.currency} weekly sharkfin(Base Currency-${
-              product.type === 'SELF' ? product.currency : 'USDT'
+            pageTitle={`${product.underlying} weekly sharkfin(Base Currency-${
+              product.type === 'SELF' ? product.underlying : 'USDT'
             })`}
-            priceCurSymbol={product?.currency}
+            priceCurSymbol={product?.underlying}
             subject={Subject.Sharkfin}
             returnOnInvestmentListItems={returnOnInvestmentListItems}
             vaultForm={<VaultForm product={product} setAmount={handleInput} amount={investAmount} />}

@@ -266,7 +266,7 @@ export const DEFAULT_COIN_SYMBOL: { [chainId in ChainId]: string } = {
   [ChainId.BSC]: 'BNB',
   [ChainId.ROPSTEN]: 'BNB',
   [ChainId.AVAX]: 'AVAX',
-  [ChainId.RINKEBY]: 'AVAX',
+  [ChainId.RINKEBY]: 'ETH',
   [ChainId.MATIC]: 'MATIC',
   [ChainId.KOVAN]: 'ETH'
 }
