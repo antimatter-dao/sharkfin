@@ -37,6 +37,17 @@ export interface OrderRecord {
   priceRangeUp: string
   rateRangeDown: string
   rateRangeUp: string
+  pnl?: string
+}
+export interface OrderRecordDetail {
+  settlement_pnl: string
+  client_order_id: string
+  size: string
+  settlement_price: string
+  settlement_rate: string
+  tag: string
+  product_code: string
+  product_name: string
 }
 export interface PrevOrder {
   orderId: number

@@ -16,7 +16,7 @@ import { usePastPositionRecords } from 'hooks/usePastPositionRecords'
 import { dayjsUTC } from 'utils/dayjsUTC'
 import { Loader } from 'components/AnimatedSvg/Loader'
 
-const TableHeader = ['', 'Invest Amount', 'Final APY', 'Subscribed Time', 'Delivery Time', 'Return Amount']
+const TableHeader = ['', 'Invest Amount', 'Pnl', 'Return Amount', 'Subscribed Time', 'Delivery Time']
 
 export default function PastPosition() {
   const { account } = useActiveWeb3React()
@@ -64,41 +64,11 @@ export default function PastPosition() {
                 gap: { xs: 0, md: 17 }
               }}
             >
-              <Typography sx={{ opacity: 0.5 }}>Product ID:</Typography>
-              <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-                29
-              </Typography>
-            </Box>
-          </Box>
-          <Box display="grid" gap={14}>
-            <Box
-              display="flex"
-              alignItems="center"
-              sx={{
-                justifyContent: { xs: 'space-between', md: 'flex-start' },
-                width: { xs: '100%', md: 'fit-content' },
-                gap: { xs: 0, md: 17 }
-              }}
-            >
               <Typography sx={{ opacity: 0.5 }}>Terms:</Typography>
               <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
                 7 Days
               </Typography>
             </Box>
-            <Box
-              display="flex"
-              alignItems="center"
-              sx={{
-                justifyContent: { xs: 'space-between', md: 'flex-start' },
-                width: { xs: '100%', md: 'fit-content' },
-                gap: { xs: 0, md: 17 }
-              }}
-            >
-              <Typography sx={{ opacity: 0.5 }}>Settlement Price:</Typography>
-              <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-                {record.settlementPrice} {record.currency}
-              </Typography>
-            </Box>
           </Box>
           <Box display="grid" gap={14}>
             <Box
@@ -110,26 +80,14 @@ export default function PastPosition() {
                 gap: { xs: 0, md: 17 }
               }}
             >
-              <Typography sx={{ opacity: 0.5 }}> Price Range(USDT):</Typography>
-              <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-                59,000~62,000
-              </Typography>
-            </Box>
-            <Box
-              display="flex"
-              alignItems="center"
-              sx={{
-                justifyContent: { xs: 'space-between', md: 'flex-start' },
-                width: { xs: '100%', md: 'fit-content' },
-                gap: { xs: 0, md: 17 }
-              }}
-            >
               <Typography sx={{ opacity: 0.5 }}>Settlement Price:</Typography>
               <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
                 {record.settlementPrice} {record.currency}
               </Typography>
             </Box>
+            <Box />
           </Box>
+          <Box></Box>
         </Box>
       )
       acc.push([
@@ -146,11 +104,13 @@ export default function PastPosition() {
           {record.size ?? '-'} {record.currency ?? '-'}
         </>,
         <Typography key={1} color="#31B047">
-          5% ~ 12%
+          {record.pnl ?? '-'} {record.currency ?? '-'}
         </Typography>,
-        dayjsUTC(+record.createdAt).format('MMM DD, YYYY'),
-        dayjsUTC(+record.liquidatedAt).format('MMM DD, YYYY\nhh:mm A') + ' UTC',
-        <>62091.35 {record.currency ?? '-'}</>
+        <>
+          {record.size && record.pnl ? (+record.size + +record.pnl).toFixed(2) : '-'} {record.currency ?? '-'}
+        </>,
+        dayjsUTC(+record.createdAt).format('MMM DD, YYYY\nhh:mm A') + ' UTC',
+        dayjsUTC(+record.liquidatedAt).format('MMM DD, YYYY\nhh:mm A') + ' UTC'
       ])
       return acc
     }, [] as any[])

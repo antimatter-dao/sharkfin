@@ -1,10 +1,9 @@
 import { useState, useMemo, useCallback } from 'react'
 import { useActiveWeb3React } from 'hooks'
-import { SharkfinRecord } from 'utils/fetch/sharkfinRecord'
 import { Axios } from 'utils/axios'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import qs from 'qs'
-import { OrderRecord } from 'utils/fetch/record'
+import { OrderRecord, OrderRecordDetail } from 'utils/fetch/record'
 
 const PageSize = 8
 
@@ -25,12 +24,28 @@ export function usePastPositionRecords(pageNum: number) {
       pageNum,
       chainId
     }
-    return Axios.get<{ records: SharkfinRecord[] }>('getOrderRecord?' + qs.stringify(params))
+    return Axios.get<{ records: OrderRecord[] }>('getOrderRecord?' + qs.stringify(params))
   }, [chainId, pageNum])
 
   const callbackFn = useCallback(r => {
     if (!r.data.data.records) return
     setOrderList(r.data.data.records)
+    const idList = r.data.data.records.map((item: OrderRecord) =>
+      Axios.get<OrderRecordDetail>('getOrderById', { orderId: item.orderId })
+    )
+    Promise.all(idList).then((orderRes: any) => {
+      setOrderList(
+        r.data.data.records.map((item: OrderRecord, idx: number) => {
+          const order = orderRes[idx].data.data
+          return {
+            ...item,
+            pnl: order.settlement_pnl,
+            settlementPrice: order.settlement_price,
+            settlementRate: order.settlement_rate
+          }
+        })
+      )
+    })
     setPageParams({
       count: parseInt(r.data.data.pages, 10),
       perPage: parseInt(r.data.data.size, 10),
