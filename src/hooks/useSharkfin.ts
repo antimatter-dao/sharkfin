@@ -35,6 +35,7 @@ export interface DefiProduct {
   depositAmount?: string
   pricePerShareRaw?: string
   contractDecimals?: string
+  minAmount?: string
 }
 
 enum DefiProductDataOrder {
@@ -120,7 +121,7 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
     if (!SUPPORTED_DEFI_VAULT[productChainId as keyof typeof SUPPORTED_DEFI_VAULT]?.includes(cur)) {
       return null
     } else {
-      const investCurrency = type.toUpperCase() === 'SELF' ? underlying ?? '' : 'USDT'
+      const investCurrency = currency
       const token = CURRENCIES[productChainId as ChainId][investCurrency]
       const shares = withdrawals.result?.shares?.toString()
       const priceResult = price.result?.[0]?.toString()
@@ -150,6 +151,9 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
           lockedBalance?.result && productChainId ? parseBalance(lockedBalance.result?.[0].toString(), token) : '-',
         expiredAt: getExpireAt(),
         apy: APY,
+        minAmount: vaultParams.result?.minimumSupply
+          ? parseBalance(vaultParams.result?.minimumSupply.toString(), token)
+          : '0',
         barrierPrice0: product?.barrier_prices?.[0].price ?? '-',
         barrierPrice1: product?.barrier_prices?.[1].price ?? '-',
         depositAmount: depositReceipts.result
@@ -168,6 +172,7 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
     }
   }, [
     cur,
+    currency,
     depositReceipts.result,
     lockedBalance.result,
     price.result,
@@ -175,8 +180,8 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
     product?.barrier_prices,
     productChainId,
     type,
-    underlying,
     vaultParams.result?.decimals,
+    vaultParams.result?.minimumSupply,
     vaultState.result?.round,
     withdrawals.result?.shares
   ])

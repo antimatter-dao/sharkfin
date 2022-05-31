@@ -93,7 +93,7 @@ export default function VaultCard(props: Props) {
 
   const error = useMemo(() => {
     if (!product || !walletBalance) return ''
-    let str = ''
+
     const balance = [
       walletBalance,
       [product.lockedBalance, product.completeBalance][standardWithdrawlStep],
@@ -101,9 +101,13 @@ export default function VaultCard(props: Props) {
     ][currentTab]
 
     if (balance && amount !== '' && !isNaN(+balance) && +balance < +amount) {
-      str = ErrorType.insufficientBalance
+      return ErrorType.insufficientBalance
     }
 
+    if (product.minAmount && balance && amount !== '' && !isNaN(+balance) && +amount < +product.minAmount) {
+      return `Amount should be no less than ${product.minAmount} ${product.investCurrency}`
+    }
+    return ''
     // const now = Date.now()
     // const before = product.expiredAt - 7200000
     // const after = product.expiredAt + 1800000
@@ -111,8 +115,6 @@ export default function VaultCard(props: Props) {
     // if (now >= before && now < after) {
     //   str = ErrorType.notAvailable
     // }
-
-    return str
   }, [product, walletBalance, standardWithdrawlStep, currentTab, amount])
 
   return (
