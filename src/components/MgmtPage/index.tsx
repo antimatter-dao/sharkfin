@@ -4,7 +4,7 @@ import { Box, Typography, Grid, styled } from '@mui/material'
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
 import theme from 'theme'
 import Card, { OutlinedCard } from 'components/Card/Card'
-import Divider from 'components/Divider'
+// import Divider from 'components/Divider'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { RiskStatement, FAQ, Subject } from './stableContent'
 import ProductCardHeader from 'components/ProductCardHeader'
@@ -63,7 +63,7 @@ export default function MgmtPage(props: Props) {
   const returnOnInvestment = useMemo(() => {
     return (
       <div>
-        <Typography fontSize={16} color={theme.palette.text.primary}>
+        <Typography fontSize={16} color={theme.palette.text.primary} fontWeight={500}>
           Rules of Return:
         </Typography>
         <StyledUnorderList>
@@ -156,29 +156,23 @@ export default function MgmtPage(props: Props) {
                         width="100%"
                         padding="32px 24px"
                       >
-                        <Box
-                          display="flex"
-                          justifyContent={isDownMd ? 'flex-start' : 'space-between'}
-                          flexDirection={isDownMd ? 'column' : 'row'}
-                          gap={18}
-                        >
+                        <Box display="flex" justifyContent={'space-between'} gap={13}>
                           <Typography fontSize={{ xs: 20, md: 24 }} fontWeight={700}>
                             {graphTitle}
                           </Typography>
-                          <Box display="flex" gap={24}>
-                            <Box display="flex" alignItems="center" gap={8}>
-                              <Box height={10} width={10} borderRadius="50%" bgcolor="#18A0FB" />
-                              <Typography fontSize={12} color="#18A0FB">
-                                Spot Price
-                              </Typography>
-                            </Box>
-                            {/* <Box display="flex" alignItems="center" gap={8}>
+
+                          <Box display="flex" alignItems="center" gap={8}>
+                            <Box height={10} width={10} borderRadius="50%" bgcolor="#18A0FB" />
+                            <Typography fontSize={12} color="#18A0FB" noWrap>
+                              Spot Price
+                            </Typography>
+                          </Box>
+                          {/* <Box display="flex" alignItems="center" gap={8}>
                               <Box height={10} width={10} borderRadius="50%" bgcolor="#F0B90B" />
                               <Typography fontSize={12} color="#F0B90B">
                                 Strike Price
                               </Typography>
                             </Box> */}
-                          </Box>
                         </Box>
                         <Box sx={{ maxWidth: '100%' }} mt={20}>
                           <Box maxHeight="100%" height="100%" gap={0} display={{ xs: 'grid', md: 'flex' }}>
@@ -187,7 +181,7 @@ export default function MgmtPage(props: Props) {
                         </Box>
                         {isDownMd ? (
                           <Box>
-                            <Divider extension={24} sx={{ opacity: 0.1, marginBottom: 20 }} />
+                            {/* <Divider extension={24} sx={{ opacity: 0.1, marginBottom: 20 }} /> */}
                             {returnOnInvestment}
                           </Box>
                         ) : (
