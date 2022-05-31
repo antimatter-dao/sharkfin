@@ -79,7 +79,7 @@ export default function History() {
       <Box width="100%" mt={48} display="flex" flexDirection="column" gap={19}>
         <Card>
           <Box width="100%" padding="38px 24px" display="flex" flexDirection="column" gap={isDownMd ? 24 : 36}>
-            <Box position="relative">
+            <Box position="relative" display="grid" gap={24}>
               {(!data || data.length == 0) && <NoDataCard height="20vh" />}
 
               {data && data?.length > 0 && (
