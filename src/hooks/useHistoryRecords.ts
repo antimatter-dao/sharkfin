@@ -3,10 +3,11 @@ import { useActiveWeb3React } from 'hooks'
 import { SharkfinRecord } from 'utils/fetch/sharkfinRecord'
 import { Axios } from 'utils/axios'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
-import { SUPPORTED_CURRENCIES } from 'constants/currencies'
+import { CURRENCIES } from 'constants/currencies'
 import { parsePrecision } from 'utils/parseAmount'
 import { trimNumberString } from 'utils/trimNumberString'
 import qs from 'qs'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 const PageSize = 8
 
@@ -24,22 +25,33 @@ export function useHistoryRecords(pageNum: number) {
   const filteredOrderList = useMemo(() => {
     if (!orderList) return undefined
     return orderList.reduce((acc, order) => {
-      const underlying = SUPPORTED_CURRENCIES.WETH.symbol
-      const isCall = [11].includes(order.type)
-      const investCurrency = isCall ? underlying : 'USDT'
-      if ([11, 12].includes(order.type)) {
-        acc.push({
-          ...order,
-          actionType: [11].includes(order.type) ? 'withdraw' : 'deposit',
-          underlying: underlying,
-          currency: investCurrency,
-          amount: parsePrecision(trimNumberString(order.amount, 0), SUPPORTED_CURRENCIES[investCurrency].decimals)
-        })
-        return acc
-      }
+      const underlying = (() => {
+        let cur: string
+        switch (order.type) {
+          case 15 | 16 | 17 | 18:
+            cur = 'BTC'
+            break
+          default: {
+            cur = 'ETH'
+          }
+        }
+        return cur
+      })()
+      const isSelf = [11, 12, 15, 16].includes(order.type)
+      const investCurrency = isSelf ? underlying : 'USDT'
+      acc.push({
+        ...order,
+        actionType: [11].includes(order.type) ? 'withdraw' : 'deposit',
+        underlying: underlying,
+        currency: investCurrency,
+        amount: parsePrecision(
+          trimNumberString(order.amount, 0),
+          CURRENCIES[chainId ?? NETWORK_CHAIN_ID]?.[investCurrency].decimals ?? 18
+        )
+      })
       return acc
     }, [] as SharkfinRecord[])
-  }, [orderList])
+  }, [chainId, orderList])
 
   const promiseFn = useCallback(() => {
     if (!account)

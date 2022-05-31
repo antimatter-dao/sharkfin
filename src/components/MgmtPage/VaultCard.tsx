@@ -1,5 +1,5 @@
 import { useCallback, useState, useMemo, useEffect } from 'react'
-import { Box, Typography, styled, Tab, TabProps } from '@mui/material'
+import { Box, Typography, styled, Tab, TabProps, useTheme } from '@mui/material'
 import Card from 'components/Card/Card'
 import ProductCardHeader from 'components/ProductCardHeader'
 import Tabs from 'components/Tabs/Tabs'
@@ -67,6 +67,7 @@ export default function VaultCard(props: Props) {
   const [currentTab, setCurrentTab] = useState<TYPE>(0)
   const [standardWithdrawlStep, setStandardWithdrawlStep] = useState<StandardWithdrawType>(0)
   const { chainId } = useActiveWeb3React()
+  const theme = useTheme()
   const productChainId = product?.chainId
   const currencySymbol = product?.investCurrency ?? ''
   const disabled = !product || !amount || chainId !== product?.chainId || +amount === 0
@@ -192,10 +193,10 @@ export default function VaultCard(props: Props) {
                           {title}:
                           <Typography
                             component={'span'}
-                            fontWeight={500}
+                            fontWeight={400}
                             variant="inherit"
                             ml={5}
-                            color="rgba(37, 37, 37, 1)"
+                            color={title === 'APR' ? theme.palette.primary.main : theme.palette.text.primary}
                           >
                             {data}
                           </Typography>

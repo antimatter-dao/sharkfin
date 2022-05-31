@@ -14,6 +14,8 @@ import Card from 'components/Card/Card'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { useSingleSharkfin } from 'hooks/useSharkfin'
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
+import { usePrice } from 'hooks/usePriceSet'
+import { trimNumberString } from 'utils/trimNumberString'
 // import { usePrevDetails } from 'hooks/usePrevDetails'
 // import { PrevOrder } from 'utils/fetch/record'
 // import Divider from 'components/Divider'
@@ -50,6 +52,7 @@ export default function SharkfinMgmt() {
   }>()
 
   const product = useSingleSharkfin(chainName ?? '', underlying ?? '', investCurrency ?? '')
+  const price = usePrice(underlying)
   // const prevDetails = usePrevDetails(chainName ?? '', currency ?? '', type ?? '')
   const isDownMd = useBreakpoint('md')
 
@@ -57,25 +60,27 @@ export default function SharkfinMgmt() {
     return [
       <>
         Settlement at maturity:at annualised rate of return{' '}
-        <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>3.00~25.00%</span> Conditions must meet:BTC
-        price was always within the price range Annualised Product Return =3.00%+(settlement price at
-        maturity-38500)/(42500-38500)*(25.00%-3.00%) Return=Principal* Annualised Product Return/365*Investment term
+        <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>3.00~25.00%</span> Conditions must meet:
+        {product?.underlying ?? 'ETH'} price was always within the price range Annualised Product Return =
+        3.00%+(settlement price at maturity-38500)/(42500-38500)*(25.00%-3.00%) Return=Principal* Annualised Product
+        Return/365*Investment term
       </>,
       <>
         Settlement at maturity:APR of <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>3.00%</span>{' '}
-        Conditions must meet:Would BTC price was atleast once below $38500 or above $42500 Return=Principal * 3.00/365 *
-        7 (investment term)
+        Conditions must meet:Would {product?.underlying ?? 'ETH'} price was atleast once below $38500 or above $42500
+        Return = Principal * 3.00/365 * 7 (investment term)
       </>,
       <>
-        *Observed btc/usd option’s underlying price at Deribit at 12:00 every day is the observed price of the day. The
-        settlement price is the BTC price at 8:00 UTC on expiry date. Price data is sourced from an on-chain oracle.
+        *Observed {product?.underlying ?? 'ETH'}/USD option’s underlying price at Deribit at 12:00 every day is the
+        observed price of the day. The settlement price is the {product?.underlying ?? 'ETH'} price at 8:00 UTC on
+        expiry date. Price data is sourced from an on-chain oracle.
       </>
     ]
-  }, [theme.palette.primary.main])
+  }, [product?.underlying, theme.palette.primary.main])
 
   const chart = useMemo(() => {
-    return <SharkfinChart />
-  }, [])
+    return <SharkfinChart marketPrice={price ? trimNumberString(price, 4) : '-'} />
+  }, [price])
 
   const handleInput = useCallback((val: string) => {
     setInvestAmount(val)
