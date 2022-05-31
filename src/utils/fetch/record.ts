@@ -1,5 +1,3 @@
-import { INVEST_TYPE } from 'hooks/useAccountData'
-
 export enum InvesStatusType {
   SUCCESS = 'success',
   PENDING = 'pending',
@@ -15,37 +13,31 @@ export const InvesStatus = {
   [6]: InvesStatusType.PENDING,
   [7]: InvesStatusType.ERROR
 }
-
 export interface OrderRecord {
-  address: string
-  amount: number
-  annualRor: string
-  confirmOrderHash: string
-  createdAt: number
+  id: number
+  orderId: string
+  phaseId: 1
+  productName: string
+  productCode: string
   currency: string
-  deliveryPrice: string
-  earn: string
-  expiredAt: number
-  hash: string
-  indexPrice: string
-  investStatus: number
-  investCurrency: string
-  isLiquidated: string
-  multiplier: string
-  orderId: number
-  price: string
-  productId: number
-  returnedAmount: string
-  returnedCurrency: string
-  signCount: string
+  name: string
+  size: string
+  code: string
+  baseRate: string
+  settlementRate: string
+  startedAt: string
+  liquidatedAt: string
   status: string
-  strikeCurrency: string
-  strikePrice: string
-  ts: number
-  type: string
-  investType: INVEST_TYPE
+  settlementPrice: string
+  createdAt: string
+  investStatus: string
+  chainId: string
+  investType: number
+  priceRangeDown: string
+  priceRangeUp: string
+  rateRangeDown: string
+  rateRangeUp: string
 }
-
 export interface PrevOrder {
   orderId: number
   productId: number

@@ -56,7 +56,7 @@ export function useHistoryRecords(pageNum: number) {
   }, [account, chainId, pageNum])
 
   const callbackFn = useCallback(r => {
-    setOrderList(r.data.data)
+    setOrderList(r.data.data.records)
     setPageParams({
       count: parseInt(r.data.data.pages, 10),
       perPage: parseInt(r.data.data.size, 10),

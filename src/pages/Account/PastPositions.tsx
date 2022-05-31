@@ -13,16 +13,10 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import Divider from 'components/Divider'
 import Pagination from 'components/Pagination'
 import { usePastPositionRecords } from 'hooks/usePastPositionRecords'
+import { dayjsUTC } from 'utils/dayjsUTC'
+import { Loader } from 'components/AnimatedSvg/Loader'
 
-const TableHeader = [
-  'Invest Amount',
-  'Subscribed Time',
-  'Final APY',
-  'Delivery Time',
-  'Price Range(USDT)',
-  'Term',
-  'Return Amount'
-]
+const TableHeader = ['', 'Invest Amount', 'Final APY', 'Subscribed Time', 'Delivery Time', 'Return Amount']
 
 export default function PastPosition() {
   const { account } = useActiveWeb3React()
@@ -32,109 +26,138 @@ export default function PastPosition() {
   const { orderList: records, pageParams } = usePastPositionRecords(page)
 
   const data = useMemo(() => {
-    if (!records) return undefined
+    if (!records) return { balanceData: undefined, hiddenParts: undefined }
+    const hiddenParts: any[] = []
+    const dataList = records.reduce((acc, record) => {
+      const underlying = record.name.match(/\(([A-Z]+)\)/i)?.[1]
 
-    return records.map(record => {
-      return [
+      hiddenParts.push(
+        <Box
+          key={1}
+          display="flex"
+          justifyContent="space-between"
+          width="100%"
+          gap={14}
+          sx={{ flexDirection: { xs: 'column', md: 'row' } }}
+        >
+          <Box display="grid" gap={14}>
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={{
+                justifyContent: { xs: 'space-between', md: 'flex-start' },
+                width: { xs: '100%', md: 'fit-content' },
+                gap: { xs: 0, md: 17 }
+              }}
+            >
+              <Typography sx={{ opacity: 0.5 }}>Order ID:</Typography>
+              <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
+                {record.orderId}
+              </Typography>
+            </Box>
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={{
+                justifyContent: { xs: 'space-between', md: 'flex-start' },
+                width: { xs: '100%', md: 'fit-content' },
+                gap: { xs: 0, md: 17 }
+              }}
+            >
+              <Typography sx={{ opacity: 0.5 }}>Product ID:</Typography>
+              <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
+                29
+              </Typography>
+            </Box>
+          </Box>
+          <Box display="grid" gap={14}>
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={{
+                justifyContent: { xs: 'space-between', md: 'flex-start' },
+                width: { xs: '100%', md: 'fit-content' },
+                gap: { xs: 0, md: 17 }
+              }}
+            >
+              <Typography sx={{ opacity: 0.5 }}>Terms:</Typography>
+              <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
+                7 Days
+              </Typography>
+            </Box>
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={{
+                justifyContent: { xs: 'space-between', md: 'flex-start' },
+                width: { xs: '100%', md: 'fit-content' },
+                gap: { xs: 0, md: 17 }
+              }}
+            >
+              <Typography sx={{ opacity: 0.5 }}>Settlement Price:</Typography>
+              <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
+                {record.settlementPrice} {record.currency}
+              </Typography>
+            </Box>
+          </Box>
+          <Box display="grid" gap={14}>
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={{
+                justifyContent: { xs: 'space-between', md: 'flex-start' },
+                width: { xs: '100%', md: 'fit-content' },
+                gap: { xs: 0, md: 17 }
+              }}
+            >
+              <Typography sx={{ opacity: 0.5 }}> Price Range(USDT):</Typography>
+              <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
+                59,000~62,000
+              </Typography>
+            </Box>
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={{
+                justifyContent: { xs: 'space-between', md: 'flex-start' },
+                width: { xs: '100%', md: 'fit-content' },
+                gap: { xs: 0, md: 17 }
+              }}
+            >
+              <Typography sx={{ opacity: 0.5 }}>Settlement Price:</Typography>
+              <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
+                {record.settlementPrice} {record.currency}
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+      )
+      acc.push([
+        <Box display="flex" alignItems="center" gap={16} key={0}>
+          <CurrencyLogo currency={SUPPORTED_CURRENCIES[record.currency]} size="32px" />
+          <Box>
+            <Typography fontSize={16}>{`${underlying ?? '-'} weekly sharkfin`}</Typography>
+            <Typography fontSize={12} sx={{}}>
+              <span style={{ opacity: 0.5, fontSize: '12px' }}>{`(Base Currency-${record.currency})`}</span>
+            </Typography>
+          </Box>
+        </Box>,
         <>
-          {record.amount ?? '-'} {record.currency ?? '-'}
+          {record.size ?? '-'} {record.currency ?? '-'}
         </>,
-        <>Sep 21, 2021</>,
         <Typography key={1} color="#31B047">
           5% ~ 12%
         </Typography>,
-        <>
-          Sep 21, 2021
-          <br />
-          08:30 AM UTC{' '}
-        </>,
-        <>59,000~62,000</>,
-        <>7 Days</>,
-        <>62091.35 USDT</>
-      ]
-    })
+        dayjsUTC(+record.createdAt).format('MMM DD, YYYY'),
+        dayjsUTC(+record.liquidatedAt).format('MMM DD, YYYY\nhh:mm A') + ' UTC',
+        <>62091.35 {record.currency ?? '-'}</>
+      ])
+      return acc
+    }, [] as any[])
+    return { dataList, hiddenParts }
   }, [records])
 
   const handlePage = useCallback((event, value) => setPage(value), [])
-
-  const hiddenParts = useMemo(() => {
-    return [
-      <Box
-        key={1}
-        display="flex"
-        justifyContent="space-between"
-        width="100%"
-        sx={{ flexDirection: { xs: 'column', md: 'row' } }}
-      >
-        <Box display="grid" gap={14}>
-          <Box
-            display="flex"
-            alignItems="center"
-            sx={{
-              justifyContent: { xs: 'space-between', md: 'flex-start' },
-              width: { xs: '100%', md: 'fit-content' },
-              gap: { xs: 0, md: 17 }
-            }}
-          >
-            <Typography sx={{ opacity: 0.5 }}>Order ID:</Typography>
-            <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-              76
-            </Typography>
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            sx={{
-              justifyContent: { xs: 'space-between', md: 'flex-start' },
-              width: { xs: '100%', md: 'fit-content' },
-              gap: { xs: 0, md: 17 }
-            }}
-          >
-            <Typography sx={{ opacity: 0.5 }}>Product ID:</Typography>
-            <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-              29
-            </Typography>
-          </Box>
-        </Box>
-        <Box display="grid" gap={14}>
-          <Box
-            display="flex"
-            alignItems="center"
-            sx={{
-              justifyContent: { xs: 'space-between', md: 'flex-start' },
-              width: { xs: '100%', md: 'fit-content' },
-              gap: { xs: 0, md: 17 }
-            }}
-          >
-            <Typography sx={{ opacity: 0.5 }}>Settlement Price:</Typography>
-            <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-              62091.35
-            </Typography>
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            sx={{
-              justifyContent: { xs: 'space-between', md: 'flex-start' },
-              width: { xs: '100%', md: 'fit-content' },
-              gap: { xs: 0, md: 17 }
-            }}
-          >
-            <Typography sx={{ opacity: 0.5 }}>Settlement Time:</Typography>
-            <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-              Sep 21, 2021 10:42 AM
-            </Typography>
-          </Box>
-        </Box>
-        <Box display="flex" alignItems="center" gap={7} sx={{ mt: { xs: 16, md: 0 } }}>
-          <CurrencyLogo currency={SUPPORTED_CURRENCIES['BTC']} />
-          <Typography fontWeight={700} sx={{ fontSize: { xs: 12, md: 14 } }}>
-            Weekly Sharkfin BTC(Base Currency-BTC)
-          </Typography>
-        </Box>
-      </Box>
-    ]
-  }, [])
 
   if (!account) {
     return (
@@ -150,14 +173,14 @@ export default function PastPosition() {
         <Card>
           <Box width="100%" padding="38px 24px" display="flex" flexDirection="column" gap={isDownMd ? 24 : 36}>
             <Box position="relative" display="grid" gap={24}>
-              {(!data || data.length == 0) && <NoDataCard height="20vh" />}
-
-              {data && data?.length > 0 && (
+              {!data.dataList ? (
+                <Loader />
+              ) : data.dataList?.length > 0 ? (
                 <>
                   {isDownMd ? (
-                    <TableCards data={data} hiddenParts={hiddenParts} />
+                    <TableCards data={data.dataList} hiddenParts={data.hiddenParts} />
                   ) : (
-                    <Table header={TableHeader} rows={data} hiddenParts={hiddenParts} collapsible />
+                    <Table header={TableHeader} rows={data.dataList} hiddenParts={data.hiddenParts} collapsible />
                   )}
 
                   <Pagination
@@ -169,6 +192,8 @@ export default function PastPosition() {
                     onChange={handlePage}
                   />
                 </>
+              ) : (
+                <NoDataCard height="20vh" />
               )}
             </Box>
           </Box>

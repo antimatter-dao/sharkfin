@@ -4,6 +4,7 @@ import { SharkfinRecord } from 'utils/fetch/sharkfinRecord'
 import { Axios } from 'utils/axios'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import qs from 'qs'
+import { OrderRecord } from 'utils/fetch/record'
 
 const PageSize = 8
 
@@ -11,7 +12,7 @@ const PageSize = 8
 
 export function usePastPositionRecords(pageNum: number) {
   const { chainId } = useActiveWeb3React()
-  const [orderList, setOrderList] = useState<SharkfinRecord[] | undefined>(undefined)
+  const [orderList, setOrderList] = useState<OrderRecord[] | undefined>(undefined)
   const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
     count: 0,
     perPage: 0,
@@ -28,7 +29,8 @@ export function usePastPositionRecords(pageNum: number) {
   }, [chainId, pageNum])
 
   const callbackFn = useCallback(r => {
-    setOrderList(r.data.data)
+    if (!r.data.data.records) return
+    setOrderList(r.data.data.records)
     setPageParams({
       count: parseInt(r.data.data.pages, 10),
       perPage: parseInt(r.data.data.size, 10),

@@ -87,6 +87,7 @@ export default function Position() {
           display="flex"
           justifyContent="space-between"
           width="100%"
+          gap={14}
           sx={{ flexDirection: { xs: 'column', md: 'row' } }}
         >
           <Box display="grid" gap={14}>
@@ -165,7 +166,7 @@ export default function Position() {
         </Typography>,
         '59,000~62,000',
         data ? data.depositAmount + ' ' + data.investCurrency : '-',
-        data?.expiredAt ? dayjsUTC(data.expiredAt).format('MMM DD, YYYY hh:mm A') + ' UTC' : '-',
+        data?.expiredAt ? dayjsUTC(data.expiredAt).format('MMM DD, YYYY\nhh:mm A') + ' UTC' : '-',
         <Box
           key={1}
           display="flex"

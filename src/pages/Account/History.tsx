@@ -59,7 +59,7 @@ export default function History() {
         ) : (
           record.hash
         ),
-        record.timestamp ? `${dayjsUTC(+record.timestamp * 1000).format('MMM DD, YYYY\nhh:mm:ss A')} UTC` : '-'
+        record.timestamp ? `${dayjsUTC(+record.timestamp * 1000).format('MMM DD, YYYY\nhh:mm A')} UTC` : '-'
       ]
     })
   }, [chainId, records])
