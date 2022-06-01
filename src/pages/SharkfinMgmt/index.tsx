@@ -8,7 +8,7 @@ import { Subject } from 'components/MgmtPage/stableContent'
 // import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
 import SharkfinChart from 'pages/SharkfinMgmt/Chart'
-import { PastAggrChart } from 'components/Chart/BarChart'
+import BarChart from 'components/Chart/BarChart'
 import Card from 'components/Card/Card'
 // import dayjs from 'dayjs'
 import useBreakpoint from 'hooks/useBreakpoint'
@@ -86,10 +86,6 @@ export default function SharkfinMgmt() {
     setInvestAmount(val)
   }, [])
 
-  // const chart2 = useMemo(() => {
-  //   return <PastAggrChart />
-  //   return null
-  // }, [])
   return (
     <>
       {product === null ? (
@@ -376,18 +372,24 @@ export default function SharkfinMgmt() {
 
 function PastAggregate() {
   return (
-    <Card width="100%" padding="34px 24px" height={400}>
-      <Typography fontSize={16} sx={{ opacity: 0.5 }} mb={8}>
-        Past Aggregate Earnings (Platform)
-      </Typography>
-      <Box display="flex" alignItems="flex-end">
-        <Typography fontSize={44} fontWeight={700}>
-          11,111
-        </Typography>
-        <Typography fontWeight={700}>$</Typography>
+    <Card width="100%" padding="34px 24px" height="100%" style={{ minHeight: 500 }}>
+      <Box display="flex" flexDirection={'column'} height="100%" gap={20}>
+        <Box>
+          <Typography fontSize={16} sx={{ opacity: 0.5 }} mb={8}>
+            Past Aggregate Earnings (Platform)
+          </Typography>
+          <Box display="flex" alignItems="flex-end">
+            <Typography fontSize={44} fontWeight={700}>
+              11,111
+            </Typography>
+            <Typography fontWeight={700}>$</Typography>
+          </Box>
+          <Typography sx={{ opacity: 0.8, mt: 8 }}>Aug 26, 2021</Typography>
+        </Box>
+        <Box height="100%" flexGrow={1}>
+          <BarChart />
+        </Box>
       </Box>
-      <Typography sx={{ opacity: 0.8, mt: 8 }}>Aug 26, 2021</Typography>
-      <PastAggrChart />
     </Card>
   )
 }
