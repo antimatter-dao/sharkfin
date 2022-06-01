@@ -36,6 +36,7 @@ export interface DefiProduct {
   pricePerShareRaw?: string
   contractDecimals?: string
   minAmount?: string
+  minRate?: string
 }
 
 enum DefiProductDataOrder {
@@ -47,7 +48,7 @@ enum DefiProductDataOrder {
   vaultState
 }
 
-const APY = '3% ~ 15%'
+const APY = '1% ~ 15%'
 
 export function useSingleSharkfin(chainName: string, underlying: string, currency: string): DefiProduct | null {
   const { account, chainId } = useActiveWeb3React()
@@ -150,12 +151,13 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
         lockedBalance:
           lockedBalance?.result && productChainId ? parseBalance(lockedBalance.result?.[0].toString(), token) : '-',
         expiredAt: getExpireAt(),
-        apy: APY,
+        apy: ((product?.base_rate ?? 0.01) * 100).toFixed(0) + '%' + ' ~15%',
         minAmount: vaultParams.result?.minimumSupply
           ? parseBalance(vaultParams.result?.minimumSupply.toString(), token)
           : '0',
         barrierPrice0: product?.barrier_prices?.[0].price ?? '-',
         barrierPrice1: product?.barrier_prices?.[1].price ?? '-',
+        minRate: ((product?.base_rate ?? 0.01) * 100).toFixed(0) + '%',
         depositAmount: depositReceipts.result
           ? trimNumberString(
               parsePrecision(
@@ -178,6 +180,7 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
     price.result,
     pricePerShare.result,
     product?.barrier_prices,
+    product?.base_rate,
     productChainId,
     type,
     vaultParams.result?.decimals,

@@ -109,7 +109,7 @@ export default function PastPosition() {
         <>
           {record.size && record.pnl ? (+record.size + +record.pnl).toFixed(2) : '-'} {record.currency ?? '-'}
         </>,
-        dayjsUTC(+record.createdAt).format('MMM DD, YYYY\nhh:mm A') + ' UTC',
+        dayjsUTC(+record.startedAt).format('MMM DD, YYYY\nhh:mm A') + ' UTC',
         dayjsUTC(+record.liquidatedAt).format('MMM DD, YYYY\nhh:mm A') + ' UTC'
       ])
       return acc

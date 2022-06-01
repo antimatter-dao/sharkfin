@@ -79,8 +79,8 @@ export default function SharkfinMgmt() {
   }, [product?.underlying, theme.palette.primary.main])
 
   const chart = useMemo(() => {
-    return <SharkfinChart marketPrice={price ? trimNumberString(price, 4) : '-'} />
-  }, [price])
+    return <SharkfinChart marketPrice={price ? trimNumberString(price, 4) : '-'} baseRate={product?.minRate} />
+  }, [price, product?.minRate])
 
   const handleInput = useCallback((val: string) => {
     setInvestAmount(val)
