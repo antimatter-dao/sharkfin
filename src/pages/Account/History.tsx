@@ -13,6 +13,7 @@ import TransactionTypeIcon from 'components/Icon/TransactionTypeIcon'
 import { ExternalLink } from 'theme/components'
 import { getEtherscanLink, shortenHash } from 'utils'
 import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { Loader } from 'components/AnimatedSvg/Loader'
 
 // const TableHeader = [
 //   'Invest Amount',
@@ -80,7 +81,8 @@ export default function History() {
         <Card>
           <Box width="100%" padding="38px 24px" display="flex" flexDirection="column" gap={isDownMd ? 24 : 36}>
             <Box position="relative" display="grid" gap={24}>
-              {(!data || data.length == 0) && <NoDataCard height="20vh" />}
+              {!data && <Loader />}
+              {data && data.length == 0 && <NoDataCard height="20vh" />}
 
               {data && data?.length > 0 && (
                 <>

@@ -3,7 +3,13 @@ import { ReactComponent as SharkfinChartSvg } from 'assets/svg/sharkfin_chart.sv
 import { ReactComponent as SharkfinChartMobileSvg } from 'assets/svg/sharkfin_chart_mobile.svg'
 import useBreakpoint from 'hooks/useBreakpoint'
 
-export default function SharkfinChart({ marketPrice }: { marketPrice: string | undefined }) {
+export default function SharkfinChart({
+  marketPrice,
+  baseRate
+}: {
+  marketPrice: string | undefined
+  baseRate?: string
+}) {
   const isDownSm = useBreakpoint('sm')
   const theme = useTheme()
   return (
@@ -25,7 +31,7 @@ export default function SharkfinChart({ marketPrice }: { marketPrice: string | u
 
           <Typography>15%</Typography>
           <Typography>5%</Typography>
-          <Typography>3%</Typography>
+          <Typography>{baseRate ?? '1%'}</Typography>
 
           <Typography>0</Typography>
         </Box>

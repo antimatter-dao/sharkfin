@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import { LineSeriesData } from 'components/Chart'
 import { priceFormatter } from 'utils/fetch/price'
 import { Time } from 'lightweight-charts'
-import { getMappedSymbol, SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
-import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { getMappedSymbol, SUPPORTED_SHARKFIN_VAULT } from 'constants/currencies'
 import { useActiveWeb3React } from 'hooks'
 
 export function usePriceSet(symbol: string | undefined) {
@@ -95,10 +94,18 @@ export function usePriceForAll() {
 
   useEffect(() => {
     let isMounted = true
+    const sharkfinCurList = Object.values(SUPPORTED_SHARKFIN_VAULT).reduce((acc, symbolList) => {
+      symbolList.map(symbol => {
+        if (!acc.includes(symbol)) {
+          acc.push(symbol)
+        }
+      })
+      return acc
+    }, [] as string[])
     const call = async () => {
       try {
         const r = await Promise.all(
-          SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].map(symbol => {
+          sharkfinCurList.map(symbol => {
             if (symbol === 'USDT') {
               return new Promise(() => {
                 return new Response(null, { status: 200, statusText: '' })
@@ -118,10 +125,10 @@ export function usePriceForAll() {
           })
         )
         const priceMap = res.reduce((acc, { price }, idx) => {
-          if (SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID][idx] === 'USDT') {
+          if (sharkfinCurList[idx] === 'USDT') {
             return acc
           }
-          acc[SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID][idx]] = price
+          acc[sharkfinCurList[idx]] = price
           return acc
         }, {})
 

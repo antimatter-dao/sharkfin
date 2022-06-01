@@ -2,11 +2,11 @@ import { useMemo, useState, useEffect } from 'react'
 import { Contract } from 'ethers'
 import JSBI from 'jsbi'
 import { ChainId, ChainList, NETWORK_CHAIN_ID } from 'constants/chain'
-import { CURRENCIES, getMappedSymbol, SUPPORTED_CURRENCIES, SUPPORTED_DEFI_VAULT } from 'constants/currencies'
+import { CURRENCIES, getMappedSymbol, SUPPORTED_CURRENCIES, SUPPORTED_SHARKFIN_VAULT } from 'constants/currencies'
 import { getOtherNetworkLibrary } from 'connectors/multiNetworkConnectors'
 import { getContract } from 'utils'
 import { SHARKFIN_ADDRESS } from 'constants/index'
-import DEFI_VAULT_ABI from '../constants/abis/defi_vault.json'
+import SHARKFIN_VAULT_ABI from '../constants/abis/sharkfin.json'
 import { useActiveWeb3React } from 'hooks'
 import { useBlockNumber } from 'state/application/hooks'
 import { parseBalance, parsePrecision } from 'utils/parseAmount'
@@ -36,6 +36,7 @@ export interface DefiProduct {
   pricePerShareRaw?: string
   contractDecimals?: string
   minAmount?: string
+  minRate?: string
 }
 
 enum DefiProductDataOrder {
@@ -47,7 +48,7 @@ enum DefiProductDataOrder {
   vaultState
 }
 
-const APY = '3% ~ 15%'
+const APY = '1% ~ 15%'
 
 export function useSingleSharkfin(chainName: string, underlying: string, currency: string): DefiProduct | null {
   const { account, chainId } = useActiveWeb3React()
@@ -118,7 +119,7 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
   }, [chainId, currency, underlying])
 
   const result = useMemo(() => {
-    if (!SUPPORTED_DEFI_VAULT[productChainId as keyof typeof SUPPORTED_DEFI_VAULT]?.includes(cur)) {
+    if (!SUPPORTED_SHARKFIN_VAULT[productChainId as keyof typeof SUPPORTED_SHARKFIN_VAULT]?.includes(cur)) {
       return null
     } else {
       const investCurrency = currency
@@ -150,12 +151,13 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
         lockedBalance:
           lockedBalance?.result && productChainId ? parseBalance(lockedBalance.result?.[0].toString(), token) : '-',
         expiredAt: getExpireAt(),
-        apy: APY,
+        apy: ((product?.base_rate ?? 0.01) * 100).toFixed(0) + '%' + ' ~15%',
         minAmount: vaultParams.result?.minimumSupply
           ? parseBalance(vaultParams.result?.minimumSupply.toString(), token)
           : '0',
         barrierPrice0: product?.barrier_prices?.[0].price ?? '-',
         barrierPrice1: product?.barrier_prices?.[1].price ?? '-',
+        minRate: ((product?.base_rate ?? 0.01) * 100).toFixed(0) + '%',
         depositAmount: depositReceipts.result
           ? trimNumberString(
               parsePrecision(
@@ -178,6 +180,7 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
     price.result,
     pricePerShare.result,
     product?.barrier_prices,
+    product?.base_rate,
     productChainId,
     type,
     vaultParams.result?.decimals,
@@ -199,15 +202,18 @@ export function useSharkfinList() {
     // const list = Object.keys(SUPPORTED_DEFI_VAULT).reduce((acc, chainId: string) => {
     const library = getOtherNetworkLibrary(chainId)
     const addresses = SHARKFIN_ADDRESS[chainId as ChainId]
-    const list = SUPPORTED_DEFI_VAULT[chainId as keyof typeof SUPPORTED_DEFI_VAULT]?.reduce((acc, symbol: string) => {
-      const addressCall = addresses?.[symbol]?.SELF
-      const addressPut = addresses?.[symbol]?.U
-      const contractCall = addressCall && library ? getContract(addressCall, DEFI_VAULT_ABI, library) : null
-      const contractPut = addressPut && library ? getContract(addressPut, DEFI_VAULT_ABI, library) : null
-      acc.push(callsFactory(contractCall, account))
-      acc.push(callsFactory(contractPut, account))
-      return acc
-    }, [] as any[])
+    const list = SUPPORTED_SHARKFIN_VAULT[chainId as keyof typeof SUPPORTED_SHARKFIN_VAULT]?.reduce(
+      (acc, symbol: string) => {
+        const addressCall = addresses?.[symbol]?.SELF
+        const addressPut = addresses?.[symbol]?.U
+        const contractCall = addressCall && library ? getContract(addressCall, SHARKFIN_VAULT_ABI, library) : null
+        const contractPut = addressPut && library ? getContract(addressPut, SHARKFIN_VAULT_ABI, library) : null
+        acc.push(callsFactory(contractCall, account))
+        acc.push(callsFactory(contractPut, account))
+        return acc
+      },
+      [] as any[]
+    )
 
     // acc.push(list ? Promise.all(list) : undefined)
     // return acc
@@ -257,9 +263,9 @@ const callsFactory = (contract: Contract | null, account: string | null | undefi
 }
 
 const defiVaultListUtil = (chainId: ChainId | null | undefined, res?: any[][]) => {
-  // return Object.keys(SUPPORTED_DEFI_VAULT).reduce((accMain, chainId: string, idx1: number) => {
-  if (!chainId || !SUPPORTED_DEFI_VAULT[chainId as keyof typeof SUPPORTED_DEFI_VAULT]) return undefined
-  return SUPPORTED_DEFI_VAULT[+chainId as keyof typeof SUPPORTED_DEFI_VAULT]?.reduce(
+  // return Object.keys(SUPPORTED_SHARKFIN_VAULT).reduce((accMain, chainId: string, idx1: number) => {
+  if (!chainId || !SUPPORTED_SHARKFIN_VAULT[chainId as keyof typeof SUPPORTED_SHARKFIN_VAULT]) return undefined
+  return SUPPORTED_SHARKFIN_VAULT[+chainId as keyof typeof SUPPORTED_SHARKFIN_VAULT]?.reduce(
     (accMain, symbol: string, idx2: number) => {
       const resCall = res?.[idx2 * 2]
       const resCallIsRound = resCall
