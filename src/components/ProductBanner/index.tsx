@@ -125,7 +125,7 @@ export default function ProductBanner({
           <StyledImg
             sx={{
               '& svg': {
-                margin: isDownMd ? undefined : svgMargin
+                margin: svgMargin
               }
             }}
           >
