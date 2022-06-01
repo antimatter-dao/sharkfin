@@ -2,7 +2,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Token } from './token'
 import { binance, injected, walletconnect, walletlink } from '../connectors'
 import JSBI from 'jsbi'
-import { ChainId } from './chain'
+import { ChainId, IS_TEST_NET } from './chain'
 
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
@@ -116,15 +116,21 @@ export const feeRate = '3%'
 
 export const SHARKFIN_ADDRESS: {
   [chainId in ChainId]?: { [currencySymbol: string]: { SELF: string | undefined; U: string | undefined } }
-} = {
-  [ChainId.MAINNET]: {
-    ETH: { SELF: undefined, U: undefined }
-  },
-  [ChainId.RINKEBY]: {
-    ETH: { U: '0x143393f0f6D5E55c50db35Cf6aAE113DC1128c2e', SELF: '0x295c6e4Fe1da094225ef0D4b2672bBaDC511979F' },
-    BTC: { SELF: '0xd88313f5bA9cBcD4F87Afe76d6A3C3ff84765B3f', U: '0xD12Ce3081c03f256B40146C31d83b95Fe588E4BC' }
-  }
-}
+} = IS_TEST_NET
+  ? {
+      [ChainId.RINKEBY]: {
+        ETH: { U: '0x22b643fFD852c02600D7c06e6Ce883af9F346c0f', SELF: '0x295c6e4Fe1da094225ef0D4b2672bBaDC511979F' },
+        BTC: { SELF: '0xd88313f5bA9cBcD4F87Afe76d6A3C3ff84765B3f', U: '0xD12Ce3081c03f256B40146C31d83b95Fe588E4BC' }
+      }
+    }
+  : {
+      [ChainId.MAINNET]: {
+        ETH: { SELF: undefined, U: undefined }
+      },
+      [ChainId.BSC]: {
+        ETH: { SELF: undefined, U: undefined }
+      }
+    }
 
 export const getSharkfinAddress = (
   underlying: string | undefined,

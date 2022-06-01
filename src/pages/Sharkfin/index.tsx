@@ -4,7 +4,7 @@ import { Box, MenuItem, Typography } from '@mui/material'
 import ProductBanner from 'components/ProductBanner'
 import VaultProductCard from './SharkfinCard'
 import { routes } from 'constants/routes'
-import { SUPPORTED_CURRENCIES, SUPPORTED_DEFI_VAULT } from 'constants/currencies'
+import { SUPPORTED_CURRENCIES, SUPPORTED_SHARKFIN_VAULT } from 'constants/currencies'
 import Select from 'components/Select/Select'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { ChainId, ChainListMap } from 'constants/chain'
@@ -12,6 +12,8 @@ import { DefiProduct, useSharkfinList } from 'hooks/useSharkfin'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import NoDataCard from 'components/Card/NoDataCard'
 import { useActiveWeb3React } from 'hooks'
+import { useHomeStatistics } from 'hooks/useStatistics'
+import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 
 // enum SortBy {
 //   highToLow = 'hl',
@@ -35,6 +37,7 @@ export default function Sharkfin() {
   const { chainId } = useActiveWeb3React()
   // const theme = useTheme()
   const isDownSm = useBreakpoint('sm')
+  const statistics = useHomeStatistics()
   // const [sortBy, setSortBy] = useState<SortBy>(SortBy.highToLow)
 
   const [depositAsset, setDepositAsset] = useState<string>('ALL')
@@ -72,9 +75,9 @@ export default function Sharkfin() {
         All
       </MenuItem>
     )
-    if (!chainId || !SUPPORTED_DEFI_VAULT[chainId as ChainId]) return defaultOption
+    if (!chainId || !SUPPORTED_SHARKFIN_VAULT[chainId as ChainId]) return defaultOption
 
-    const optionList = SUPPORTED_DEFI_VAULT[+chainId as ChainId]?.reduce(
+    const optionList = SUPPORTED_SHARKFIN_VAULT[+chainId as ChainId]?.reduce(
       (acc, curSymbol) => {
         const val = formatAssetVal(+chainId, curSymbol)
         acc.push(
@@ -118,11 +121,11 @@ export default function Sharkfin() {
         checkpoints={['Principal protected products', 'Low-risk profile']}
         imgFileName={'shark'}
         svgMargin={'0 0 40px'}
-        val1={'1111,111'}
+        val1={statistics.totalInvest === '0' ? '-' : toLocaleNumberString(statistics.totalInvest, 0)}
         subVal1="Total investment amount"
         unit1={'USDT'}
-        val2={'1111,111'}
-        subVal2="Amount of subscribed investment"
+        val2={statistics.totalInvest === '0' ? '-' : toLocaleNumberString(statistics.amountInProgress, 0)}
+        subVal2="Amount of investment in progress"
         unit2={'USDT'}
       />
       <Box

@@ -74,90 +74,92 @@ export default function Position() {
 
   const data = useMemo(() => {
     if (!vaultList) return { balanceData: undefined, hiddenParts: undefined }
-    const hiddenParts: any[] = []
+    // const hiddenParts: any[] = []
+    let hasData = false
     const balanceData = vaultList.reduce((acc, data) => {
       if (!data.depositAmount || +data.depositAmount == 0 || data.depositAmount === '-') {
         return acc
       }
+      hasData = true
       const token = SUPPORTED_CURRENCIES[data.underlying]
       const investCurrency = SUPPORTED_CURRENCIES[data.investCurrency]
-      hiddenParts.push(
-        <Box
-          key={1}
-          display="flex"
-          justifyContent="space-between"
-          width="100%"
-          gap={14}
-          sx={{ flexDirection: { xs: 'column', md: 'row' } }}
-        >
-          <Box display="grid" gap={14}>
-            <Box
-              display="flex"
-              alignItems="center"
-              sx={{
-                justifyContent: { xs: 'space-between', md: 'flex-start' },
-                width: { xs: '100%', md: 'fit-content' },
-                gap: { xs: 0, md: 17 }
-              }}
-            >
-              <Typography sx={{ opacity: 0.5 }}>Order ID:</Typography>
-              <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-                761
-              </Typography>
-            </Box>
-            <Box
-              display="flex"
-              alignItems="center"
-              sx={{
-                justifyContent: { xs: 'space-between', md: 'flex-start' },
-                width: { xs: '100%', md: 'fit-content' },
-                gap: { xs: 0, md: 17 }
-              }}
-            >
-              <Typography sx={{ opacity: 0.5 }}>Product ID:</Typography>
-              <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-                29
-              </Typography>
-            </Box>
-          </Box>
-          <Box display="grid" gap={14}>
-            <Box
-              display="flex"
-              alignItems="center"
-              sx={{
-                justifyContent: { xs: 'space-between', md: 'flex-start' },
-                width: { xs: '100%', md: 'fit-content' },
-                gap: { xs: 0, md: 17 }
-              }}
-            >
-              <Typography sx={{ opacity: 0.5 }}>Subscribed Time:</Typography>
-              <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-                Sep 21, 2021 10:42 AM
-              </Typography>
-            </Box>
-            <Box
-              display="flex"
-              alignItems="center"
-              sx={{
-                justifyContent: { xs: 'space-between', md: 'flex-start' },
-                width: { xs: '100%', md: 'fit-content' },
-                gap: { xs: 0, md: 17 }
-              }}
-            >
-              <Typography sx={{ opacity: 0.5 }}>Term:</Typography>
-              <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
-                7 Days
-              </Typography>
-            </Box>
-          </Box>
-          <Box display="grid" gap={14}>
-            {/* <CurrencyLogo currency={SUPPORTED_CURRENCIES['BTC']} />
-            <Typography fontWeight={700} sx={{ fontSize: { xs: 12, md: 14 } }}>
-              Daily Sharkfin BTC(Base Currency-BTC)
-            </Typography> */}
-          </Box>
-        </Box>
-      )
+      // hiddenParts.push(
+      //   <Box
+      //     key={1}
+      //     display="flex"
+      //     justifyContent="space-between"
+      //     width="100%"
+      //     gap={14}
+      //     sx={{ flexDirection: { xs: 'column', md: 'row' } }}
+      //   >
+      //     <Box display="grid" gap={14}>
+      //       <Box
+      //         display="flex"
+      //         alignItems="center"
+      //         sx={{
+      //           justifyContent: { xs: 'space-between', md: 'flex-start' },
+      //           width: { xs: '100%', md: 'fit-content' },
+      //           gap: { xs: 0, md: 17 }
+      //         }}
+      //       >
+      //         <Typography sx={{ opacity: 0.5 }}>Order ID:</Typography>
+      //         <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
+      //           761
+      //         </Typography>
+      //       </Box>
+      //       <Box
+      //         display="flex"
+      //         alignItems="center"
+      //         sx={{
+      //           justifyContent: { xs: 'space-between', md: 'flex-start' },
+      //           width: { xs: '100%', md: 'fit-content' },
+      //           gap: { xs: 0, md: 17 }
+      //         }}
+      //       >
+      //         <Typography sx={{ opacity: 0.5 }}>Product ID:</Typography>
+      //         <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
+      //           29
+      //         </Typography>
+      //       </Box>
+      //     </Box>
+      //     <Box display="grid" gap={14}>
+      //       <Box
+      //         display="flex"
+      //         alignItems="center"
+      //         sx={{
+      //           justifyContent: { xs: 'space-between', md: 'flex-start' },
+      //           width: { xs: '100%', md: 'fit-content' },
+      //           gap: { xs: 0, md: 17 }
+      //         }}
+      //       >
+      //         <Typography sx={{ opacity: 0.5 }}>Subscribed Time:</Typography>
+      //         <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
+      //           Sep 21, 2021 10:42 AM
+      //         </Typography>
+      //       </Box>
+      //       <Box
+      //         display="flex"
+      //         alignItems="center"
+      //         sx={{
+      //           justifyContent: { xs: 'space-between', md: 'flex-start' },
+      //           width: { xs: '100%', md: 'fit-content' },
+      //           gap: { xs: 0, md: 17 }
+      //         }}
+      //       >
+      //         <Typography sx={{ opacity: 0.5 }}>Term:</Typography>
+      //         <Typography sx={{ fontWeight: { xs: 600, md: 400 } }} component="span">
+      //           7 Days
+      //         </Typography>
+      //       </Box>
+      //     </Box>
+      //     <Box display="grid" gap={14}>
+      //       {/* <CurrencyLogo currency={SUPPORTED_CURRENCIES['BTC']} />
+      //       <Typography fontWeight={700} sx={{ fontSize: { xs: 12, md: 14 } }}>
+      //         Daily Sharkfin BTC(Base Currency-BTC)
+      //       </Typography> */}
+      //     </Box>
+      //   </Box>
+      // )
       acc.push([
         <TokenHeader key={data.type + data.underlying} token={token} type={data.type} investToken={investCurrency} />,
 
@@ -195,7 +197,7 @@ export default function Position() {
       ])
       return acc
     }, [] as any[])
-    return { balanceData, hiddenParts }
+    return { balanceData: hasData ? balanceData : undefined, hiddenParts: undefined }
   }, [chainId, history, isDownMd, vaultList])
 
   if (!account) {
@@ -221,14 +223,14 @@ export default function Position() {
             </OutlinedCard>
             <Box position="relative" display="grid" gap={24}>
               {!data.balanceData && <Loader />}
-              {data.balanceData?.length === 0 && <NoDataCard height="20vh" />}
+              {data.balanceData && data.balanceData.length === 0 && <NoDataCard height="20vh" />}
 
-              {data.balanceData && data.balanceData?.length > 0 && (
+              {data.balanceData && data.balanceData.length > 0 && (
                 <>
                   {isDownMd ? (
-                    <TableCards data={data.balanceData} hiddenParts={data.hiddenParts} />
+                    <TableCards data={data.balanceData} />
                   ) : (
-                    <Table header={TableHeader} rows={data.balanceData} hiddenParts={data.hiddenParts} collapsible />
+                    <Table header={TableHeader} rows={data.balanceData} />
                   )}
                   <Pagination
                     count={Math.ceil(data.balanceData.length / 6)}
@@ -248,7 +250,7 @@ export default function Position() {
   )
 }
 
-function TableCards({ data, hiddenParts }: { data: any[][]; hiddenParts: JSX.Element[] }) {
+function TableCards({ data, hiddenParts }: { data: any[][]; hiddenParts?: JSX.Element[] }) {
   return (
     <Box display="flex" flexDirection="column" gap={8}>
       {data.map((dataRow, idx) => (
@@ -258,7 +260,7 @@ function TableCards({ data, hiddenParts }: { data: any[][]; hiddenParts: JSX.Ele
   )
 }
 
-function TableCard({ dataRow, hiddenPart }: { dataRow: any[]; hiddenPart: JSX.Element }) {
+function TableCard({ dataRow, hiddenPart }: { dataRow: any[]; hiddenPart?: JSX.Element }) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -281,14 +283,16 @@ function TableCard({ dataRow, hiddenPart }: { dataRow: any[]; hiddenPart: JSX.El
       <Box display="flex" alignItems={'center'} justifyContent="space-between" mt={20}>
         {dataRow[TableHeaderIndex.status]}
 
-        <IconButton
-          aria-label="expand row"
-          size="small"
-          onClick={() => setIsOpen(isOpen => !isOpen)}
-          sx={{ flexGrow: 0, border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: '50%' }}
-        >
-          {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-        </IconButton>
+        {hiddenPart && (
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setIsOpen(isOpen => !isOpen)}
+            sx={{ flexGrow: 0, border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: '50%' }}
+          >
+            {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        )}
       </Box>
       {isOpen && (
         <>

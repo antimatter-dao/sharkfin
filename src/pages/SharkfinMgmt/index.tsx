@@ -382,7 +382,7 @@ function PastAggregate() {
       </Typography>
       <Box display="flex" alignItems="flex-end">
         <Typography fontSize={44} fontWeight={700}>
-          82,890
+          11,111
         </Typography>
         <Typography fontWeight={700}>$</Typography>
       </Box>
