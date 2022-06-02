@@ -14,14 +14,14 @@ import useBreakpoint from 'hooks/useBreakpoint'
 
 export default function VaultProductCard({
   title,
-  description,
+  // description,
   onClick,
   color,
   product
 }: // onChain
 {
   title: string
-  description?: string
+  // description?: string
   onClick: () => void
   color: string
   product: DefiProduct | undefined
