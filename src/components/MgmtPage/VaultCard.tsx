@@ -128,7 +128,6 @@ export default function VaultCard(props: Props) {
           // priceCurSymbol={product?.currency ?? ''}
           // description=""
         />
-
         <Box width={'100%'} mt={{ xs: 0, md: 30 }}>
           <Box mt={12} position="relative">
             <Tabs
@@ -190,7 +189,7 @@ export default function VaultCard(props: Props) {
                           justifyContent="space-between"
                           color={'rgba(37, 37, 37, 0.8)'}
                         >
-                          {title}:
+                          {title}
                           <Typography
                             component={'span'}
                             fontWeight={400}

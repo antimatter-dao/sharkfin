@@ -20,15 +20,22 @@ export function LogoTitle({
   const isDownSm = useBreakpoint('sm')
 
   return (
-    <Box display="grid" columnGap={20} mb={{ xs: 10, md: 0 }} width="auto" zIndex={2} maxWidth="max-content">
+    <Box
+      display="flex"
+      gap={15}
+      mb={{ xs: 10, md: 0 }}
+      width="auto"
+      zIndex={2}
+      maxWidth="max-content"
+      alignItems="center"
+    >
       {logoCurSymbol && (
         <CurrencyLogo
           currency={SUPPORTED_CURRENCIES[logoCurSymbol]}
           size={logoSize ? logoSize : isDownMd ? '32px' : '64px'}
           style={{
             gridRowStart: 1,
-            gridRowEnd: isDownSm ? 'span 1' : 'span 2',
-            marginBottom: isDownSm ? 12 : 0
+            gridRowEnd: isDownSm ? 'span 1' : 'span 2'
           }}
         />
       )}

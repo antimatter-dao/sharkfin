@@ -8,24 +8,27 @@ import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { SimpleProgress } from 'components/Progress'
 import { DefiProduct } from 'hooks/useSharkfin'
 import { Timer } from 'components/Timer'
+import useBreakpoint from 'hooks/useBreakpoint'
 // import { ChainListMap } from 'constants/chain'
 // import Image from 'components/Image'
 
 export default function VaultProductCard({
   title,
-  description,
+  // description,
   onClick,
   color,
   product
 }: // onChain
 {
   title: string
-  description?: string
+  // description?: string
   onClick: () => void
   color: string
   product: DefiProduct | undefined
   // onChain: ChainId
 }) {
+  const isDownMd = useBreakpoint('md')
+
   return (
     <Box
       display="grid"
@@ -46,11 +49,12 @@ export default function VaultProductCard({
       <TermTag days={7} color={color} />
       <CurrencyLogo
         currency={SUPPORTED_CURRENCIES[product?.investCurrency ?? '']}
-        size={'52px'}
+        size={isDownMd ? '44px' : '52px'}
         style={{ zIndex: 2, position: 'absolute', right: 24, top: 36 }}
       />
 
-      <TextCard text={title} subText={description} maxWidth={330} />
+      {/* <TextCard text={title} subText={description} maxWidth={330} /> */}
+      <Typography sx={{ fontSize: { xs: 20, md: 24 }, fontWeight: 700 }}>{title}</Typography>
 
       {product ? (
         <>
@@ -95,7 +99,7 @@ export default function VaultProductCard({
             </Typography>{' '}
           </Box> */}
           <Button backgroundColor={color} onClick={onClick}>
-            Add
+            Subscribe
           </Button>
         </>
       ) : (
