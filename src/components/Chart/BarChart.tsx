@@ -2,25 +2,37 @@ import { useEffect, useRef, useState } from 'react'
 import { Chart, CategoryScale, LinearScale, BarElement, Tooltip, BarController } from 'chart.js'
 import { Box, Typography } from '@mui/material'
 import Divider from 'components/Divider'
+import { ChartDataType } from 'hooks/usePastPositionRecords'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 Chart.register(CategoryScale, LinearScale, BarElement, Tooltip, BarController)
+const defaultTooltip = {
+  date: '-',
+  profit: '-',
+  interestRate: '-',
+  price: '-',
+  returnedAmount: '-'
+}
 
-export default function BarChart() {
+export default function BarChart({ chartData }: { chartData: ChartDataType }) {
   const [hasChart, setHasChart] = useState<any>(undefined)
   const [tooltipData, setTooltipDataData] = useState<{
     date: string
     profit: string
     interestRate: string
     price: string
+    returnedAmount: string
   }>({
     date: '-',
     profit: '-',
     interestRate: '-',
-    price: '-'
+    price: '-',
+    returnedAmount: '-'
   })
 
   const ctx = useRef(null)
   const tooltip = useRef<HTMLDivElement>(null)
+  const isDownSm = useBreakpoint('sm')
 
   useEffect(() => {
     if (!ctx.current) {
@@ -30,106 +42,84 @@ export default function BarChart() {
     const options = {
       responsive: true,
       maintainAspectRatio: false,
+      FontFace: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif',
+      outerHeight: isDownSm ? '200px' : '100%',
       scales: {
         x: {
+          color: '#25252550',
           grid: {
             display: true,
             drawBorder: true,
             drawOnChartArea: false,
             drawTicks: false
-          },
-          scaleLabel: {
-            position: 'left',
-            display: true,
-            labelString: 'Delivery Date'
           }
+          // scaleLabel: {
+          //   position: 'left',
+          //   display: true,
+          //   labelString: 'Delivery Date',
+          //   color: '#252525'
+          // }
         },
         y: {
+          color: '#25252550',
           grid: {
-            drawBorder: false
+            drawBorder: false,
+            drawTicks: false
+          },
+          ticks: {
+            callback: function(value: any) {
+              if (+value / 1000 > 1) {
+                return '$' + value / 1000 + 'k'
+              }
+              return '$' + value
+            }
           }
         }
       },
       plugins: {
         tooltip: {
-          // backgroundColor: '#ffffff',
-          // bodyColor: '#252525',
-          // titleColor: '#252525',
-          // padding: 12,
-          // label: '11111111111'
           enabled: false,
           external: function(context: any) {
-            // Tooltip Element
-            // let tooltipEl = document.getElementById('chartjs-tooltip')
-
-            // // Create element on first render
-            // if (!tooltipEl) {
-            //   tooltipEl = document.createElement('div')
-            //   tooltipEl.id = 'chartjs-tooltip'
-            //   tooltipEl.innerHTML = '<table></table>'
-            //   document.body.appendChild(tooltipEl)
-            // }
             if (!tooltip.current) return
-
             const tooltipEl = tooltip.current
 
             // Hide if no tooltip
             const tooltipModel = context.tooltip
             if (tooltipModel.opacity == 0) {
-              tooltipEl.style.opacity = '0'
+              if (!isDownSm) {
+                tooltipEl.style.opacity = '0'
+              } else {
+                setTooltipDataData(defaultTooltip)
+              }
+
               return
             }
 
-            // Set caret Position
-            tooltipEl.classList.remove('above', 'below', 'no-transform')
-            if (tooltipModel.yAlign) {
-              tooltipEl.classList.add(tooltipModel.yAlign)
-            } else {
-              tooltipEl.classList.add('no-transform')
-            }
-
-            function getBody(bodyItem: any) {
-              return bodyItem.lines
-            }
-
-            // Set Text
             if (tooltipModel.body) {
-              const titleLines = tooltipModel.title || []
-              const bodyLines = tooltipModel.body.map(getBody)
-
-              let innerHtml = '<thead>'
-
-              titleLines.forEach(function(title: any) {
-                innerHtml += '<tr><th>' + title + '</th></tr>'
-              })
-              innerHtml += '</thead><tbody>'
-
-              bodyLines.forEach(function(body: any, i: any) {
-                const colors = tooltipModel.labelColors[i]
-                let style = 'background:' + colors.backgroundColor
-                style += '; border-color:' + colors.borderColor
-                style += '; border-width: 2px'
-                const span = '<span style="' + style + '"></span>'
-                innerHtml += '<tr><td>' + span + body + '</td></tr>'
-              })
-              innerHtml += '</tbody>'
-
-              const tableRoot = tooltipEl.querySelector('table')
-              if (tableRoot) {
-                tableRoot.innerHTML = innerHtml
-              }
+              const curData = tooltipModel.dataPoints[0]
+              const dataIndex = curData.dataIndex
+              setTooltipDataData(prev => ({
+                ...prev,
+                date: curData.label,
+                returnedAmount: curData.formattedValue,
+                price: chartData.otherData[dataIndex].price,
+                profit: chartData.otherData[dataIndex].pnl,
+                interestRate: chartData.otherData[dataIndex].rate
+              }))
             }
-            setTooltipDataData(prev => ({ ...prev, date: context.label }))
 
             const position = context.chart.canvas.getBoundingClientRect()
-            // const bodyFont = (Chart as any).helpers?.toFont(tooltipModel.options.bodyFont)
 
             // Display, position, and set styles for font
             tooltipEl.style.opacity = '1'
-            tooltipEl.style.position = 'absolute'
-            tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px'
-            tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px'
-            // tooltipEl.style.font = bodyFont?.string
+            if (isDownSm) {
+              tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px'
+              tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY - 25 + 'px'
+            } else {
+              tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px'
+              tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY - 50 + 'px'
+            }
+
             // tooltipEl.style.padding = tooltipModel.padding + 'px ' + tooltipModel.padding + 'px'
             // tooltipEl.style.pointerEvents = 'none'
           }
@@ -137,14 +127,14 @@ export default function BarChart() {
       }
     }
 
-    const labels = ['7 Jul', '14 Jul', '21 Jul', '28 Jul', '5 Aug', '12 Aug', '19 Aug', '26 Aug', '2 Sep']
+    const labels = chartData.dateData
 
     const data = {
       labels,
       datasets: [
         {
-          label: 'Profit Amount',
-          data: [42, 21, 60, 32, 42, 25, 15, 12, 82],
+          label: 'Returned Amount',
+          data: chartData.returnedAmountData,
           backgroundColor: '#31B047',
           hoverBackgroundColor: '#156623',
           barPercentage: 0.6
@@ -165,28 +155,42 @@ export default function BarChart() {
       hasChart.data = data
       hasChart.update()
     }
-  }, [hasChart])
+  }, [chartData.dateData, chartData.otherData, chartData.returnedAmountData, hasChart, isDownSm])
 
   return (
-    <Box width="100%" height="100%">
+    <Box width="100%" height={'100%'}>
+      <Box width="100%" height={isDownSm ? 300 : '100%'}>
+        <canvas id="barChart" width="100%" height={isDownSm ? 'calc(100% - 200px)' : '100%'} ref={ctx}></canvas>
+      </Box>
       <Box
         ref={tooltip}
         padding="12px 14px"
         sx={{
           pointerEvents: 'none',
-          position: 'absolute',
-          opacity: 0,
+          position: isDownSm ? 'static' : 'absolute',
+          opacity: isDownSm ? '1!important' : 0,
           background: '#ffffff',
           borderRadius: '10px',
-          boxShadow: '0px 1px 10px rgba(0, 0, 0, 0.1)',
-          transform: 'translate(-50%,-100%)',
+          border: '1px solid rgba(0, 0, 0, 0.1)',
+          width: isDownSm ? '100%' : 'auto',
+          marginTop: isDownSm ? 11 : 0,
+          boxShadow: isDownSm ? 'none' : '0px 1px 10px rgba(0, 0, 0, 0.1)',
+          transform: isDownSm ? 'none' : 'translate(-55%,-100%)',
           minWidth: 'max-content'
         }}
       >
-        <Box height={10} width={10} borderRadius="50%" sx={{ background: '#31B047' }}></Box>
-        <Typography fontWeight={700}>{tooltipData.date}</Typography>
+        <Box display="flex" gap={15} alignItems="center">
+          <Box height={10} width={10} borderRadius="50%" sx={{ background: '#31B047' }}></Box>
+          <Typography fontWeight={700}>{tooltipData.date}</Typography>
+        </Box>
         <Divider extension={14} style={{ marginTop: '10px', marginBottom: '10px' }} color="#25252510" />
         <Box display="grid">
+          <Typography>
+            Returned Amount:&nbsp;&nbsp;
+            <Typography component="span" fontWeight={500}>
+              {tooltipData.returnedAmount} USDT
+            </Typography>
+          </Typography>
           <Typography>
             Profit Amount:&nbsp;&nbsp;
             <Typography component="span" fontWeight={500}>
@@ -207,7 +211,6 @@ export default function BarChart() {
           </Typography>
         </Box>
       </Box>
-      <canvas id="barChart" width="100%" height="100%" ref={ctx}></canvas>
     </Box>
   )
   // return null

@@ -16,6 +16,7 @@ import { useSingleSharkfin } from 'hooks/useSharkfin'
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
 import { usePrice } from 'hooks/usePriceSet'
 import { trimNumberString } from 'utils/trimNumberString'
+import { usePastEarningsChartData } from 'hooks/usePastPositionRecords'
 // import { usePrevDetails } from 'hooks/usePrevDetails'
 // import { PrevOrder } from 'utils/fetch/record'
 // import Divider from 'components/Divider'
@@ -45,6 +46,7 @@ export default function SharkfinMgmt() {
 
   const theme = useTheme()
   const history = useHistory()
+  const isDownMd = useBreakpoint('md')
   const { investCurrency, underlying, chainName } = useParams<{
     investCurrency: string
     underlying: string
@@ -54,7 +56,7 @@ export default function SharkfinMgmt() {
   const product = useSingleSharkfin(chainName ?? '', underlying ?? '', investCurrency ?? '')
   const price = usePrice(underlying)
   // const prevDetails = usePrevDetails(chainName ?? '', currency ?? '', type ?? '')
-  const isDownMd = useBreakpoint('md')
+  const chartData = usePastEarningsChartData()
 
   const returnOnInvestmentListItems = useMemo(() => {
     return [
@@ -144,7 +146,7 @@ export default function SharkfinMgmt() {
               <RecurringSwitch />
             </Grid> */}
             <Grid xs={12} item>
-              <PastAggregate />
+              <PastAggregate data={chartData} />
               {/* <PrevCycleStats prevDetails={prevDetails} /> */}
             </Grid>
             {/* {!isDownMd && (
@@ -370,7 +372,7 @@ export default function SharkfinMgmt() {
 //   )
 // }
 
-function PastAggregate() {
+function PastAggregate({ data }: { data: any }) {
   return (
     <Card width="100%" padding="34px 24px" height="100%" style={{ minHeight: 500 }}>
       <Box display="flex" flexDirection={'column'} height="100%" gap={20}>
@@ -386,8 +388,8 @@ function PastAggregate() {
           </Box>
           <Typography sx={{ opacity: 0.8, mt: 8 }}>Aug 26, 2021</Typography>
         </Box>
-        <Box height="100%" flexGrow={1}>
-          <BarChart />
+        <Box height="100%" flexGrow={1} mt={40}>
+          <BarChart chartData={data} />
         </Box>
       </Box>
     </Card>
