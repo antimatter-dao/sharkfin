@@ -8,7 +8,7 @@ import { Subject } from 'components/MgmtPage/stableContent'
 // import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
 import SharkfinChart from 'pages/SharkfinMgmt/Chart'
-import { PastAggrChart } from 'components/Chart/BarChart'
+import BarChart from 'components/Chart/BarChart'
 import Card from 'components/Card/Card'
 // import dayjs from 'dayjs'
 import useBreakpoint from 'hooks/useBreakpoint'
@@ -16,6 +16,7 @@ import { useSingleSharkfin } from 'hooks/useSharkfin'
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
 import { usePrice } from 'hooks/usePriceSet'
 import { trimNumberString } from 'utils/trimNumberString'
+import { usePastEarningsChartData } from 'hooks/usePastPositionRecords'
 // import { usePrevDetails } from 'hooks/usePrevDetails'
 // import { PrevOrder } from 'utils/fetch/record'
 // import Divider from 'components/Divider'
@@ -45,6 +46,7 @@ export default function SharkfinMgmt() {
 
   const theme = useTheme()
   const history = useHistory()
+  const isDownMd = useBreakpoint('md')
   const { investCurrency, underlying, chainName } = useParams<{
     investCurrency: string
     underlying: string
@@ -54,7 +56,7 @@ export default function SharkfinMgmt() {
   const product = useSingleSharkfin(chainName ?? '', underlying ?? '', investCurrency ?? '')
   const price = usePrice(underlying)
   // const prevDetails = usePrevDetails(chainName ?? '', currency ?? '', type ?? '')
-  const isDownMd = useBreakpoint('md')
+  const chartData = usePastEarningsChartData()
 
   const returnOnInvestmentListItems = useMemo(() => {
     return [
@@ -86,10 +88,6 @@ export default function SharkfinMgmt() {
     setInvestAmount(val)
   }, [])
 
-  // const chart2 = useMemo(() => {
-  //   return <PastAggrChart />
-  //   return null
-  // }, [])
   return (
     <>
       {product === null ? (
@@ -148,7 +146,7 @@ export default function SharkfinMgmt() {
               <RecurringSwitch />
             </Grid> */}
             <Grid xs={12} item>
-              <PastAggregate />
+              <PastAggregate data={chartData} />
               {/* <PrevCycleStats prevDetails={prevDetails} /> */}
             </Grid>
             {/* {!isDownMd && (
@@ -374,20 +372,26 @@ export default function SharkfinMgmt() {
 //   )
 // }
 
-function PastAggregate() {
+function PastAggregate({ data }: { data: any }) {
   return (
-    <Card width="100%" padding="34px 24px" height={400}>
-      <Typography fontSize={16} sx={{ opacity: 0.5 }} mb={8}>
-        Past Aggregate Earnings (Platform)
-      </Typography>
-      <Box display="flex" alignItems="flex-end">
-        <Typography fontSize={44} fontWeight={700}>
-          11,111
-        </Typography>
-        <Typography fontWeight={700}>$</Typography>
+    <Card width="100%" padding="34px 24px" height="100%" style={{ minHeight: 500 }}>
+      <Box display="flex" flexDirection={'column'} height="100%" gap={20}>
+        <Box>
+          <Typography fontSize={16} sx={{ opacity: 0.5 }} mb={8}>
+            Past Aggregate Earnings (Platform)
+          </Typography>
+          <Box display="flex" alignItems="flex-end">
+            <Typography fontSize={44} fontWeight={700}>
+              11,111
+            </Typography>
+            <Typography fontWeight={700}>$</Typography>
+          </Box>
+          <Typography sx={{ opacity: 0.8, mt: 8 }}>Aug 26, 2021</Typography>
+        </Box>
+        <Box height="100%" flexGrow={1} mt={40}>
+          <BarChart chartData={data} />
+        </Box>
       </Box>
-      <Typography sx={{ opacity: 0.8, mt: 8 }}>Aug 26, 2021</Typography>
-      <PastAggrChart />
     </Card>
   )
 }

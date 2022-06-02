@@ -4,12 +4,18 @@ import { Axios } from 'utils/axios'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import qs from 'qs'
 import { OrderRecord, OrderRecordDetail } from 'utils/fetch/record'
+import { dayjsUTC } from 'utils/dayjsUTC'
+import useBreakpoint from './useBreakpoint'
 
 const PageSize = 8
 
-// const types = [11, 12].join('&types=')
+export interface ChartDataType {
+  dateData: string[]
+  returnedAmountData: number[]
+  otherData: { pnl: string; rate: string; price: string }[]
+}
 
-export function usePastPositionRecords(pageNum: number) {
+export function usePastPositionRecords(pageNum: number, pageSize = PageSize) {
   const { chainId } = useActiveWeb3React()
   const [orderList, setOrderList] = useState<OrderRecord[] | undefined>(undefined)
   const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
@@ -20,12 +26,12 @@ export function usePastPositionRecords(pageNum: number) {
 
   const promiseFn = useCallback(() => {
     const params = {
-      pageSize: PageSize,
+      pageSize: pageSize,
       pageNum,
       chainId
     }
     return Axios.get<{ records: OrderRecord[] }>('getOrderRecord?' + qs.stringify(params))
-  }, [chainId, pageNum])
+  }, [chainId, pageNum, pageSize])
 
   const callbackFn = useCallback(r => {
     if (!r.data.data.records) return
@@ -61,4 +67,33 @@ export function usePastPositionRecords(pageNum: number) {
       pageParams
     }
   }, [orderList, pageParams])
+}
+
+export function usePastEarningsChartData(): ChartDataType {
+  const isDownMd = useBreakpoint('md')
+  const { orderList } = usePastPositionRecords(1, isDownMd ? 5 : 10)
+
+  const res = useMemo(() => {
+    const defaultData: ChartDataType = {
+      dateData: [],
+      returnedAmountData: [],
+      otherData: []
+    }
+
+    if (!orderList) {
+      return defaultData
+    }
+    return orderList.reduce((acc: ChartDataType, item: OrderRecord) => {
+      acc.dateData.push(dayjsUTC(item.liquidatedAt).format('DD MMM'))
+      acc.returnedAmountData.push(+(item.pnl ?? '0') + +item.size)
+      acc.otherData.push({
+        pnl: item.pnl ?? '-',
+        rate: item.settlementRate ? Math.round(+item.settlementRate * 10000) / 100 + '' : '-',
+        price: item.settlementPrice ?? '-'
+      })
+      return acc
+    }, defaultData)
+  }, [orderList])
+
+  return res
 }
