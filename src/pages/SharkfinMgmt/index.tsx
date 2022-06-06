@@ -81,7 +81,7 @@ export default function SharkfinMgmt() {
         expiry date. Price data is sourced from an on-chain oracle.
       </>
     ]
-  }, [product?.underlying, theme.palette.primary.main])
+  }, [product?.minRate, product?.underlying, theme.palette.primary.main])
 
   const chart = useMemo(() => {
     return <SharkfinChart marketPrice={price ? trimNumberString(price, 4) : '-'} baseRate={product?.minRate} />

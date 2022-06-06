@@ -108,14 +108,16 @@ export default function VaultCard(props: Props) {
     if (product.minAmount && balance && amount !== '' && !isNaN(+balance) && +amount < +product.minAmount) {
       return `Amount should be no less than ${product.minAmount} ${product.investCurrency}`
     }
-    return ''
-    // const now = Date.now()
-    // const before = product.expiredAt - 7200000
-    // const after = product.expiredAt + 1800000
 
-    // if (now >= before && now < after) {
-    //   str = ErrorType.notAvailable
-    // }
+    const now = Date.now()
+    const before = product.expiredAt
+    // const before = product.expiredAt - 3.6e6
+    const after = product.expiredAt + 7.2e6
+
+    if (now >= before && now < after) {
+      return ErrorType.notAvailable
+    }
+    return ''
   }, [product, walletBalance, standardWithdrawlStep, currentTab, amount])
 
   return (
@@ -155,9 +157,9 @@ export default function VaultCard(props: Props) {
                     {[
                       {
                         title: 'Price Range(USDT)',
-                        data: `${product?.barrierPrice0}${product?.barrierPrice0 && product?.barrierPrice1 ? '' : '~'}${
-                          product?.barrierPrice1
-                        }`
+                        data: `${product?.barrierPrice0}${
+                          product?.barrierPrice0 && product?.barrierPrice1 ? '~' : ' '
+                        }${product?.barrierPrice1}`
                       },
                       {
                         title: 'APR',

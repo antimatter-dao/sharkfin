@@ -9,6 +9,7 @@ import { SimpleProgress } from 'components/Progress'
 import { DefiProduct } from 'hooks/useSharkfin'
 import { Timer } from 'components/Timer'
 import useBreakpoint from 'hooks/useBreakpoint'
+import { trimNumberString } from 'utils/trimNumberString'
 // import { ChainListMap } from 'constants/chain'
 // import Image from 'components/Image'
 
@@ -68,8 +69,10 @@ export default function VaultProductCard({
             <TextCard subTextBold color={color} text={product?.apy ?? '-'} subText="Current APY" />
             <TextCard
               subTextBold
-              text={`${product?.lockedBalance ?? '-'}  ${product?.investCurrency ?? '-'}`}
-              subText="Initial investment"
+              text={`${
+                product?.depositAmount ? trimNumberString(product.depositAmount, 4) : '-'
+              }  ${product?.investCurrency ?? '-'}`}
+              subText="Your existing position"
             />
           </Box>
           <Box display="grid" gap={9}>
