@@ -59,21 +59,22 @@ export default function SharkfinMgmt() {
   const chartData = usePastEarningsChartData()
 
   const returnOnInvestmentListItems = useMemo(() => {
+    const minRate = product?.minRate ? (+product.minRate.slice(0, -1)).toFixed(2) + '%' : '3%'
     return [
       <>
         Settlement at maturity:at annualised rate of return{' '}
-        <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>
-          {product?.minRate ? (+product.minRate.slice(0, -1)).toFixed(2) : '3.00%'}~15.00%
-        </span>{' '}
-        Conditions must meet:
-        {product?.underlying ?? 'ETH'} price was always within the price range Annualised Product Return =
-        3.00%+(settlement price at maturity-38500)/(42500-38500)*(25.00%-3.00%) Return=Principal* Annualised Product
+        <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>{minRate}~15.00%</span> Conditions must
+        meet:
+        {product?.underlying ?? 'ETH'} price was always within the price range Annualised Product Return ={minRate}
+        +(settlement price at maturity-38500)/(42500-38500)*(25.00%-{minRate}) Return=Principal* Annualised Product
         Return/365*Investment term
       </>,
       <>
-        Settlement at maturity:APR of <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>3.00%</span>{' '}
-        Conditions must meet:Would {product?.underlying ?? 'ETH'} price was atleast once below $38500 or above $42500
-        Return = Principal * 3.00/365 * 7 (investment term)
+        Settlement at maturity:APR of{' '}
+        <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>{minRate}</span> Conditions must meet:Would{' '}
+        {product?.underlying ?? 'ETH'} price was atleast once below ${product?.barrierPrice0 ?? '-'} or above $
+        {product?.barrierPrice1 ?? '-'} Return = Principal *{' '}
+        {product?.minRate ? (+product.minRate.slice(0, -1)).toFixed(2) : '3.00'}/365 * 7 (investment term)
       </>,
       <>
         *Observed {product?.underlying ?? 'ETH'}/USD option’s underlying price at Deribit at 12:00 every day is the
@@ -81,11 +82,24 @@ export default function SharkfinMgmt() {
         expiry date. Price data is sourced from an on-chain oracle.
       </>
     ]
-  }, [product?.minRate, product?.underlying, theme.palette.primary.main])
+  }, [
+    product?.barrierPrice0,
+    product?.barrierPrice1,
+    product?.minRate,
+    product?.underlying,
+    theme.palette.primary.main
+  ])
 
   const chart = useMemo(() => {
-    return <SharkfinChart marketPrice={price ? trimNumberString(price, 4) : '-'} baseRate={product?.minRate} />
-  }, [price, product?.minRate])
+    return (
+      <SharkfinChart
+        marketPrice={price ? trimNumberString(price, 4) : '-'}
+        baseRate={product?.minRate}
+        barrierPrice0={product?.barrierPrice0}
+        barrierPrice1={product?.barrierPrice1}
+      />
+    )
+  }, [price, product?.barrierPrice0, product?.barrierPrice1, product?.minRate])
 
   const handleInput = useCallback((val: string) => {
     setInvestAmount(val)

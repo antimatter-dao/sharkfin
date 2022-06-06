@@ -5,10 +5,14 @@ import useBreakpoint from 'hooks/useBreakpoint'
 
 export default function SharkfinChart({
   marketPrice,
-  baseRate
+  baseRate,
+  barrierPrice0,
+  barrierPrice1
 }: {
   marketPrice: string | undefined
   baseRate?: string
+  barrierPrice0?: string
+  barrierPrice1?: string
 }) {
   const isDownSm = useBreakpoint('sm')
   const theme = useTheme()
@@ -24,14 +28,14 @@ export default function SharkfinChart({
         <Box
           height="100%"
           display="grid"
-          gridTemplateRows={isDownSm ? '15% 25% 12% 45% 3%' : '10% 38% 10% 35% 3%'}
+          gridTemplateRows={isDownSm ? '15% 37% 45% 3%' : '10% 48% 35% 3%'}
           sx={{ textAlign: 'right', color: theme.palette.text.primary + '60' }}
         >
           <Typography fontWeight={500}>APR</Typography>
 
           <Typography>15%</Typography>
-          <Typography>5%</Typography>
-          <Typography>{baseRate ?? '1%'}</Typography>
+
+          <Typography>{baseRate ?? '3%'}</Typography>
 
           <Typography>0</Typography>
         </Box>
@@ -75,8 +79,8 @@ export default function SharkfinChart({
       </Box>
       <Box display="flex" justifyContent={'space-between'} width="100%" sx={{ color: theme.palette.primary.main }}>
         <span style={{ width: 60 }}></span>
-        <Typography fontWeight={700}>$38500</Typography>
-        <Typography fontWeight={700}>$42500</Typography>
+        <Typography fontWeight={700}>${barrierPrice0}</Typography>
+        <Typography fontWeight={700}>${barrierPrice1}</Typography>
         <Typography fontWeight={500} color={theme.palette.text.primary + '60'}>
           PRICE
         </Typography>

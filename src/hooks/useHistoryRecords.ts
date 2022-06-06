@@ -32,6 +32,7 @@ export function useHistoryRecords(pageNum: number) {
             cur = 'BTC'
             break
           default: {
+            // 11|12|13|14 ETH
             cur = 'ETH'
           }
         }
