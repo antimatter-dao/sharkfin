@@ -117,7 +117,7 @@ export default function BarChart({ chartData }: { chartData: ChartDataType }) {
               tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY - 25 + 'px'
             } else {
               tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px'
-              tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY - 50 + 'px'
+              tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY - 85 + 'px'
             }
 
             // tooltipEl.style.padding = tooltipModel.padding + 'px ' + tooltipModel.padding + 'px'

@@ -62,7 +62,10 @@ export default function SharkfinMgmt() {
     return [
       <>
         Settlement at maturity:at annualised rate of return{' '}
-        <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>3.00~25.00%</span> Conditions must meet:
+        <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>
+          {product?.minRate ? (+product.minRate.slice(0, -1)).toFixed(2) : '3.00%'}~15.00%
+        </span>{' '}
+        Conditions must meet:
         {product?.underlying ?? 'ETH'} price was always within the price range Annualised Product Return =
         3.00%+(settlement price at maturity-38500)/(42500-38500)*(25.00%-3.00%) Return=Principal* Annualised Product
         Return/365*Investment term
