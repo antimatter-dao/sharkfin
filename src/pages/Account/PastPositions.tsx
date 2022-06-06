@@ -29,7 +29,7 @@ export default function PastPosition() {
     if (!records) return { balanceData: undefined, hiddenParts: undefined }
     const hiddenParts: any[] = []
     const dataList = records.reduce((acc, record) => {
-      const underlying = record.name.match(/\(([A-Z]+)\)/i)?.[1]
+      const underlying = record.code.match(/([A-Z]+)\_([A-Z]+)/i)?.[2]
 
       hiddenParts.push(
         <Box
