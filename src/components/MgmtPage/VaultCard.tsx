@@ -35,7 +35,7 @@ enum StandardWithdrawType {
 
 export enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
-  notAvailable = 'The current status is not available for subscription, please try again after the current period is settled'
+  notAvailable = 'Settlement in progress, please try again after the current period is settled'
 }
 
 interface Props {
