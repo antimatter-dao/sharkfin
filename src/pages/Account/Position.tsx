@@ -50,7 +50,7 @@ function TokenHeader({
     <Box display="flex" alignItems="center" gap={16}>
       <CurrencyLogo currency={investToken} size="32px" />
       <Box>
-        <Typography fontSize={16}>{`${token?.symbol} weekly sharkfin`}</Typography>
+        <Typography fontSize={16}>{`${token?.symbol} Weekly Sharkfin`}</Typography>
         <Typography fontSize={12} sx={{}}>
           <span style={{ opacity: 0.5, fontSize: '12px' }}>{`(Base Currency- ${
             type === 'SELF' ? token?.symbol : investToken?.symbol

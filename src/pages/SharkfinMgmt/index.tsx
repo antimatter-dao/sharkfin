@@ -63,23 +63,24 @@ export default function SharkfinMgmt() {
     return [
       <>
         Settlement at maturity:at annualised rate of return{' '}
-        <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>{minRate}~15.00%</span> Conditions must
-        meet:
-        {product?.underlying ?? 'ETH'} price was always within the price range Annualised Product Return ={minRate}
-        +(settlement price at maturity-38500)/(42500-38500)*(25.00%-{minRate}) Return=Principal* Annualised Product
-        Return/365*Investment term
+        <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>{minRate}~15.00%</span>{' '}
+        <span>{<br />}</span> Conditions must meet:
+        {product?.underlying ?? 'ETH'} price was <span style={{ fontWeight: 500 }}>always</span> within the price range{' '}
+        <span>{<br />}</span>
+        Annualised Product Return ={minRate}
+        +(settlement price-{product?.barrierPrice0})/({product?.barrierPrice1}-{product?.barrierPrice0})*(15.00%-
+        {minRate}) Return=Principal* Annualised Product Return/365*Investment term
       </>,
       <>
         Settlement at maturity:APR of{' '}
-        <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>{minRate}</span> Conditions must meet:Would{' '}
-        {product?.underlying ?? 'ETH'} price was atleast once below ${product?.barrierPrice0 ?? '-'} or above $
-        {product?.barrierPrice1 ?? '-'} Return = Principal *{' '}
+        <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>{minRate}</span>
+        <span>{<br />}</span> Conditions must meet: {product?.underlying ?? 'ETH'} price was atleast once below $
+        {product?.barrierPrice0 ?? '-'} or above ${product?.barrierPrice1 ?? '-'} Return = Principal *{' '}
         {product?.minRate ? (+product.minRate.slice(0, -1)).toFixed(2) : '3.00'}/365 * 7 (investment term)
       </>,
       <>
-        *Observed {product?.underlying ?? 'ETH'}/USD option’s underlying price at Deribit at 12:00 every day is the
-        observed price of the day. The settlement price is the {product?.underlying ?? 'ETH'} price at 8:00 UTC on
-        expiry date. Price data is sourced from an on-chain oracle.
+        The settlement price is the {product?.underlying ?? 'ETH'} price at 8:00 UTC on expiry date. Price data is
+        sourced from an on-chain oracle.
       </>
     ]
   }, [
@@ -150,7 +151,7 @@ export default function SharkfinMgmt() {
             graphTitle="Purchase expected income graph"
             showFaq={true}
             // backLink={routes.sharkfin}
-            pageTitle={`${product.underlying} weekly sharkfin(Base Currency-${
+            pageTitle={`${product.underlying} Weekly Sharkfin (Base Currency-${
               product.type === 'SELF' ? product.underlying : 'USDT'
             })`}
             priceCurSymbol={product?.underlying}

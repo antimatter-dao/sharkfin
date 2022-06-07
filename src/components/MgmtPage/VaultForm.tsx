@@ -21,8 +21,8 @@ enum TYPE {
 
 const Instructions: JSX.Element = (
   <>
-    Standard withdrawals are for funds that have been deployed in the vault&apos;s weekly strategy and involve a 2-step
-    withdrawal process:
+    Standard withdrawals are for funds that have been deployed in the weekly strategy and involve a 2-step withdrawal
+    process:
     <br /> Step 1: User submits the amount to be withdrawn <br />
     Step 2: After the investment expires, the actual withdrawal will be completed, and the withdrawal amount includes
     part of the income.

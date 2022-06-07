@@ -263,22 +263,24 @@ export function FAQ({ subject }: { subject: Subject }) {
           summary: 'How is my return calculated?',
           details: (
             <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
-              <p>The product return has a lower and upper limit.</p>
-              <p>Observed price was **always** within the price range:</p>
+              <p>The product has a lower and upper limit.</p>
+              <p>
+                1. Observed price was <b>always</b> within the price range:
+              </p>
               <p>
                 Annualised Percentage Return (APR) = Annualised Lower Return + (Settlement Price at Maturity-Lower
-                Price) / (Upper Price - Lower Price) * (Annualised Upper Return - Annualised Lower Return), the higher
-                the settlement price, the higher the product return.
+                Barrier) / (Upper Barrier - Lower Barrier) * (Annualised Upper Return - Annualised Lower Return), the
+                higher the settlement price, the higher the product return.
               </p>
               <p>Return = Principal * Annualised Percentage Return / 365 * Investment term.</p>
-              <p>Observed price was atleast once below Lower Limit or above Upper Limit:</p>
+              <p>2. Observed price was atleast once below Lower Barrier or above Upper Barrier:</p>
               <p>Return = Principal * Annualised Lower Return / 365 * Investment term.</p>
             </AccordionDetailText>
           )
         },
         {
           summary:
-            'What are “Price Range”, “Observed Price”, “Underlying Asset”, “Deposit Currency” and “Delivery Date”?',
+            'What are “Price Range”, “Observed Price”, "Strike Price", “Underlying Asset”, “Deposit Currency” and “Delivery Date”?',
           details: (
             <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
               <p>
@@ -290,10 +292,14 @@ export function FAQ({ subject }: { subject: Subject }) {
                 range determine the outcome.
               </p>
               <p>
-                Underlying Asset - An asset on which a Dual Investment product is based. For instance, if you are making
-                reference to BTC spot price and BTC strike price, then the underlying asset is BTC.
+                Settlement Price - Average of the spot price in the last 30 minutes before 08:00 (UTC) on the delivery
+                date.
               </p>
-              <p>Deposit Currency - The currency you have used to subscribe to a Daily Sharkfin product.</p>
+              <p>
+                Underlying Asset - An asset on which a Weekly Sharkfin product is based. For instance, if you are making
+                reference to BTC spot price and BTC settlement price, then the underlying asset is BTC.
+              </p>
+              <p>Deposit Currency - The currency you have used to subscribe to a Weekly Sharkfin product.</p>
               <p>Delivery Date - Date on which the product expires and has two outcomes.</p>
             </AccordionDetailText>
           )

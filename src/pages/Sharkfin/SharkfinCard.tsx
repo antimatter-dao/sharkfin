@@ -86,7 +86,7 @@ export default function VaultProductCard({
             />
             <Box display="flex" alignItems={'center'} justifyContent="space-between">
               <Typography fontSize={12} color="rgba(0,0,0,0.5)" fontWeight={500}>
-                Count Down to the start
+                Countdown until the start
               </Typography>
               <Typography fontSize={12} fontWeight={700}>
                 <Timer timer={product?.expiredAt ?? 0} />
