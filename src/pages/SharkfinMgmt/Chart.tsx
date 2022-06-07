@@ -3,6 +3,31 @@ import { ReactComponent as SharkfinChartSvg } from 'assets/svg/sharkfin_chart.sv
 import { ReactComponent as SharkfinChartMobileSvg } from 'assets/svg/sharkfin_chart_mobile.svg'
 import useBreakpoint from 'hooks/useBreakpoint'
 
+enum priceStatus {
+  lower = 'lower',
+  middle = 'middle',
+  higher = 'higher'
+}
+
+const getPriceStatus = (
+  barrierPrice0: string | undefined,
+  barrierPrice1: string | undefined,
+  marketPrice: string | undefined
+) => {
+  const barrier0 = barrierPrice0 ? +barrierPrice0 : NaN
+  const barrier1 = barrierPrice1 ? +barrierPrice1 : NaN
+  const market = marketPrice ? +marketPrice : NaN
+  const hasPrice = !isNaN(barrier0) && !isNaN(barrier1) && !isNaN(market)
+
+  if (hasPrice && market < barrier0) {
+    return priceStatus.lower
+  }
+  if (hasPrice && market > barrier1) {
+    return priceStatus.higher
+  }
+  return priceStatus.middle
+}
+
 export default function SharkfinChart({
   marketPrice,
   baseRate,
@@ -16,6 +41,8 @@ export default function SharkfinChart({
 }) {
   const isDownSm = useBreakpoint('sm')
   const theme = useTheme()
+  const status = getPriceStatus(barrierPrice0, barrierPrice1, marketPrice)
+
   return (
     <Box
       display="flex"
@@ -39,43 +66,57 @@ export default function SharkfinChart({
 
           <Typography>0</Typography>
         </Box>
-        {isDownSm ? (
-          <Box position="relative" width="100%">
-            <Box
-              position="absolute"
-              left="55%"
-              borderRadius={'10px'}
-              boxShadow="0px 1px 10px rgba(0, 0, 0, 0.1)"
-              padding="10px 12px"
-              fontSize={12}
-              sx={{ backgroundColor: '#ffffff' }}
-            >
-              Market Price:{' '}
-              <Typography fontSize={12} fontWeight={700}>
-                {marketPrice ?? '-'} USDT
-              </Typography>{' '}
-            </Box>
-            <SharkfinChartMobileSvg width={'100%'} style={{ height: 'auto' }} />
-          </Box>
-        ) : (
-          <Box position="relative" width="100%">
-            <Box
-              position="absolute"
-              left="50%"
-              borderRadius={'10px'}
-              boxShadow="0px 1px 10px rgba(0, 0, 0, 0.1)"
-              padding="10px 12px"
-              fontSize={12}
-              sx={{ backgroundColor: '#ffffff' }}
-            >
-              Market Price:{' '}
-              <Typography fontSize={12} fontWeight={700}>
-                {marketPrice ?? '-'} USDT
-              </Typography>
-            </Box>
-            <SharkfinChartSvg width={'100%'} style={{ height: 'auto' }} />{' '}
-          </Box>
-        )}
+
+        <Box
+          position="relative"
+          width="100%"
+          sx={{
+            [`& path.${status}`]: {
+              strokeOpacity: 1
+            },
+            [`& line.${status}`]: {
+              strokeOpacity: 1
+            }
+          }}
+        >
+          {isDownSm ? (
+            <>
+              <Box
+                position="absolute"
+                left={status === priceStatus.lower ? '20%' : status === priceStatus.higher ? '55%' : '51%'}
+                borderRadius={'10px'}
+                boxShadow="0px 1px 10px rgba(0, 0, 0, 0.1)"
+                padding="10px 12px"
+                fontSize={12}
+                sx={{ backgroundColor: '#ffffff' }}
+              >
+                Market Price:{' '}
+                <Typography fontSize={12} fontWeight={700}>
+                  {marketPrice ?? '-'} USDT
+                </Typography>{' '}
+              </Box>
+              <SharkfinChartMobileSvg width={'100%'} style={{ height: 'auto' }} />
+            </>
+          ) : (
+            <>
+              <Box
+                position="absolute"
+                left={status === priceStatus.lower ? '20%' : status === priceStatus.higher ? '65%' : '50%'}
+                borderRadius={'10px'}
+                boxShadow="0px 1px 10px rgba(0, 0, 0, 0.1)"
+                padding="10px 12px"
+                fontSize={12}
+                sx={{ backgroundColor: '#ffffff' }}
+              >
+                Market Price:{' '}
+                <Typography fontSize={12} fontWeight={700}>
+                  {marketPrice ?? '-'} USDT
+                </Typography>
+              </Box>
+              <SharkfinChartSvg width={'100%'} style={{ height: 'auto' }} />
+            </>
+          )}
+        </Box>
       </Box>
       <Box display="flex" justifyContent={'space-between'} width="100%" sx={{ color: theme.palette.primary.main }}>
         <span style={{ width: 60 }}></span>

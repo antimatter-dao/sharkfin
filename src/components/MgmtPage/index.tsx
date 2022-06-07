@@ -164,7 +164,7 @@ export default function MgmtPage(props: Props) {
                           <Box display="flex" alignItems="center" gap={8}>
                             <Box height={10} width={10} borderRadius="50%" bgcolor="#18A0FB" />
                             <Typography fontSize={12} color="#18A0FB" noWrap>
-                              Spot Price
+                              Market Price
                             </Typography>
                           </Box>
                           {/* <Box display="flex" alignItems="center" gap={8}>

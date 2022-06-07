@@ -2,7 +2,9 @@
 <path d="M1 1L1.00001 219" stroke="black" stroke-opacity="0.2"/>
 <path d="M1 219H543" stroke="black" stroke-opacity="0.2"/>
 <path d="M182 20L182 220" stroke="#F00B0B" stroke-dasharray="4 4"/>
-<path d="M363 29L2.99997 29" stroke="#18A0FB" stroke-dasharray="4 4"/>
+<path d="M2.99997 29L100 29" stroke="#18A0FB" stroke-dasharray="4 4" class='lower' stroke-opacity="0"/>
+<path d="M2.99997 29L270 29" stroke="#18A0FB" stroke-dasharray="4 4" class='middle' stroke-opacity="0"/>
+<path d="M2.99997 29L470 29" stroke="#18A0FB" stroke-dasharray="4 4" class='higher' stroke-opacity="0"/>
 <path d="M363.381 19L362.526 219.001" stroke="#F00B0B" stroke-dasharray="4 4"/>
 <rect x="1" y="138" width="182" height="80" fill="url(#paint0_linear_3801_29370)"/>
 <path d="M183 137.5L362 29V216H183V137.5Z" fill="url(#paint1_linear_3801_29370)"/>
@@ -10,7 +12,12 @@
 <line x1="1" y1="137.5" x2="183" y2="137.5" stroke="#FA0E0E"/>
 <line x1="362" y1="137.5" x2="526" y2="137.5" stroke="#FA0E0E"/>
 <line x1="182.741" y1="137.572" x2="362.741" y2="28.5723" stroke="#11BF2D"/>
-<line x1="264.5" y1="-2.29614e-08" x2="264.5" y2="219" stroke="#252525"/>
+<line x1="100" y1="-2.29614e-08" x2="100" y2="219" stroke="#252525" 
+stroke-opacity="0" class='lower'/>
+<line x1="270" y1="-2.29614e-08" x2="270" y2="219" stroke="#252525" 
+stroke-opacity="0" class='middle'/>
+<line x1="470" y1="-2.29614e-08" x2="470" y2="219" stroke="#252525" 
+stroke-opacity="0" class='higher'/>
 <path d="M182 138L3 138" stroke="#18A0FB" stroke-dasharray="4 4"/>
 <defs>
 <linearGradient id="paint0_linear_3801_29370" x1="92" y1="138" x2="92" y2="218" gradientUnits="userSpaceOnUse">
