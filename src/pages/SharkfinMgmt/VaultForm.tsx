@@ -36,7 +36,7 @@ export default function VaultForm({
   const { account, chainId } = useActiveWeb3React()
   const investCurrency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.investCurrency ?? '']
   const underlying = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.underlying ?? '']
-  const title = `${underlying.symbol} weekly sharkfin\n (Principle protected)`
+  const title = `${underlying.symbol} Weekly Sharkfin\n (principal protected)`
 
   const ETHBalance = useETHBalances([account ?? undefined])?.[account ?? '']
   const tokenBalance = useTokenBalance(account ?? undefined, investCurrency)
