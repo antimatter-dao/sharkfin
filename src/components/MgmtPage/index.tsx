@@ -162,8 +162,8 @@ export default function MgmtPage(props: Props) {
                           </Typography>
 
                           <Box display="flex" alignItems="center" gap={8}>
-                            <Box height={10} width={10} borderRadius="50%" bgcolor="#18A0FB" />
-                            <Typography fontSize={12} color="#18A0FB" noWrap>
+                            <Box height={10} width={10} borderRadius="50%" bgcolor="black" />
+                            <Typography fontSize={12} noWrap>
                               Market Price
                             </Typography>
                           </Box>

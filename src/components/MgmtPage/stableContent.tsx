@@ -250,10 +250,10 @@ export function FAQ({ subject }: { subject: Subject }) {
       [Subject.RecurringVault]: [],
       [Subject.Sharkfin]: [
         {
-          summary: 'What is Daily Sharkfin?',
+          summary: 'What is Weekly Sharkfin?',
           details: (
             <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
-              Daily Sharkfin is a principal protected product, where users subscribe using the required currency and
+              Weekly Sharkfin is a principal protected product, where users subscribe using the required currency and
               earn varying yield based on a specified price range of the underlying asset. The product runs on a weekly
               basis and redemption is only possible at maturity.
             </AccordionDetailText>

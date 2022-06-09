@@ -62,17 +62,16 @@ export default function SharkfinMgmt() {
     const minRate = product?.minRate ? (+product.minRate.slice(0, -1)).toFixed(2) + '%' : '3%'
     return [
       <>
-        Settlement at maturity:at annualised rate of return{' '}
+        Settlement at maturity: APR of{' '}
         <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>{minRate}~15.00%</span>{' '}
-        <span>{<br />}</span> Conditions must meet:
-        {product?.underlying ?? 'ETH'} price was <span style={{ fontWeight: 500 }}>always</span> within the price range{' '}
-        <span>{<br />}</span>
-        Annualised Product Return ={minRate}
+        <span>{<br />}</span> Conditions must meet: {product?.underlying ?? 'ETH'} price was{' '}
+        <span style={{ fontWeight: 500 }}>always</span> within the price range <span>{<br />}</span>
+        Annualised Product Return = {minRate}
         +(settlement price-{product?.barrierPrice0})/({product?.barrierPrice1}-{product?.barrierPrice0})*(15.00%-
-        {minRate}) Return=Principal* Annualised Product Return/365*Investment term
+        {minRate}) <span>{<br />}</span> Return = Principal * Annualised Product Return/365 * 7 (investment term)
       </>,
       <>
-        Settlement at maturity:APR of{' '}
+        Settlement at maturity: APR of{' '}
         <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>{minRate}</span>
         <span>{<br />}</span> Conditions must meet: {product?.underlying ?? 'ETH'} price was atleast once below $
         {product?.barrierPrice0 ?? '-'} or above ${product?.barrierPrice1 ?? '-'} Return = Principal *{' '}
@@ -398,13 +397,16 @@ function PastAggregate({ data }: { data: any }) {
           <Typography fontSize={16} sx={{ opacity: 0.5 }} mb={8}>
             Past Aggregate Earnings (Platform)
           </Typography>
-          <Box display="flex" alignItems="flex-end">
+          {/* <Box display="flex" alignItems="flex-end">
             <Typography fontSize={44} fontWeight={700}>
               11,111
             </Typography>
             <Typography fontWeight={700}>$</Typography>
           </Box>
-          <Typography sx={{ opacity: 0.8, mt: 8 }}>Aug 26, 2021</Typography>
+          <Typography sx={{ opacity: 0.8, mt: 8 }}>Aug 26, 2021</Typography> */}
+          <Typography sx={{ opacity: 0.8 }} fontSize={24} fontWeight={500}>
+            Coming Soon
+          </Typography>
         </Box>
         <Box height="100%" flexGrow={1} mt={40}>
           <BarChart chartData={data} />
