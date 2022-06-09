@@ -221,7 +221,7 @@ export function useSharkfinList() {
     if (list) {
       setPromise(Promise.all(list))
     }
-  }, [account, chainId])
+  }, [account, chainId, blockNumber])
 
   useEffect(() => {
     let mounted = true
@@ -244,8 +244,7 @@ export function useSharkfinList() {
     return () => {
       mounted = false
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [promise, blockNumber])
+  }, [chainId, promise])
 
   return defiVaultList
 }

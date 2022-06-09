@@ -116,21 +116,24 @@ export const feeRate = '3%'
 
 export const SHARKFIN_ADDRESS: {
   [chainId in ChainId]?: { [currencySymbol: string]: { SELF: string | undefined; U: string | undefined } }
-} = IS_TEST_NET
-  ? {
-      [ChainId.RINKEBY]: {
-        ETH: { U: '0x22b643fFD852c02600D7c06e6Ce883af9F346c0f', SELF: '0x295c6e4Fe1da094225ef0D4b2672bBaDC511979F' },
-        BTC: { SELF: '0xd88313f5bA9cBcD4F87Afe76d6A3C3ff84765B3f', U: '0xD12Ce3081c03f256B40146C31d83b95Fe588E4BC' }
+} = {
+  [ChainId.MAINNET]: {
+    ETH: { SELF: '0xe3059306d3bC60894C4944Af01553f650D2255E3', U: '0x973c470e885F44B3BcC9fd89308EBE658E88EBe5' },
+    BTC: { SELF: '0xF570079Ea377528B513b263C5B980dA58a8fe1a4', U: '0xD383bf84C4dB0764c7f7887b489933dE1B7A157A' }
+  },
+  [ChainId.BSC]: {
+    ETH: { SELF: '0xB2d06a54f2DBC5a2b608358c034be6aA88646Df4', U: '0x07877a8a74C3fDB822F952108EeF9f8d8752A9c4' },
+    BTC: { SELF: '0xfE354EA7a06f6dBDEF06F087C4Be5A6d4E021442', U: '0x39F4E6E0fbD301576a8Ce54821a192b91e7d2E90' }
+  },
+  ...(IS_TEST_NET
+    ? {
+        [ChainId.RINKEBY]: {
+          ETH: { U: '0x22b643fFD852c02600D7c06e6Ce883af9F346c0f', SELF: '0x295c6e4Fe1da094225ef0D4b2672bBaDC511979F' },
+          BTC: { SELF: '0xd88313f5bA9cBcD4F87Afe76d6A3C3ff84765B3f', U: '0xD12Ce3081c03f256B40146C31d83b95Fe588E4BC' }
+        }
       }
-    }
-  : {
-      [ChainId.MAINNET]: {
-        ETH: { SELF: undefined, U: undefined }
-      },
-      [ChainId.BSC]: {
-        ETH: { SELF: undefined, U: undefined }
-      }
-    }
+    : {})
+}
 
 export const getSharkfinAddress = (
   underlying: string | undefined,

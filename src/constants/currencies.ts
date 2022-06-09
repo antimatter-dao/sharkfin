@@ -8,7 +8,8 @@ import LUNALogo from 'assets/svg/luna.svg'
 import MATICLogo from 'assets/svg/matic.svg'
 import CAKELogo from 'assets/svg/cake.svg'
 import USDCLogo from 'assets/svg/usdc.svg'
-import { ChainId, ChainList, IS_TEST_NET } from './chain'
+import { ChainId, ChainList } from './chain'
+import { SHARKFIN_ADDRESS } from 'constants/index'
 
 export const SYMBOL_MAP = {
   BTC: 'BTC',
@@ -53,7 +54,8 @@ export const SUPPORTED_CURRENCIES: {
     address: {
       [ChainId.ROPSTEN]: '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93',
       [ChainId.BSC]: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
-      [ChainId.RINKEBY]: '0x329695b36c66d2d44160Cf84be6e2c6FF76F981F'
+      [ChainId.RINKEBY]: '0x329695b36c66d2d44160Cf84be6e2c6FF76F981F',
+      [ChainId.MAINNET]: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'
     },
     decimals: 18,
     symbol: 'BTC',
@@ -252,12 +254,26 @@ export const CURRENCY_ADDRESS_MAP = Object.keys(SUPPORTED_CURRENCIES).reduce((ac
   return acc
 }, {} as { [key: string]: Token })
 
-export const SUPPORTED_SHARKFIN_VAULT: { [chainId in ChainId]?: string[] } = IS_TEST_NET
-  ? { [ChainId.RINKEBY]: ['ETH', 'BTC'], [ChainId.BSC]: ['BTC', 'ETH'] }
-  : {
-      [ChainId.MAINNET]: ['ETH', 'BTC'],
-      [ChainId.BSC]: ['BTC', 'ETH']
+export const SUPPORTED_SHARKFIN_VAULT: { [chainId in ChainId]?: string[] } = Object.keys(SHARKFIN_ADDRESS).reduce(
+  (acc, chain) => {
+    const chainId: ChainId = +chain
+    const addresses = SHARKFIN_ADDRESS[chainId]
+
+    if (!addresses) {
+      return acc
     }
+    const curList = Object.keys(addresses).reduce((acc2, curSymbol: string) => {
+      if (!acc2.includes(curSymbol)) {
+        acc2.push(curSymbol)
+      }
+      return acc2
+    }, [] as string[])
+
+    acc[chainId] = curList
+    return acc
+  },
+  {} as { [key: string]: string[] }
+)
 
 export const DEFAULT_COIN_SYMBOL: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: 'ETH',
