@@ -39,7 +39,7 @@ export default function History() {
 
     return records.map(record => {
       return [
-        ` ${record.id}${record.underlying ?? '-'} weekly sharkfin`,
+        `${record.underlying ?? '-'} weekly sharkfin`,
         <TransactionTypeIcon key="type" txType={record.actionType} />,
         <>
           {record.amount} {record.investCurrency ?? '-'}
