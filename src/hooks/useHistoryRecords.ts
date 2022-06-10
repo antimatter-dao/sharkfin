@@ -11,8 +11,6 @@ import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 const PageSize = 8
 
-// const types = [11, 12].join('&types=')
-
 export function useHistoryRecords(pageNum: number) {
   const { account, chainId } = useActiveWeb3React()
   const [orderList, setOrderList] = useState<SharkfinRecord[] | undefined>(undefined)
@@ -28,13 +26,15 @@ export function useHistoryRecords(pageNum: number) {
       const underlying = (() => {
         let cur: string
         switch (order.type) {
-          case 15 | 16 | 17 | 18:
+          case 15:
+          case 16:
+          case 17:
+          case 18:
             cur = 'BTC'
             break
-          default: {
+          default:
             // 11|12|13|14 ETH
             cur = 'ETH'
-          }
         }
         return cur
       })()
@@ -42,9 +42,9 @@ export function useHistoryRecords(pageNum: number) {
       const investCurrency = isSelf ? underlying : 'USDT'
       acc.push({
         ...order,
-        actionType: [11].includes(order.type) ? 'withdraw' : 'deposit',
+        actionType: order.type % 2 == 0 ? 'withdraw' : 'deposit',
         underlying: underlying,
-        currency: investCurrency,
+        investCurrency: investCurrency,
         amount: parsePrecision(
           trimNumberString(order.amount, 0),
           CURRENCIES[chainId ?? NETWORK_CHAIN_ID]?.[investCurrency].decimals ?? 18
@@ -77,7 +77,7 @@ export function useHistoryRecords(pageNum: number) {
     })
   }, [])
 
-  usePollingWithMaxRetries(promiseFn, callbackFn, 50000)
+  usePollingWithMaxRetries(promiseFn, callbackFn, 100000)
 
   return useMemo(() => {
     return {
