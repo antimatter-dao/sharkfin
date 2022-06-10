@@ -8,7 +8,7 @@ import { getContract } from 'utils'
 import { SHARKFIN_ADDRESS } from 'constants/index'
 import SHARKFIN_VAULT_ABI from '../constants/abis/sharkfin.json'
 import { useActiveWeb3React } from 'hooks'
-import { useBlockNumber } from 'state/application/hooks'
+// import { useBlockNumber } from 'state/application/hooks'
 import { parseBalance, parsePrecision } from 'utils/parseAmount'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useSharkfinContract } from './useContract'
@@ -48,7 +48,7 @@ enum DefiProductDataOrder {
   vaultState
 }
 
-const APY = '1% ~ 15%'
+const APY = '3% ~ 15%'
 
 export function useSingleSharkfin(chainName: string, underlying: string, currency: string): DefiProduct | null {
   const { account, chainId } = useActiveWeb3React()
@@ -157,7 +157,7 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
           : '0',
         barrierPrice0: product?.barrier_prices?.[0].price ?? '-',
         barrierPrice1: product?.barrier_prices?.[1].price ?? '-',
-        minRate: ((product?.base_rate ?? 0.01) * 100).toFixed(0) + '%',
+        minRate: ((product?.base_rate ?? 0.03) * 100).toFixed(0) + '%',
         depositAmount: depositReceipts.result
           ? trimNumberString(
               parsePrecision(
@@ -194,16 +194,22 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
 export function useSharkfinList() {
   const { account, chainId } = useActiveWeb3React()
   const [promise, setPromise] = useState<Promise<any> | undefined>(undefined)
+  const [products, setProducts] = useState<any[] | undefined>(undefined)
   const [defiVaultList, setDefiVaultList] = useState<undefined | null | DefiProduct[]>(undefined)
-  const blockNumber = useBlockNumber()
+  // const blockNumber = useBlockNumber()
 
   useEffect(() => {
     if (!chainId) return
     // const list = Object.keys(SUPPORTED_DEFI_VAULT).reduce((acc, chainId: string) => {
+    const productsPromises: any[] = []
     const library = getOtherNetworkLibrary(chainId)
     const addresses = SHARKFIN_ADDRESS[chainId as ChainId]
     const list = SUPPORTED_SHARKFIN_VAULT[chainId as keyof typeof SUPPORTED_SHARKFIN_VAULT]?.reduce(
       (acc, symbol: string) => {
+        productsPromises.push(
+          Axios.get('getProducts', { chainId, currency: getMappedSymbol(symbol), underlying: getMappedSymbol(symbol) }),
+          Axios.get('getProducts', { chainId, currency: 'USDT', underlying: getMappedSymbol(symbol) })
+        )
         const addressCall = addresses?.[symbol]?.SELF
         const addressPut = addresses?.[symbol]?.U
         const contractCall = addressCall && library ? getContract(addressCall, SHARKFIN_VAULT_ABI, library) : null
@@ -214,22 +220,28 @@ export function useSharkfinList() {
       },
       [] as any[]
     )
-
+    Promise.all(productsPromises)
+      .then(r => {
+        setProducts(r)
+      })
+      .catch(e => {
+        console.error(e)
+      })
     // acc.push(list ? Promise.all(list) : undefined)
     // return acc
     // }, [] as any[])
     if (list) {
       setPromise(Promise.all(list))
     }
-  }, [account, chainId, blockNumber])
+  }, [account, chainId])
 
   useEffect(() => {
     let mounted = true
     ;(async () => {
-      if (!promise) setDefiVaultList(defiVaultListUtil(chainId, undefined))
+      if (!promise) setDefiVaultList(defiVaultListUtil(chainId, undefined, products))
       try {
         const res = await promise
-        const mappedRes = defiVaultListUtil(chainId, res)
+        const mappedRes = defiVaultListUtil(chainId, res, products)
         if (mounted) {
           setDefiVaultList(mappedRes)
         }
@@ -244,7 +256,7 @@ export function useSharkfinList() {
     return () => {
       mounted = false
     }
-  }, [chainId, promise])
+  }, [chainId, products, promise])
 
   return defiVaultList
 }
@@ -261,15 +273,21 @@ const callsFactory = (contract: Contract | null, account: string | null | undefi
   ])
 }
 
-const defiVaultListUtil = (chainId: ChainId | null | undefined, res?: any[][]) => {
+const defiVaultListUtil = (
+  chainId: ChainId | null | undefined,
+  res: any[][] | undefined,
+  products: undefined | any[]
+) => {
   // return Object.keys(SUPPORTED_SHARKFIN_VAULT).reduce((accMain, chainId: string, idx1: number) => {
   if (!chainId || !SUPPORTED_SHARKFIN_VAULT[chainId as keyof typeof SUPPORTED_SHARKFIN_VAULT]) return undefined
   return SUPPORTED_SHARKFIN_VAULT[+chainId as keyof typeof SUPPORTED_SHARKFIN_VAULT]?.reduce(
     (accMain, symbol: string, idx2: number) => {
+      const productCall = getClosestProduct(products?.[idx2 * 2].data.data)
       const resCall = res?.[idx2 * 2]
       const resCallIsRound = resCall
         ? resCall?.[DefiProductDataOrder.vaultState]?.round === resCall[DefiProductDataOrder.depositReceipts]?.round
         : false
+      const minRateCall = ((productCall?.base_rate ?? 0.03) * 100).toFixed(0) + '%'
       accMain.push({
         chainId: +chainId,
         underlying: symbol,
@@ -298,7 +316,7 @@ const defiVaultListUtil = (chainId: ChainId | null | undefined, res?: any[][]) =
               )
             : 0,
         type: 'SELF',
-        apy: APY,
+        apy: getApyRange(minRateCall),
         expiredAt: getExpireAt(),
         beginAt: getExpireAt(true),
         investCurrency: symbol,
@@ -314,13 +332,17 @@ const defiVaultListUtil = (chainId: ChainId | null | undefined, res?: any[][]) =
                 ),
                 4
               )
-            : '-'
+            : '-',
+        barrierPrice0: productCall?.barrier_prices?.[0].price ?? '-',
+        barrierPrice1: productCall?.barrier_prices?.[1].price ?? '-'
       })
 
+      const productPut = getClosestProduct(products?.[idx2 * 2 + 1].data.data)
       const resPut = res?.[idx2 * 2 + 1]
       const resPutIsRound = resPut
         ? resPut?.[DefiProductDataOrder.vaultState]?.round === resPut[DefiProductDataOrder.depositReceipts]?.round
         : false
+      const minRatePut = ((productPut?.base_rate ?? 0.03) * 100).toFixed(0) + '%'
 
       accMain.push({
         chainId: +chainId,
@@ -350,7 +372,7 @@ const defiVaultListUtil = (chainId: ChainId | null | undefined, res?: any[][]) =
               )
             : 0,
         type: 'U',
-        apy: APY,
+        apy: getApyRange(minRatePut),
         expiredAt: getExpireAt(),
         beginAt: getExpireAt(true),
         investCurrency: 'USDT',
@@ -366,7 +388,10 @@ const defiVaultListUtil = (chainId: ChainId | null | undefined, res?: any[][]) =
                 ),
                 4
               )
-            : '-'
+            : '-',
+        barrierPrice0: productPut?.barrier_prices?.[0].price ?? '-',
+        barrierPrice1: productPut?.barrier_prices?.[1].price ?? '-',
+        minRate: ((productPut?.base_rate ?? 0.03) * 100).toFixed(0) + '%'
       })
       return accMain
     },
@@ -383,4 +408,28 @@ const getExpireAt = (beginAt?: boolean) => {
   //UTC 8:00
   now.setUTCHours(8, 0, 0)
   return beginAt ? now.getTime() - 1000 * 60 * 60 * 24 * 7 : now.getTime()
+}
+
+const getClosestProduct = (productList: any[] | undefined) => {
+  if (!productList) {
+    return undefined
+  }
+  const product = productList.reduce((acc: any, data: any) => {
+    if (!acc) return data
+    if (Math.abs(acc.liquidated_at - getExpireAt()) > Math.abs(data.liquidated_at - getExpireAt())) {
+      return data
+    } else {
+      return acc
+    }
+  }, undefined)
+
+  return product
+}
+
+const getApyRange = (minRate: string | undefined) => {
+  if (!minRate) {
+    return APY
+  } else {
+    return `${minRate} ~ 15%`
+  }
 }
