@@ -14,6 +14,7 @@ import { useSingleCallResult } from 'state/multicall/hooks'
 import { useSharkfinContract } from './useContract'
 import { trimNumberString } from 'utils/trimNumberString'
 import { Axios } from 'utils/axios'
+import { useTokenBalance } from 'state/wallet/hooks'
 
 export interface DefiProduct {
   apy: string
@@ -37,6 +38,7 @@ export interface DefiProduct {
   contractDecimals?: string
   minAmount?: string
   minRate?: string
+  aggregateEarnings?: string
 }
 
 enum DefiProductDataOrder {
@@ -80,6 +82,8 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
   const vaultState = useSingleCallResult(contract, 'vaultState')
   const vaultParams = useSingleCallResult(contract, 'vaultParams')
   const pricePerShare = useSingleCallResult(contract, 'pricePerShare')
+  const totalPending = useSingleCallResult(contract, 'totalPending')
+  const totalBalance = useTokenBalance(contract?.address, CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currency])
 
   const argPrice = useMemo(() => {
     return [withdrawals?.result?.round]
@@ -169,7 +173,17 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
               ),
               4
             )
-          : '-'
+          : '-',
+        aggregateEarnings:
+          totalPending.result && totalBalance
+            ? trimNumberString(
+                parsePrecision(
+                  JSBI.subtract(JSBI.BigInt(totalBalance.raw), JSBI.BigInt(totalPending.result.toString())).toString(),
+                  vaultParams.result?.decimals ?? 18
+                ),
+                4
+              )
+            : '-'
       } as DefiProduct
     }
   }, [
@@ -182,6 +196,8 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
     product?.barrier_prices,
     product?.base_rate,
     productChainId,
+    totalBalance,
+    totalPending.result,
     type,
     vaultParams.result?.decimals,
     vaultParams.result?.minimumSupply,
