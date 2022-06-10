@@ -163,7 +163,7 @@ export default function SharkfinMgmt() {
               <RecurringSwitch />
             </Grid> */}
             <Grid xs={12} item>
-              <PastAggregate data={chartData} />
+              <PastAggregate data={chartData} earnings={product?.aggregateEarnings} />
               {/* <PrevCycleStats prevDetails={prevDetails} /> */}
             </Grid>
             {/* {!isDownMd && (
@@ -389,7 +389,7 @@ export default function SharkfinMgmt() {
 //   )
 // }
 
-function PastAggregate({ data }: { data: any }) {
+function PastAggregate({ data, earnings }: { data: any; earnings?: string }) {
   return (
     <Card width="100%" padding="34px 24px" height="100%" style={{ minHeight: 500 }}>
       <Box display="flex" flexDirection={'column'} height="100%" gap={20}>
@@ -397,16 +397,13 @@ function PastAggregate({ data }: { data: any }) {
           <Typography fontSize={16} sx={{ opacity: 0.5 }} mb={8}>
             Past Aggregate Earnings (Platform)
           </Typography>
-          {/* <Box display="flex" alignItems="flex-end">
+          <Box display="flex" alignItems="flex-end">
             <Typography fontSize={44} fontWeight={700}>
-              11,111
+              {earnings ?? '-'}
             </Typography>
             <Typography fontWeight={700}>$</Typography>
           </Box>
-          <Typography sx={{ opacity: 0.8, mt: 8 }}>Aug 26, 2021</Typography> */}
-          <Typography sx={{ opacity: 0.8 }} fontSize={24} fontWeight={500}>
-            Coming Soon
-          </Typography>
+          {/*<Typography sx={{ opacity: 0.8, mt: 8 }}>Aug 26, 2021</Typography> */}
         </Box>
         <Box height="100%" flexGrow={1} mt={40}>
           <BarChart chartData={data} />

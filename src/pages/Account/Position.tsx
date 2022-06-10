@@ -168,7 +168,7 @@ export default function Position() {
           <Typography key={1} color="#31B047">
             {data.apy}
           </Typography>,
-          `${data.barrierPrice0 ?? ''}~${data.barrierPrice0 ?? ''}`,
+          `${data.barrierPrice0 ?? ''}~${data.barrierPrice1 ?? ''}`,
           data ? data.depositAmount + ' ' + data.investCurrency : '-',
           data?.expiredAt ? dayjsUTC(data.expiredAt).format('MMM DD, YYYY\nhh:mm A') + ' UTC' : '-',
           <Box
