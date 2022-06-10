@@ -16,7 +16,7 @@ export interface SharkfinRecord {
   account: string
   hash: string
   symbol: string
-  currency: string
+  investCurrency: string
   amount: string
   timestamp: string
   type: number

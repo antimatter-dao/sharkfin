@@ -39,10 +39,10 @@ export default function History() {
 
     return records.map(record => {
       return [
-        `${record.underlying ?? '-'} weekly sharkfin`,
+        ` ${record.id}${record.underlying ?? '-'} weekly sharkfin`,
         <TransactionTypeIcon key="type" txType={record.actionType} />,
         <>
-          {record.amount} {record.currency ?? '-'}
+          {record.amount} {record.investCurrency ?? '-'}
         </>,
         record.hash ? (
           <ExternalLink

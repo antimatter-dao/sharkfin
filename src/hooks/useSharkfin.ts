@@ -215,6 +215,7 @@ export function useSharkfinList() {
   // const blockNumber = useBlockNumber()
 
   useEffect(() => {
+    let mounted = true
     if (!chainId) return
     // const list = Object.keys(SUPPORTED_DEFI_VAULT).reduce((acc, chainId: string) => {
     const productsPromises: any[] = []
@@ -238,7 +239,9 @@ export function useSharkfinList() {
     )
     Promise.all(productsPromises)
       .then(r => {
-        setProducts(r)
+        if (mounted) {
+          setProducts(r)
+        }
       })
       .catch(e => {
         console.error(e)
@@ -246,8 +249,11 @@ export function useSharkfinList() {
     // acc.push(list ? Promise.all(list) : undefined)
     // return acc
     // }, [] as any[])
-    if (list) {
+    if (list && mounted) {
       setPromise(Promise.all(list))
+    }
+    return () => {
+      mounted = false
     }
   }, [account, chainId])
 
