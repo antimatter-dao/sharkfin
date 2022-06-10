@@ -5,7 +5,7 @@ import { retry } from 'utils/retry'
 const axiosInstance = axios.create({
   baseURL: IS_TEST_NET
     ? 'https://dualinvest-testapi.antimatter.finance/web/'
-    : 'https://sharkfinapi.antimatter.finance/',
+    : 'https://sharkfinapi.antimatter.finance/web/',
   timeout: 10000,
   headers: { 'content-type': 'application/json', accept: 'application/json' }
 })

@@ -42,7 +42,7 @@ export const SUPPORTED_CURRENCY_SYMBOL = {
 
 export const SUPPORTED_CURRENCIES: {
   [key: string]: {
-    address: { [key in ChainId]?: string }
+    address: { [key in ChainId]?: string | [string, number] }
     decimals: number
     symbol: string
     name: string
@@ -55,11 +55,11 @@ export const SUPPORTED_CURRENCIES: {
       [ChainId.ROPSTEN]: '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93',
       [ChainId.BSC]: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
       [ChainId.RINKEBY]: '0x329695b36c66d2d44160Cf84be6e2c6FF76F981F',
-      [ChainId.MAINNET]: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'
+      [ChainId.MAINNET]: ['0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8]
     },
     decimals: 18,
     symbol: 'BTC',
-    name: 'Binance-Peg BTCB Token',
+    name: 'Bitcoin',
     logoUrl: BtcLogo,
     color: '#FD8B00'
   },
@@ -67,7 +67,8 @@ export const SUPPORTED_CURRENCIES: {
     address: {
       [ChainId.ROPSTEN]: '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93',
       [ChainId.BSC]: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
-      [ChainId.RINKEBY]: '0x329695b36c66d2d44160Cf84be6e2c6FF76F981F'
+      [ChainId.RINKEBY]: '0x329695b36c66d2d44160Cf84be6e2c6FF76F981F',
+      [ChainId.MAINNET]: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'
     },
     decimals: 18,
     symbol: 'BTC',
@@ -77,14 +78,14 @@ export const SUPPORTED_CURRENCIES: {
   },
   USDT: {
     address: {
-      [ChainId.ROPSTEN]: '0xE78D911B56a6321bF622172D32D916f9563e8D84',
-      [ChainId.BSC]: '0x55d398326f99059fF775485246999027B3197955',
+      [ChainId.ROPSTEN]: ['0xE78D911B56a6321bF622172D32D916f9563e8D84', 18],
+      [ChainId.BSC]: ['0x55d398326f99059fF775485246999027B3197955', 18],
       [ChainId.AVAX]: '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
       [ChainId.MAINNET]: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
       [ChainId.RINKEBY]: '0x4Fc7CF6A62c913203f4CC9B2eA02DB27d090AB18',
       [ChainId.MATIC]: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
       [ChainId.KOVAN]: '0x7e6edA50d1c833bE936492BF42C1BF376239E9e2'
-    } as { [chainId in ChainId]: string },
+    } as { [chainId in ChainId]: string | [string, number] },
     decimals: 6,
     symbol: 'USDT',
     name: 'Tether USD',
@@ -227,9 +228,13 @@ export const CURRENCIES: { [key in ChainId]: { [key: string]: Token } } = ChainL
     const tokenMap = Object.keys(SUPPORTED_CURRENCIES).reduce((acc: { [key: string]: Token }, key) => {
       const item = SUPPORTED_CURRENCIES[key as keyof typeof SUPPORTED_CURRENCIES]
       const address = item.address[id]
-      const decimal = item.symbol === 'USDT' && [ChainId.ROPSTEN, ChainId.BSC].includes(id) ? 18 : item.decimals
+      const decimal = item.decimals
       if (address) {
-        acc[key as keyof typeof SUPPORTED_CURRENCIES] = new Token(id, address, decimal, item.symbol, item.name)
+        if (Array.isArray(address)) {
+          acc[key as keyof typeof SUPPORTED_CURRENCIES] = new Token(id, address[0], address[1], item.symbol, item.name)
+        } else {
+          acc[key as keyof typeof SUPPORTED_CURRENCIES] = new Token(id, address, decimal, item.symbol, item.name)
+        }
       }
 
       return acc
@@ -245,9 +250,25 @@ export const CURRENCY_ADDRESS_MAP = Object.keys(SUPPORTED_CURRENCIES).reduce((ac
   const item = SUPPORTED_CURRENCIES[key as keyof typeof SUPPORTED_CURRENCIES]
   ChainList.map(({ id: chainId }: { id: ChainId }) => {
     const address = item.address[chainId]
-    const decimal = item.symbol === 'USDT' && [ChainId.ROPSTEN, ChainId.BSC].includes(chainId) ? 18 : item.decimals
+    const decimal = item.decimals
     if (address) {
-      acc[address as keyof typeof SUPPORTED_CURRENCIES] = new Token(+chainId, address, decimal, item.symbol, item.name)
+      if (Array.isArray(address)) {
+        acc[address[0] as keyof typeof SUPPORTED_CURRENCIES] = new Token(
+          +chainId,
+          address[0],
+          address[1],
+          item.symbol,
+          item.name
+        )
+      } else {
+        acc[address as keyof typeof SUPPORTED_CURRENCIES] = new Token(
+          +chainId,
+          address,
+          decimal,
+          item.symbol,
+          item.name
+        )
+      }
     }
   })
 
