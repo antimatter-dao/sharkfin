@@ -12,7 +12,7 @@ import { dayjsUTC } from 'utils/dayjsUTC'
 // import dayjs from 'dayjs'
 
 const StyledBox = styled(Box)<{ selected?: boolean }>(({ theme, selected }) => ({
-  border: `1px solid ${selected ? theme.palette.primary.main : theme.palette.text.secondary}`,
+  border: `1.25px solid ${selected ? theme.palette.primary.main : theme.palette.text.secondary}`,
   borderRadius: '50%',
   height: 20,
   width: 20,
@@ -20,7 +20,7 @@ const StyledBox = styled(Box)<{ selected?: boolean }>(({ theme, selected }) => (
   alignItems: 'center',
   justifyContent: 'center',
   marginRight: 5,
-  paddingTop: 2
+  paddingRight: 1
 }))
 
 export enum TYPE {
@@ -265,7 +265,7 @@ function CustomTab(props: TabProps & { selected?: boolean }) {
       {...props}
       disableRipple
       label={
-        <Box display={'flex'} alignItems="center" sx={{ fontSize: { xs: 12, sm: 14 } }}>
+        <Box display={'flex'} alignItems="center" marginLeft="-10px" sx={{ fontSize: 12 }}>
           <StyledBox component="span" selected={props.selected}>
             {props.value + 1}
           </StyledBox>

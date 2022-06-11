@@ -101,7 +101,7 @@ export default function VaultForm({
         />
         <Box>
           {account && chainId === productChainId && (
-            <Button onClick={onClick} disabled={disabled || !!error}>
+            <Button style={{ borderRadius: '16px' }} onClick={onClick} disabled={disabled || !!error}>
               {buttonText}
             </Button>
           )}
@@ -112,10 +112,10 @@ export default function VaultForm({
           )}
           {!account && <BlackButton onClick={toggleWallet}>Connect</BlackButton>}
         </Box>
-        <Box display="flex" alignItems="center">
+        <Box marginTop={'-14px'} display="flex" alignItems="center">
           {error ? (
             <>
-              <InfoOutlinedIcon sx={{ color: theme => theme.palette.error.main, height: 12 }} />
+              <InfoOutlinedIcon sx={{ color: theme => theme.palette.error.main, height: 12, marginLeft: '-6px' }} />
               <Typography component="p" fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
                 {
                   <>

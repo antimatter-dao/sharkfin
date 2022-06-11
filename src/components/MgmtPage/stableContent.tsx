@@ -32,9 +32,13 @@ const StyledOrderList = styled('ol')(({ theme }) => ({
     marginLeft: '12px'
   },
   '& li:before': {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     counterIncrement: 'counterReset',
     content: 'counter(counterReset)',
     color: theme.palette.primary.main,
+    fontSize: '12px',
     width: '24px',
     height: '24px',
     borderRadius: '50%',

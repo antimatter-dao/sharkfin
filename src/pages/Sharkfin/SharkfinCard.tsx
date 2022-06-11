@@ -50,7 +50,7 @@ export default function VaultProductCard({
       <TermTag days={7} color={color} />
       <CurrencyLogo
         currency={SUPPORTED_CURRENCIES[product?.investCurrency ?? '']}
-        size={isDownMd ? '44px' : '52px'}
+        size={isDownMd ? '44px' : '60px'}
         style={{ zIndex: 2, position: 'absolute', right: 24, top: 36 }}
       />
 
@@ -101,7 +101,7 @@ export default function VaultProductCard({
               <Timer timer={product?.expiredAt ?? 0} />
             </Typography>{' '}
           </Box> */}
-          <Button backgroundColor={color} onClick={onClick}>
+          <Button style={{ borderRadius: '16px' }} backgroundColor={color} onClick={onClick}>
             Subscribe
           </Button>
         </>
@@ -184,6 +184,9 @@ function TermTag({ days, color }: { days: number; color: string }) {
           fontSize: 16,
           fontWeight: 600,
           color
+        },
+        '& .MuiInputBase-root': {
+          fontFamily: 'SF Pro'
         },
         '& .MuiInputLabel-root': {
           color
