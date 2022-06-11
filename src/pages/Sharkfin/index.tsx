@@ -121,10 +121,10 @@ export default function Sharkfin() {
         checkpoints={['Principal protected products', 'Low-risk profile']}
         imgFileName={'shark'}
         svgMargin={'0 0 40px'}
-        val1={statistics.totalInvest === '0' ? '-' : toLocaleNumberString(statistics.totalInvest, 0)}
+        val1={statistics.totalInvest ? toLocaleNumberString(statistics.totalInvest, 0) : '0'}
         subVal1="Total investment amount"
         unit1={'USDT'}
-        val2={statistics.totalInvest === '0' ? '-' : toLocaleNumberString(statistics.amountInProgress, 0)}
+        val2={statistics.amountInProgress ? toLocaleNumberString(statistics.amountInProgress, 0) : '0'}
         subVal2="Amount of investment in progress"
         unit2={'USDT'}
       />

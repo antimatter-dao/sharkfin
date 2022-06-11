@@ -75,8 +75,9 @@ export default function Position() {
   const data = useMemo(() => {
     if (!vaultList) return { balanceData: undefined, hiddenParts: undefined }
     // const hiddenParts: any[] = []
-    let hasData = false
+
     const balanceData = vaultList.reduce((acc, data) => {
+      let hasData = false
       if (!data.depositAmount || +data.depositAmount == 0 || data.depositAmount === '-') {
         return acc
       }
@@ -160,44 +161,46 @@ export default function Position() {
       //     </Box>
       //   </Box>
       // )
-      acc.push([
-        <TokenHeader key={data.type + data.underlying} token={token} type={data.type} investToken={investCurrency} />,
+      if (hasData) {
+        acc.push([
+          <TokenHeader key={data.type + data.underlying} token={token} type={data.type} investToken={investCurrency} />,
 
-        <Typography key={1} color="#31B047">
-          {data.apy}
-        </Typography>,
-        '59,000~62,000',
-        data ? data.depositAmount + ' ' + data.investCurrency : '-',
-        data?.expiredAt ? dayjsUTC(data.expiredAt).format('MMM DD, YYYY\nhh:mm A') + ' UTC' : '-',
-        <Box
-          key={1}
-          display="flex"
-          gap={10}
-          pl={isDownMd ? 0 : 20}
-          justifyContent="flex-end"
-          width={isDownMd ? '100%' : 'auto'}
-          mr={isDownMd ? '20px' : 0}
-        >
-          <StatusTag key="status" status="progressing" />
-          <Button
-            fontSize={14}
-            style={{ width: 92, borderRadius: 4, height: 36 }}
-            onClick={() => {
-              history.push(
-                routes.sharkfinMgmt.replace(
-                  ':chainName/:underlying/:investCurrency',
-                  `${chainId ? ChainListMap[chainId].symbol : 'ETH'}/${data.underlying}/${data.investCurrency}`
-                )
-              )
-            }}
+          <Typography key={1} color="#31B047">
+            {data.apy}
+          </Typography>,
+          `${data.barrierPrice0 ?? ''}~${data.barrierPrice1 ?? ''}`,
+          data ? data.depositAmount + ' ' + data.investCurrency : '-',
+          data?.expiredAt ? dayjsUTC(data.expiredAt).format('MMM DD, YYYY\nhh:mm A') + ' UTC' : '-',
+          <Box
+            key={1}
+            display="flex"
+            gap={10}
+            pl={isDownMd ? 0 : 20}
+            justifyContent="flex-end"
+            width={isDownMd ? '100%' : 'auto'}
+            mr={isDownMd ? '20px' : 0}
           >
-            View
-          </Button>
-        </Box>
-      ])
+            <StatusTag key="status" status="progressing" />
+            <Button
+              fontSize={14}
+              style={{ width: 92, borderRadius: 4, height: 36 }}
+              onClick={() => {
+                history.push(
+                  routes.sharkfinMgmt.replace(
+                    ':chainName/:underlying/:investCurrency',
+                    `${chainId ? ChainListMap[chainId].symbol : 'ETH'}/${data.underlying}/${data.investCurrency}`
+                  )
+                )
+              }}
+            >
+              View
+            </Button>
+          </Box>
+        ])
+      }
       return acc
     }, [] as any[])
-    return { balanceData: hasData ? balanceData : undefined, hiddenParts: undefined }
+    return { balanceData: balanceData, hiddenParts: undefined }
   }, [chainId, history, isDownMd, vaultList])
 
   if (!account) {

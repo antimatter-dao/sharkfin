@@ -112,7 +112,7 @@ export const BLOCKED_ADDRESSES: string[] = [
 
 export const NO_REFERRER = '0x0000000000000000000000000000000000000000'
 
-export const feeRate = '3%'
+export const feeRate = '10%'
 
 export const SHARKFIN_ADDRESS: {
   [chainId in ChainId]?: { [currencySymbol: string]: { SELF: string | undefined; U: string | undefined } }

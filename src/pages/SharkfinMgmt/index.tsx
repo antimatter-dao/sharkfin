@@ -163,7 +163,7 @@ export default function SharkfinMgmt() {
               <RecurringSwitch />
             </Grid> */}
             <Grid xs={12} item>
-              <PastAggregate data={chartData} />
+              <PastAggregate data={chartData} earnings={product?.aggregateEarnings} />
               {/* <PrevCycleStats prevDetails={prevDetails} /> */}
             </Grid>
             {/* {!isDownMd && (
@@ -389,7 +389,7 @@ export default function SharkfinMgmt() {
 //   )
 // }
 
-function PastAggregate({ data }: { data: any }) {
+function PastAggregate({ data, earnings }: { data: any; earnings?: string }) {
   return (
     <Card width="100%" padding="34px 24px" height="100%" style={{ minHeight: 500 }}>
       <Box display="flex" flexDirection={'column'} height="100%" gap={20}>
@@ -399,7 +399,7 @@ function PastAggregate({ data }: { data: any }) {
           </Typography>
           {/* <Box display="flex" alignItems="flex-end">
             <Typography fontSize={44} fontWeight={700}>
-              11,111
+              {earnings ?? '-'}
             </Typography>
             <Typography fontWeight={700}>$</Typography>
           </Box>

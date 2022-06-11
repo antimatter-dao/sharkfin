@@ -42,7 +42,7 @@ export default function History() {
         `${record.underlying ?? '-'} weekly sharkfin`,
         <TransactionTypeIcon key="type" txType={record.actionType} />,
         <>
-          {record.amount} {record.currency ?? '-'}
+          {record.amount} {record.investCurrency ?? '-'}
         </>,
         record.hash ? (
           <ExternalLink

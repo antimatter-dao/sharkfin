@@ -18,7 +18,7 @@ enum DataOrder {
 
 export function useHomeStatistics() {
   const [totalInvest, setTotalInvest] = useState('0')
-  const [amountInProgress, setAmountInProgress] = useState('0')
+  const [amountInProgress, setAmountInProgress] = useState<undefined | string>('0')
   const prices = usePriceForAll()
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export function useHomeStatistics() {
 
           return acc
         }, 0)
-        setTotalInvest(acc)
+        setTotalInvest(acc + '')
       }
     })
   }, [prices])

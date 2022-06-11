@@ -157,9 +157,7 @@ export default function VaultCard(props: Props) {
                     {[
                       {
                         title: 'Price Range(USDT)',
-                        data: `${product?.barrierPrice0}${
-                          product?.barrierPrice0 && product?.barrierPrice1 ? '~' : ' '
-                        }${product?.barrierPrice1}`
+                        data: `${product?.barrierPrice0}~${product?.barrierPrice1}`
                       },
                       {
                         title: 'APR',
