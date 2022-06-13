@@ -56,7 +56,7 @@ export default function SharkfinMgmt() {
   const product = useSingleSharkfin(chainName ?? '', underlying ?? '', investCurrency ?? '')
   const price = usePrice(underlying)
   // const prevDetails = usePrevDetails(chainName ?? '', currency ?? '', type ?? '')
-  const chartData = usePastEarningsChartData()
+  const chartData = usePastEarningsChartData(product?.chainId, product?.investCurrency, product?.underlying)
 
   const returnOnInvestmentListItems = useMemo(() => {
     const minRate = product?.minRate ? (+product.minRate.slice(0, -1)).toFixed(2) + '%' : '3%'

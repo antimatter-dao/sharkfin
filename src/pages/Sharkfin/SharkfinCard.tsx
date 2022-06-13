@@ -70,9 +70,9 @@ export default function VaultProductCard({
             <TextCard
               subTextBold
               text={`${
-                product?.depositAmount ? trimNumberString(product.depositAmount, 4) : '-'
+                product?.totalInvestment ? trimNumberString(product.totalInvestment, 4) : '-'
               }  ${product?.investCurrency ?? '-'}`}
-              subText="Your existing position"
+              subText="Investment Amount"
             />
           </Box>
           <Box display="grid" gap={9}>
