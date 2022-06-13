@@ -95,7 +95,7 @@ export default function Select(props: Props) {
         sx={{
           '& .MuiPaper-root': {
             width: 'max-content',
-            borderRadius: '14px',
+            borderRadius: '16px',
             marginTop: 6,
             border: '1px solid rgba(0, 0, 0, 0.1)',
             boxShadow: '0px 1px 8px rgba(0, 0, 0, 0.05)',

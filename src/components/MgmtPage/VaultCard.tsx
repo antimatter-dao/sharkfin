@@ -20,7 +20,8 @@ const StyledBox = styled(Box)<{ selected?: boolean }>(({ theme, selected }) => (
   alignItems: 'center',
   justifyContent: 'center',
   marginRight: 5,
-  paddingTop: 2
+  paddingTop: 1,
+  fontSize: 12
 }))
 
 export enum TYPE {
@@ -276,6 +277,7 @@ function CustomTab(props: TabProps & { selected?: boolean }) {
         color: theme => theme.palette.text.secondary,
         border: '1px solid transparent',
         padding: 10,
+        paddingLeft: props.value === 0 ? 0 : 10,
         opacity: 1,
         '&.Mui-selected': {
           color: theme => theme.palette.primary.main

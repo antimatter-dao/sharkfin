@@ -50,7 +50,7 @@ export default function VaultProductCard({
       <TermTag days={7} color={color} />
       <CurrencyLogo
         currency={SUPPORTED_CURRENCIES[product?.investCurrency ?? '']}
-        size={isDownMd ? '44px' : '52px'}
+        size={isDownMd ? '44px' : '60px'}
         style={{ zIndex: 2, position: 'absolute', right: 24, top: 36 }}
       />
 
@@ -178,6 +178,7 @@ function TermTag({ days, color }: { days: number; color: string }) {
         width: 80,
         height: '35px',
         color,
+        marginBottom: 10,
         pointerEvents: 'none',
         '& .MuiInputBase-input': {
           padding: '8px 14px',
@@ -189,7 +190,8 @@ function TermTag({ days, color }: { days: number; color: string }) {
           color
         },
         '& .MuiOutlinedInput-notchedOutline': {
-          borderColor: color
+          borderColor: color,
+          borderRadius: '10px'
         }
       }}
     />

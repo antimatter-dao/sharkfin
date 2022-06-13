@@ -135,7 +135,7 @@ export const theme = {
   },
   shape: {
     border: '1px solid',
-    borderRadius: 10
+    borderRadius: 16
   },
   spacing: (factor: number) => `${1 * factor}px`
   // gray: {
@@ -306,6 +306,11 @@ export default createTheme({
   ...theme,
   components: {
     ...override
+  },
+  typography: {
+    allVariants: {
+      fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif'
+    }
   }
 })
 
