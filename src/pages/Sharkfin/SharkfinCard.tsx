@@ -70,9 +70,9 @@ export default function VaultProductCard({
             <TextCard
               subTextBold
               text={`${
-                product?.depositAmount ? trimNumberString(product.depositAmount, 4) : '-'
+                product?.totalInvestment ? trimNumberString(product.totalInvestment, 4) : '-'
               }  ${product?.investCurrency ?? '-'}`}
-              subText="Your existing position"
+              subText="Investment Amount"
             />
           </Box>
           <Box display="grid" gap={9}>
@@ -178,6 +178,7 @@ function TermTag({ days, color }: { days: number; color: string }) {
         width: 80,
         height: '35px',
         color,
+        marginBottom: 10,
         pointerEvents: 'none',
         '& .MuiInputBase-input': {
           padding: '8px 14px',
@@ -192,7 +193,8 @@ function TermTag({ days, color }: { days: number; color: string }) {
           color
         },
         '& .MuiOutlinedInput-notchedOutline': {
-          borderColor: color
+          borderColor: color,
+          borderRadius: '10px'
         }
       }}
     />

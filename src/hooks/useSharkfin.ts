@@ -39,6 +39,7 @@ export interface DefiProduct {
   minAmount?: string
   minRate?: string
   aggregateEarnings?: string
+  totalInvestment?: string
 }
 
 enum DefiProductDataOrder {
@@ -306,13 +307,28 @@ const defiVaultListUtil = (
     (accMain, symbol: string, idx2: number) => {
       const productCall = getClosestProduct(products?.[idx2 * 2].data.data)
       const resCall = res?.[idx2 * 2]
+      const vaultStateCall = resCall ? resCall?.[DefiProductDataOrder.vaultState] : undefined
       const resCallIsRound = resCall
         ? resCall?.[DefiProductDataOrder.vaultState]?.round === resCall[DefiProductDataOrder.depositReceipts]?.round
         : false
       const minRateCall = ((productCall?.base_rate ?? 0.03) * 100).toFixed(0) + '%'
+      const decimalsCall = resCall?.[DefiProductDataOrder.decimals] ?? 18
+      const totalInvestmentCall = vaultStateCall
+        ? trimNumberString(
+            parsePrecision(
+              JSBI.add(
+                JSBI.BigInt(vaultStateCall.lockedAmount.toString()),
+                JSBI.BigInt(vaultStateCall.totalPending.toString())
+              ).toString(),
+              decimalsCall
+            ),
+            4
+          )
+        : '0'
       accMain.push({
         chainId: +chainId,
         underlying: symbol,
+        totalInvestment: totalInvestmentCall,
         lockedBalance:
           resCall && resCall[DefiProductDataOrder.accountVaultBalance]
             ? trimNumberString(
@@ -324,18 +340,12 @@ const defiVaultListUtil = (
               )
             : '-',
         cap:
-          resCall && resCall[DefiProductDataOrder.cap] && resCall[DefiProductDataOrder.decimals]
-            ? +parsePrecision(resCall[DefiProductDataOrder.cap].toString(), resCall[DefiProductDataOrder.decimals])
+          resCall && resCall[DefiProductDataOrder.cap]
+            ? +parsePrecision(resCall[DefiProductDataOrder.cap].toString(), decimalsCall)
             : 100,
         totalBalance:
-          resCall && resCall[DefiProductDataOrder.totalBalance] && resCall[DefiProductDataOrder.decimals]
-            ? +trimNumberString(
-                parsePrecision(
-                  resCall[DefiProductDataOrder.totalBalance].toString(),
-                  resCall[DefiProductDataOrder.decimals]
-                ),
-                4
-              )
+          resCall && resCall[DefiProductDataOrder.totalBalance]
+            ? +trimNumberString(parsePrecision(resCall[DefiProductDataOrder.totalBalance].toString(), decimalsCall), 4)
             : 0,
         type: 'SELF',
         apy: getApyRange(minRateCall),
@@ -343,14 +353,14 @@ const defiVaultListUtil = (
         beginAt: getExpireAt(true),
         investCurrency: symbol,
         depositAmount:
-          resCall && resCall[DefiProductDataOrder.depositReceipts] && resCall[DefiProductDataOrder.decimals]
+          resCall && resCall[DefiProductDataOrder.depositReceipts]
             ? trimNumberString(
                 parsePrecision(
                   JSBI.ADD(
                     JSBI.BigInt(resCallIsRound ? resCall[DefiProductDataOrder.depositReceipts].amount.toString() : '0'),
                     JSBI.BigInt(resCall[DefiProductDataOrder.accountVaultBalance].toString())
                   ).toString(),
-                  resCall[DefiProductDataOrder.decimals]
+                  decimalsCall
                 ),
                 4
               )
@@ -365,10 +375,25 @@ const defiVaultListUtil = (
         ? resPut?.[DefiProductDataOrder.vaultState]?.round === resPut[DefiProductDataOrder.depositReceipts]?.round
         : false
       const minRatePut = ((productPut?.base_rate ?? 0.03) * 100).toFixed(0) + '%'
+      const vaultStatePut = resPut ? resPut?.[DefiProductDataOrder.vaultState] : undefined
+      const decimalsPut = resPut?.[DefiProductDataOrder.decimals] ?? 18
+      const totalInvestmentPut = vaultStatePut
+        ? trimNumberString(
+            parsePrecision(
+              JSBI.add(
+                JSBI.BigInt(vaultStatePut.lockedAmount.toString()),
+                JSBI.BigInt(vaultStatePut.totalPending.toString())
+              ).toString(),
+              decimalsPut
+            ),
+            4
+          )
+        : '0'
 
       accMain.push({
         chainId: +chainId,
         underlying: symbol,
+        totalInvestment: totalInvestmentPut,
         lockedBalance:
           resPut && resPut[DefiProductDataOrder.accountVaultBalance]
             ? trimNumberString(
@@ -380,18 +405,12 @@ const defiVaultListUtil = (
               )
             : '-',
         cap:
-          resPut && resPut[DefiProductDataOrder.cap] && resPut[DefiProductDataOrder.decimals]
-            ? +parsePrecision(resPut[DefiProductDataOrder.cap].toString(), resPut[DefiProductDataOrder.decimals])
+          resPut && resPut[DefiProductDataOrder.cap]
+            ? +parsePrecision(resPut[DefiProductDataOrder.cap].toString(), decimalsPut)
             : 100,
         totalBalance:
-          resPut && resPut[DefiProductDataOrder.totalBalance] && resPut[DefiProductDataOrder.decimals]
-            ? +trimNumberString(
-                parsePrecision(
-                  resPut[DefiProductDataOrder.totalBalance].toString(),
-                  resPut[DefiProductDataOrder.decimals]
-                ),
-                4
-              )
+          resPut && resPut[DefiProductDataOrder.totalBalance]
+            ? +trimNumberString(parsePrecision(resPut[DefiProductDataOrder.totalBalance].toString(), decimalsPut), 4)
             : 0,
         type: 'U',
         apy: getApyRange(minRatePut),
@@ -399,14 +418,14 @@ const defiVaultListUtil = (
         beginAt: getExpireAt(true),
         investCurrency: 'USDT',
         depositAmount:
-          resPut && resPut[DefiProductDataOrder.depositReceipts] && resPut[DefiProductDataOrder.decimals]
+          resPut && resPut[DefiProductDataOrder.depositReceipts]
             ? trimNumberString(
                 parsePrecision(
                   JSBI.ADD(
                     JSBI.BigInt(resPutIsRound ? resPut[DefiProductDataOrder.depositReceipts].amount.toString() : '0'),
                     JSBI.BigInt(resPut[DefiProductDataOrder.accountVaultBalance].toString())
                   ).toString(),
-                  resPut[DefiProductDataOrder.decimals]
+                  decimalsPut
                 ),
                 4
               )

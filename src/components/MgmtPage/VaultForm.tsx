@@ -75,7 +75,7 @@ export default function VaultForm({
 
     onChange(available)
   }, [available, onChange])
-
+  console.log(!account, error === ErrorType.notAvailable, chainId !== productChainId, !!(available && +available === 0))
   return (
     <Box pt="20px" display="flex" flexDirection="column" width="100%">
       <Box display="grid" gap={type === TYPE.invest ? '30px' : '16px'} width={'100%'}>
@@ -87,16 +87,13 @@ export default function VaultForm({
           balance={available ? available : '-'}
           unit={currencySymbol}
           error={!!error && error !== ErrorType.notAvailable}
-          smallPlaceholder
           placeholder={'0.00'}
           onChange={handleChange}
           onMax={handleMax}
           value={val}
           disabled={
-            !account ||
-            error === ErrorType.notAvailable ||
-            chainId !== productChainId ||
-            !!(available && +available === 0)
+            !account || error === ErrorType.notAvailable || chainId !== productChainId
+            // ||!!(available && +available === 0)
           }
         />
         <Box>

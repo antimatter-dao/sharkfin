@@ -1,11 +1,11 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useActiveWeb3React } from 'hooks'
 import { Axios } from 'utils/axios'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import qs from 'qs'
 import { OrderRecord, OrderRecordDetail } from 'utils/fetch/record'
 import { dayjsUTC } from 'utils/dayjsUTC'
-import useBreakpoint from './useBreakpoint'
+import { ChainId } from 'constants/chain'
 
 const PageSize = 8
 
@@ -69,9 +69,33 @@ export function usePastPositionRecords(pageNum: number, pageSize = PageSize) {
   }, [orderList, pageParams])
 }
 
-export function usePastEarningsChartData(): ChartDataType {
-  const isDownMd = useBreakpoint('md')
-  const { orderList } = usePastPositionRecords(1, isDownMd ? 5 : 10)
+export function usePastEarningsChartData(
+  chainId: ChainId | undefined,
+  investCurrency: string | undefined,
+  underlying: string | undefined
+): ChartDataType {
+  const [orderList, setOrderList] = useState<OrderRecord[] | undefined>(undefined)
+  // const { orderList } = usePastPositionRecords(1, isDownMd ? 5 : 10)
+
+  useEffect(() => {
+    let mounted = true
+    if (!chainId || !investCurrency || !underlying) {
+      return
+    }
+    Axios.get('getOrderRecord', {
+      chainId,
+      currency: investCurrency
+    })
+      .then(r => {
+        if (mounted && r.data.data.records) {
+          setOrderList(r.data.data.records)
+        }
+      })
+      .catch(e => console.error(e))
+    return () => {
+      mounted = false
+    }
+  }, [chainId, investCurrency, underlying])
 
   const res = useMemo(() => {
     const defaultData: ChartDataType = {
@@ -84,6 +108,10 @@ export function usePastEarningsChartData(): ChartDataType {
       return defaultData
     }
     return orderList.reduce((acc: ChartDataType, item: OrderRecord) => {
+      const underlyingCur = item.code.match(/([A-Z]+)\_([A-Z]+)/i)?.[2]
+      if (underlying !== underlyingCur) {
+        return acc
+      }
       acc.dateData.push(dayjsUTC(item.liquidatedAt).format('DD MMM'))
       acc.returnedAmountData.push(+(item.pnl ?? '0') + +item.size)
       acc.otherData.push({
@@ -93,7 +121,7 @@ export function usePastEarningsChartData(): ChartDataType {
       })
       return acc
     }, defaultData)
-  }, [orderList])
+  }, [orderList, underlying])
 
   return res
 }

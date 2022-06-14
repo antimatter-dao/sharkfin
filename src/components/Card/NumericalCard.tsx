@@ -88,7 +88,7 @@ export default function NumericalCard(props: Props) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderRadius: '12px'
+                  borderRadius: '16px'
                 }}
               >
                 <Typography

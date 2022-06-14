@@ -4,6 +4,7 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
+import { Box } from '@mui/material'
 interface Props {
   summary: string | JSX.Element
   details: string | JSX.Element
@@ -21,6 +22,9 @@ export default function _Accordion(props: Props) {
         boxShadow: 'none',
         '& .MuiAccordionSummary-content': {
           margin: '20px 0'
+        },
+        '&.MuiAccordion-root.Mui-expanded': {
+          margin: 0
         },
         '&.MuiAccordion-root.Mui-expanded:before': {
           content: '""',
@@ -41,7 +45,9 @@ export default function _Accordion(props: Props) {
       >
         {summary}
       </AccordionSummary>
-      <AccordionDetails>{details}</AccordionDetails>
+      <AccordionDetails>
+        <Box paddingBottom={20}>{details}</Box>
+      </AccordionDetails>
     </Accordion>
   )
 }
