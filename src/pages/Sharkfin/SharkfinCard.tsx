@@ -101,7 +101,7 @@ export default function VaultProductCard({
               <Timer timer={product?.expiredAt ?? 0} />
             </Typography>{' '}
           </Box> */}
-          <Button backgroundColor={color} onClick={onClick}>
+          <Button style={{ borderRadius: '16px' }} backgroundColor={color} onClick={onClick}>
             Subscribe
           </Button>
         </>
@@ -185,6 +185,9 @@ function TermTag({ days, color }: { days: number; color: string }) {
           fontSize: 16,
           fontWeight: 600,
           color
+        },
+        '& .MuiInputBase-root': {
+          fontFamily: 'SF Pro'
         },
         '& .MuiInputLabel-root': {
           color

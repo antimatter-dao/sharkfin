@@ -403,7 +403,7 @@ function PastAggregate({ data, earnings }: { data: any; earnings?: string }) {
             </Typography>
             <Typography fontWeight={700}>$</Typography>
           </Box>
-          {/*<Typography sx={{ opacity: 0.8, mt: 8 }}>Aug 26, 2021</Typography> */}
+          <Typography sx={{ opacity: 0.8, mt: 8 }}>Aug 26, 2021</Typography>
         </Box>
         <Box height="100%" flexGrow={1} mt={40}>
           <BarChart chartData={data} />
