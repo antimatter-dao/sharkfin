@@ -54,6 +54,7 @@ export function BlackButton({ style, ...props }: Props) {
     <Button
       {...props}
       style={{
+        borderRadius: '16px',
         backgroundColor: theme.palette.text.primary,
         '&:hover': {
           background: '#515151'
