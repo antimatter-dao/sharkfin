@@ -55,13 +55,13 @@ export default function SharkfinChart({
         <Box
           height="100%"
           display="grid"
-          gridTemplateRows={isDownSm ? '15% 37% 45% 3%' : '10% 48% 35% 3%'}
+          gridTemplateRows={isDownSm ? '13% 25% 32% 27% 3%' : '10% 23% 35% 25% 3%'}
           sx={{ textAlign: 'right', color: theme.palette.text.primary + '60' }}
         >
           <Typography fontWeight={500}>APR</Typography>
 
           <Typography>15%</Typography>
-
+          <Typography>11%</Typography>
           <Typography>{baseRate ?? '3%'}</Typography>
 
           <Typography>0</Typography>

@@ -9,7 +9,7 @@ import { SHARKFIN_ADDRESS } from 'constants/index'
 import SHARKFIN_VAULT_ABI from '../constants/abis/sharkfin.json'
 import { useActiveWeb3React } from 'hooks'
 // import { useBlockNumber } from 'state/application/hooks'
-import { parseBalance, parsePrecision } from 'utils/parseAmount'
+import { absolute, parseBalance, parsePrecision } from 'utils/parseAmount'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useSharkfinContract } from './useContract'
 import { trimNumberString } from 'utils/trimNumberString'
@@ -179,7 +179,9 @@ export function useSingleSharkfin(chainName: string, underlying: string, currenc
           totalPending.result && totalBalance
             ? trimNumberString(
                 parsePrecision(
-                  JSBI.subtract(JSBI.BigInt(totalBalance.raw), JSBI.BigInt(totalPending.result.toString())).toString(),
+                  absolute(
+                    JSBI.subtract(JSBI.BigInt(totalBalance.raw), JSBI.BigInt(totalPending.result.toString())).toString()
+                  ),
                   vaultParams.result?.decimals ?? 18
                 ),
                 4

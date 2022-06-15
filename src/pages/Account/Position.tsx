@@ -35,7 +35,7 @@ enum TableHeaderIndex {
   status
 }
 
-const TableHeader = ['', 'APY', 'Price Range(USDT)', 'Invest Amount', 'Delivery Time', '']
+const TableHeader = ['', 'APY', 'Price Range(USDT)', 'Invest Amount', 'Execute time', '']
 
 function TokenHeader({
   token,
