@@ -259,7 +259,7 @@ export function FAQ({ subject }: { subject: Subject }) {
             <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
               Weekly Sharkfin is a principal protected product, where users subscribe using the required currency and
               earn varying yield based on a specified price range of the underlying asset. The product runs on a weekly
-              basis and redemption is only possible at maturity.
+              basis and redemption is only possible at maturity. The price range is set at the beginning of each week.
             </AccordionDetailText>
           )
         },
@@ -269,7 +269,7 @@ export function FAQ({ subject }: { subject: Subject }) {
             <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
               <p>The product has a lower and upper limit.</p>
               <p>
-                1. Observed price was <b>always</b> within the price range:
+                1. Settlement price is within the price range <b>at maturity</b>:
               </p>
               <p>
                 Annualised Percentage Return (APR) = Annualised Lower Return + (Settlement Price at Maturity-Lower
@@ -277,7 +277,9 @@ export function FAQ({ subject }: { subject: Subject }) {
                 higher the settlement price, the higher the product return.
               </p>
               <p>Return = Principal * Annualised Percentage Return / 365 * Investment term.</p>
-              <p>2. Observed price was atleast once below Lower Barrier or above Upper Barrier:</p>
+              <p>
+                2. Settlement price is below Lower Barrier or above Upper Barrier <b>at maturity</b>:
+              </p>
               <p>Return = Principal * Annualised Lower Return / 365 * Investment term.</p>
             </AccordionDetailText>
           )
