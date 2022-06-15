@@ -264,7 +264,7 @@ function CustomTab(props: TabProps & { selected?: boolean }) {
       {...props}
       disableRipple
       label={
-        <Box display={'flex'} alignItems="center" marginLeft="-10px" sx={{ fontSize: 12 }}>
+        <Box display={'flex'} alignItems="center" marginLeft="-10px">
           <StyledBox component="span" selected={props.selected}>
             {props.value + 1}
           </StyledBox>
@@ -277,7 +277,6 @@ function CustomTab(props: TabProps & { selected?: boolean }) {
         color: theme => theme.palette.text.secondary,
         border: '1px solid transparent',
         padding: 10,
-        paddingLeft: props.value === 0 ? 0 : 10,
         opacity: 1,
         '&.Mui-selected': {
           color: theme => theme.palette.primary.main
