@@ -75,7 +75,7 @@ export default function VaultForm({
 
     onChange(available)
   }, [available, onChange])
-  console.log(!account, error === ErrorType.notAvailable, chainId !== productChainId, !!(available && +available === 0))
+
   return (
     <Box pt="20px" display="flex" flexDirection="column" width="100%">
       <Box display="grid" gap={type === TYPE.invest ? '30px' : '16px'} width={'100%'}>
