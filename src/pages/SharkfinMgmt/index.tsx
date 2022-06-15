@@ -63,9 +63,10 @@ export default function SharkfinMgmt() {
     return [
       <>
         Settlement at maturity: APR of{' '}
-        <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>{minRate}~15.00%</span>{' '}
-        <span>{<br />}</span> Conditions must meet: {product?.underlying ?? 'ETH'} price was{' '}
-        <span style={{ fontWeight: 500 }}>always</span> within the price range <span>{<br />}</span>
+        <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>11.00%~15.00%</span> <span>{<br />}</span>{' '}
+        Conditions must meet: {product?.underlying ?? 'ETH'} price is within the price range{' '}
+        <span style={{ fontWeight: 500 }}>at maturity</span>
+        <span>{<br />}</span>
         Annualised Product Return = {minRate}
         +(settlement price-{product?.barrierPrice0})/({product?.barrierPrice1}-{product?.barrierPrice0})*(15.00%-
         {minRate}) <span>{<br />}</span> Return = Principal * Annualised Product Return/365 * 7 (investment term)
@@ -73,8 +74,10 @@ export default function SharkfinMgmt() {
       <>
         Settlement at maturity: APR of{' '}
         <span style={{ color: theme.palette.primary.main, fontWeight: 700 }}>{minRate}</span>
-        <span>{<br />}</span> Conditions must meet: {product?.underlying ?? 'ETH'} price was atleast once below $
-        {product?.barrierPrice0 ?? '-'} or above ${product?.barrierPrice1 ?? '-'} Return = Principal *{' '}
+        <span>{<br />}</span> Conditions must meet: {product?.underlying ?? 'ETH'} price is below $
+        {product?.barrierPrice0 ?? '-'} or above ${product?.barrierPrice1 ?? '-'}{' '}
+        <span style={{ fontWeight: 500 }}>at maturity</span>
+        <span>{<br />}</span> Return = Principal *{' '}
         {product?.minRate ? (+product.minRate.slice(0, -1)).toFixed(2) : '3.00'}/365 * 7 (investment term)
       </>,
       <>
