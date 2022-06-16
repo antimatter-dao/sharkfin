@@ -215,6 +215,7 @@ export function useSharkfinList() {
   const [promise, setPromise] = useState<Promise<any> | undefined>(undefined)
   const [products, setProducts] = useState<any[] | undefined>(undefined)
   const [defiVaultList, setDefiVaultList] = useState<undefined | null | DefiProduct[]>(undefined)
+  const [otherChainVaultStates, setOtherChainVaultStates] = useState<undefined | any>(undefined)
   // const blockNumber = useBlockNumber()
 
   useEffect(() => {
@@ -224,12 +225,33 @@ export function useSharkfinList() {
     const productsPromises: any[] = []
     const library = getOtherNetworkLibrary(chainId)
     const addresses = SHARKFIN_ADDRESS[chainId as ChainId]
+    const vaultStatesPromises: any[] = []
     const list = SUPPORTED_SHARKFIN_VAULT[chainId as keyof typeof SUPPORTED_SHARKFIN_VAULT]?.reduce(
       (acc, symbol: string) => {
         productsPromises.push(
           Axios.get('getProducts', { chainId, currency: getMappedSymbol(symbol), underlying: getMappedSymbol(symbol) }),
           Axios.get('getProducts', { chainId, currency: 'USDT', underlying: getMappedSymbol(symbol) })
         )
+        Object.keys(SUPPORTED_SHARKFIN_VAULT).map(chainIdStr => {
+          const chainId2: ChainId = +chainIdStr
+          if (chainId2 === chainId) {
+            return
+          } else {
+            const library = getOtherNetworkLibrary(chainId2)
+            const addressSelf = SHARKFIN_ADDRESS[chainId2]?.[symbol]?.SELF
+            const addressU = SHARKFIN_ADDRESS[chainId2]?.[symbol]?.U
+            const contractSelf = addressSelf && library ? getContract(addressSelf, SHARKFIN_VAULT_ABI, library) : null
+            const contractU = addressU && library ? getContract(addressU, SHARKFIN_VAULT_ABI, library) : null
+            vaultStatesPromises.push(
+              Promise.all([
+                contractSelf?.vaultState(),
+                contractSelf?.decimals(),
+                contractU?.vaultState(),
+                contractU?.decimals()
+              ])
+            )
+          }
+        })
         const addressCall = addresses?.[symbol]?.SELF
         const addressPut = addresses?.[symbol]?.U
         const contractCall = addressCall && library ? getContract(addressCall, SHARKFIN_VAULT_ABI, library) : null
@@ -240,6 +262,15 @@ export function useSharkfinList() {
       },
       [] as any[]
     )
+
+    Promise.all(vaultStatesPromises)
+      .then(r => {
+        if (mounted) {
+          setOtherChainVaultStates(r)
+        }
+      })
+      .catch(e => console.error(e))
+
     Promise.all(productsPromises)
       .then(r => {
         if (mounted) {
@@ -263,10 +294,10 @@ export function useSharkfinList() {
   useEffect(() => {
     let mounted = true
     ;(async () => {
-      if (!promise) setDefiVaultList(defiVaultListUtil(chainId, undefined, products))
+      if (!promise) setDefiVaultList(defiVaultListUtil(chainId, undefined, products, otherChainVaultStates))
       try {
         const res = await promise
-        const mappedRes = defiVaultListUtil(chainId, res, products)
+        const mappedRes = defiVaultListUtil(chainId, res, products, otherChainVaultStates)
         if (mounted) {
           setDefiVaultList(mappedRes)
         }
@@ -281,7 +312,7 @@ export function useSharkfinList() {
     return () => {
       mounted = false
     }
-  }, [chainId, products, promise])
+  }, [chainId, otherChainVaultStates, products, promise])
 
   return defiVaultList
 }
@@ -301,32 +332,52 @@ const callsFactory = (contract: Contract | null, account: string | null | undefi
 const defiVaultListUtil = (
   chainId: ChainId | null | undefined,
   res: any[][] | undefined,
-  products: undefined | any[]
+  products: undefined | any[],
+  otherChainVaultStates: any[][]
 ) => {
   // return Object.keys(SUPPORTED_SHARKFIN_VAULT).reduce((accMain, chainId: string, idx1: number) => {
   if (!chainId || !SUPPORTED_SHARKFIN_VAULT[chainId as keyof typeof SUPPORTED_SHARKFIN_VAULT]) return undefined
   return SUPPORTED_SHARKFIN_VAULT[+chainId as keyof typeof SUPPORTED_SHARKFIN_VAULT]?.reduce(
     (accMain, symbol: string, idx2: number) => {
+      /////// call results
       const productCall = getClosestProduct(products?.[idx2 * 2].data.data)
       const resCall = res?.[idx2 * 2]
+      const decimalsCall = resCall?.[DefiProductDataOrder.decimals] ?? 18
       const vaultStateCall = resCall ? resCall?.[DefiProductDataOrder.vaultState] : undefined
       const resCallIsRound = resCall
         ? resCall?.[DefiProductDataOrder.vaultState]?.round === resCall[DefiProductDataOrder.depositReceipts]?.round
         : false
       const minRateCall = ((productCall?.base_rate ?? 0.03) * 100).toFixed(0) + '%'
-      const decimalsCall = resCall?.[DefiProductDataOrder.decimals] ?? 18
-      const totalInvestmentCall = vaultStateCall
-        ? trimNumberString(
-            parsePrecision(
-              JSBI.add(
-                JSBI.BigInt(vaultStateCall.lockedAmount.toString()),
-                JSBI.BigInt(vaultStateCall.totalPending.toString())
-              ).toString(),
-              decimalsCall
-            ),
-            4
-          )
-        : '0'
+
+      /////// put results
+      const productPut = getClosestProduct(products?.[idx2 * 2 + 1].data.data)
+      const resPut = res?.[idx2 * 2 + 1]
+      const decimalsPut = resPut?.[DefiProductDataOrder.decimals] ?? 18
+      const resPutIsRound = resPut
+        ? resPut?.[DefiProductDataOrder.vaultState]?.round === resPut[DefiProductDataOrder.depositReceipts]?.round
+        : false
+      const minRatePut = ((productPut?.base_rate ?? 0.03) * 100).toFixed(0) + '%'
+      const vaultStatePut = resPut ? resPut?.[DefiProductDataOrder.vaultState] : undefined
+
+      /////// investment amount on other chain
+      const otherChainTotal = { SELF: 0, U: 0 }
+      const chainList = Object.keys(SUPPORTED_SHARKFIN_VAULT)
+      const curChainIdx = chainList.findIndex(item => item === chainId + '')
+      chainList.splice(curChainIdx, 1)
+      chainList.map((id, idx3) => {
+        const res = otherChainVaultStates?.[idx2 * chainList.length + idx3]
+        const self = res?.[0]
+        const selfDecimals = res?.[1].toString() ?? '18'
+        const u = res?.[2]
+        const uDecimals = res?.[3].toString() ?? '18'
+        otherChainTotal.SELF += +getTotalInvestment(self, +selfDecimals)
+        otherChainTotal.U += +getTotalInvestment(u, +uDecimals)
+      })
+
+      const totalInvestmentCall = trimNumberString(
+        `${+getTotalInvestment(vaultStateCall, decimalsCall) + otherChainTotal.SELF}`,
+        4
+      )
       accMain.push({
         chainId: +chainId,
         underlying: symbol,
@@ -371,27 +422,10 @@ const defiVaultListUtil = (
         barrierPrice1: productCall?.barrier_prices?.[1].price ?? '-'
       })
 
-      const productPut = getClosestProduct(products?.[idx2 * 2 + 1].data.data)
-      const resPut = res?.[idx2 * 2 + 1]
-      const resPutIsRound = resPut
-        ? resPut?.[DefiProductDataOrder.vaultState]?.round === resPut[DefiProductDataOrder.depositReceipts]?.round
-        : false
-      const minRatePut = ((productPut?.base_rate ?? 0.03) * 100).toFixed(0) + '%'
-      const vaultStatePut = resPut ? resPut?.[DefiProductDataOrder.vaultState] : undefined
-      const decimalsPut = resPut?.[DefiProductDataOrder.decimals] ?? 18
-      const totalInvestmentPut = vaultStatePut
-        ? trimNumberString(
-            parsePrecision(
-              JSBI.add(
-                JSBI.BigInt(vaultStatePut.lockedAmount.toString()),
-                JSBI.BigInt(vaultStatePut.totalPending.toString())
-              ).toString(),
-              decimalsPut
-            ),
-            4
-          )
-        : '0'
-
+      const totalInvestmentPut = trimNumberString(
+        `${+getTotalInvestment(vaultStatePut, decimalsPut) + otherChainTotal.U}`,
+        4
+      )
       accMain.push({
         chainId: +chainId,
         underlying: symbol,
@@ -475,4 +509,19 @@ const getApyRange = (minRate: string | undefined) => {
   } else {
     return `${minRate} ~ 15%`
   }
+}
+
+const getTotalInvestment = (vaultState: any, decimals: number) => {
+  return vaultState
+    ? trimNumberString(
+        parsePrecision(
+          JSBI.add(
+            JSBI.BigInt(vaultState.lockedAmount.toString()),
+            JSBI.BigInt(vaultState.totalPending.toString())
+          ).toString(),
+          decimals
+        ),
+        4
+      )
+    : '0'
 }

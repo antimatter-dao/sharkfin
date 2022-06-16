@@ -285,7 +285,11 @@ export const SUPPORTED_SHARKFIN_VAULT: { [chainId in ChainId]?: string[] } = Obj
     }
     const curList = Object.keys(addresses).reduce((acc2, curSymbol: string) => {
       if (!acc2.includes(curSymbol)) {
-        acc2.push(curSymbol)
+        if (curSymbol === 'BTC') {
+          acc2.unshift(curSymbol)
+        } else {
+          acc2.push(curSymbol)
+        }
       }
       return acc2
     }, [] as string[])
